@@ -22,8 +22,7 @@ RUN npm install && npm run build
 
 RUN php artisan filament:assets && \
     php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan config:cache
+    php artisan view:cache
 
 RUN chmod +x docker-entrypoint.sh
 
