@@ -9,7 +9,10 @@
       "Read(//Users/alan/Sites/pessoal/**)",
       "Bash(composer create-project:*)",
       "Bash(rsync -av --exclude='.git' /tmp/wine-app/ /Users/alan/Sites/pessoal/codigo-de-barras/)",
-      "Bash(composer require:*)"
+      "Bash(composer require:*)",
+      "Bash(php artisan:*)",
+      "Bash(find /Users/alan/Sites/pessoal/congresso-laravel -name *.yml -o -name *.yaml)",
+      "Bash(cat /Users/alan/Sites/pessoal/congresso-laravel/.github/workflows/*.yml)"
     ]
   }
 }
