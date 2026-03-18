@@ -13,8 +13,9 @@ Route::get('/', function () {
         ->get();
 
     $types = WineType::withCount(['wines' => fn ($q) => $q->where('is_active', true)])
-        ->having('wines_count', '>', 0)
-        ->get();
+        ->get()
+        ->filter(fn ($t) => $t->wines_count > 0)
+        ->values();
 
     return view('home', compact('wines', 'types'));
 });
@@ -33,8 +34,9 @@ Route::get('/catalogo', function () {
 
     $wines = $query->orderBy('name')->paginate(24)->withQueryString();
     $types = WineType::withCount(['wines' => fn ($q) => $q->where('is_active', true)])
-        ->having('wines_count', '>', 0)
-        ->get();
+        ->get()
+        ->filter(fn ($t) => $t->wines_count > 0)
+        ->values();
 
     return view('catalogo', compact('wines', 'types'));
 })->name('catalogo');

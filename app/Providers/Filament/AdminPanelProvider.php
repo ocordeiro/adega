@@ -35,7 +35,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#7b1f3a'),
+                'gray'    => Color::Slate,
             ])
             ->brandName('Adega')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
