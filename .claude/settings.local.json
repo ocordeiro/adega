@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/alan/Sites/pessoal/codigo-de-barras -maxdepth 3 -type f \\\\\\(-name composer.json -o -name artisan -o -name *.php -o -name package.json \\\\\\))",
+      "WebSearch",
+      "Bash(php --version)",
+      "Bash(composer --version)",
+      "Bash(npm --version)",
+      "Read(//Users/alan/Sites/pessoal/**)",
+      "Bash(composer create-project:*)",
+      "Bash(rsync -av --exclude='.git' /tmp/wine-app/ /Users/alan/Sites/pessoal/codigo-de-barras/)",
+      "Bash(composer require:*)"
+    ]
+  }
+}
