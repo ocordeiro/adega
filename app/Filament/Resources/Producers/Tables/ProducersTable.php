@@ -17,7 +17,7 @@ class ProducersTable
             ->columns([
                 TextColumn::make('name')->label('Produtor / Vinícola')->searchable()->sortable(),
                 TextColumn::make('country.name')->label('País')->searchable()->sortable(),
-                TextColumn::make('website')->label('Website')->url()->limit(40)->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('website')->label('Website')->url(fn ($record) => $record->website)->limit(40)->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('wines_count')->label('Vinhos')->counts('wines')->badge()->sortable(),
             ])
             ->filters([

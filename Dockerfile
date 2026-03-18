@@ -1,6 +1,6 @@
 FROM dunglas/frankenphp:1.11.1-php8.4-alpine
 
-RUN install-php-extensions bcmath pcntl mysqli pdo_mysql intl zip redis ffi
+RUN install-php-extensions bcmath pcntl mysqli pdo_mysql intl zip redis ffi exif
 
 RUN apk add --no-cache \
     curl \

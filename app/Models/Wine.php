@@ -37,6 +37,11 @@ class Wine extends Model implements HasMedia
         'is_active',
     ];
 
+    protected $attributes = [
+        'is_active'      => true,
+        'stock_quantity' => 0,
+    ];
+
     protected $casts = [
         'is_active'       => 'boolean',
         'cost_price'      => 'decimal:2',
