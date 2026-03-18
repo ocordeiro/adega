@@ -24,9 +24,6 @@ RUN php artisan filament:assets && \
     php artisan route:cache && \
     php artisan view:cache
 
-RUN chmod +x docker-entrypoint.sh
-
 EXPOSE 8000
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["php", "artisan", "octane:frankenphp", "--workers=1", "--max-requests=500", "--caddyfile=Caddyfile"]
