@@ -16,8 +16,8 @@ class CreateDatabase extends Command
         $driver      = config("database.connections.{$connection}.driver");
 
         if ($driver !== 'mysql') {
-            $this->warn("db:create só suporta MySQL/MariaDB (driver atual: {$driver}).");
-            return self::FAILURE;
+            $this->line("db:create: nada a fazer para o driver [{$driver}].");
+            return self::SUCCESS;
         }
 
         $database    = config("database.connections.{$connection}.database");
