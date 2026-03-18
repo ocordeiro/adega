@@ -20,9 +20,9 @@ class WineForm
         return $schema->columns(3)->components([
 
             // ── COLUNA PRINCIPAL (2/3) ─────────────────────────────────────
-            Section::make('Identificação')
-                ->columnSpan(2)
-                ->schema([
+            Grid::make(1)->columnSpan(2)->schema([
+
+                Section::make('Identificação')->schema([
                     TextInput::make('name')
                         ->label('Nome do Vinho')
                         ->required()
@@ -51,21 +51,7 @@ class WineForm
                     ]),
                 ]),
 
-            // ── SIDEBAR (1/3) ──────────────────────────────────────────────
-            Section::make('Status')
-                ->columnSpan(1)
-                ->schema([
-                    Toggle::make('is_active')
-                        ->label('Vinho ativo')
-                        ->default(true)
-                        ->inline(false),
-                ]),
-
-            // ── ORIGEM ─────────────────────────────────────────────────────
-            Section::make('Origem')
-                ->columnSpan(2)
-                ->columns(2)
-                ->schema([
+                Section::make('Origem')->columns(2)->schema([
                     Select::make('producer_id')
                         ->label('Produtor / Vinícola')
                         ->relationship('producer', 'name')
@@ -101,47 +87,7 @@ class WineForm
                         ->nullable(),
                 ]),
 
-            // ── PREÇOS & ESTOQUE (sidebar) ─────────────────────────────────
-            Section::make('Preços & Estoque')
-                ->columnSpan(1)
-                ->schema([
-                    TextInput::make('cost_price')
-                        ->label('Preço de Custo')
-                        ->numeric()
-                        ->prefix('R$')
-                        ->step(0.01)
-                        ->nullable(),
-
-                    TextInput::make('sale_price')
-                        ->label('Preço de Venda')
-                        ->numeric()
-                        ->prefix('R$')
-                        ->step(0.01)
-                        ->nullable(),
-
-                    TextInput::make('stock_quantity')
-                        ->label('Estoque')
-                        ->numeric()
-                        ->minValue(0)
-                        ->default(0)
-                        ->required()
-                        ->suffix('un.'),
-
-                    Select::make('stock_unit')
-                        ->label('Unidade')
-                        ->options([
-                            'bottle'      => 'Garrafa (750ml)',
-                            'magnum'      => 'Magnum (1,5L)',
-                            'half_bottle' => 'Meia Garrafa (375ml)',
-                        ])
-                        ->default('bottle')
-                        ->required(),
-                ]),
-
-            // ── CARACTERÍSTICAS ────────────────────────────────────────────
-            Section::make('Características')
-                ->columnSpan(2)
-                ->schema([
+                Section::make('Características')->schema([
                     Textarea::make('description')
                         ->label('Notas de Degustação')
                         ->nullable()
@@ -183,10 +129,66 @@ class WineForm
                         ->nullable(),
                 ]),
 
-            // ── FOTOS (sidebar) ────────────────────────────────────────────
-            Section::make('Fotos')
-                ->columnSpan(1)
-                ->schema([
+                Section::make('Harmonização com Alimentos')->schema([
+                    Select::make('foods')
+                        ->label('Alimentos que harmonizam')
+                        ->relationship('foods', 'name')
+                        ->multiple()
+                        ->searchable()
+                        ->preload()
+                        ->nullable()
+                        ->columnSpanFull(),
+                ]),
+
+            ]),
+
+            // ── SIDEBAR (1/3) ──────────────────────────────────────────────
+            Grid::make(1)->columnSpan(1)->schema([
+
+                Section::make('Status')->schema([
+                    Toggle::make('is_active')
+                        ->label('Vinho ativo')
+                        ->default(true)
+                        ->inline(false),
+                ]),
+
+                Section::make('Preços')->schema([
+                    TextInput::make('cost_price')
+                        ->label('Preço de Custo')
+                        ->numeric()
+                        ->prefix('R$')
+                        ->step(0.01)
+                        ->nullable(),
+
+                    TextInput::make('sale_price')
+                        ->label('Preço de Venda')
+                        ->numeric()
+                        ->prefix('R$')
+                        ->step(0.01)
+                        ->nullable(),
+                ]),
+
+                Section::make('Estoque')->schema([
+                    TextInput::make('stock_quantity')
+                        ->label('Quantidade')
+                        ->numeric()
+                        ->minValue(0)
+                        ->default(0)
+                        ->required()
+                        ->suffix('un.'),
+
+                    Select::make('stock_unit')
+                        ->label('Unidade')
+                        ->options([
+                            'bottle'      => 'Garrafa (750ml)',
+                            'magnum'      => 'Magnum (1,5L)',
+                            'half_bottle' => 'Meia Garrafa (375ml)',
+                        ])
+                        ->default('bottle')
+                        ->required(),
+                ]),
+
+                Section::make('Fotos')->schema([
                     SpatieMediaLibraryFileUpload::make('photos')
                         ->label(false)
                         ->collection('photos')
@@ -201,19 +203,8 @@ class WineForm
                         ->columnSpanFull(),
                 ]),
 
-            // ── HARMONIZAÇÃO ───────────────────────────────────────────────
-            Section::make('Harmonização com Alimentos')
-                ->columnSpan(3)
-                ->schema([
-                    Select::make('foods')
-                        ->label('Alimentos que harmonizam')
-                        ->relationship('foods', 'name')
-                        ->multiple()
-                        ->searchable()
-                        ->preload()
-                        ->nullable()
-                        ->columnSpanFull(),
-                ]),
+            ]),
+
         ]);
     }
 }
