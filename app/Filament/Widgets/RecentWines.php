@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Wine;
-use Filament\SpatieLaravelMediaLibraryPlugin\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;

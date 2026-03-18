@@ -1,0 +1,143 @@
+<?php
+
+namespace Tests\Unit\Models;
+
+use App\Models\Country;
+use App\Models\Food;
+use App\Models\GrapeVariety;
+use App\Models\Producer;
+use App\Models\Region;
+use App\Models\Wine;
+use App\Models\WineType;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class WineTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_slug_is_generated_on_create(): void
+    {
+        $wine = Wine::create([
+            'name'           => 'Château Margaux',
+            'vintage'        => 2015,
+            'stock_quantity' => 10,
+            'stock_unit'     => 'bottle',
+        ]);
+
+        $this->assertEquals('chateau-margaux-2015', $wine->slug);
+    }
+
+    public function test_slug_is_generated_without_vintage(): void
+    {
+        $wine = Wine::create([
+            'name'           => 'Gran Reserva',
+            'stock_quantity' => 5,
+            'stock_unit'     => 'bottle',
+        ]);
+
+        $this->assertEquals('gran-reserva', $wine->slug);
+    }
+
+    public function test_duplicate_slug_gets_numeric_suffix(): void
+    {
+        Wine::create(['name' => 'Malbec', 'vintage' => 2020, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine2 = Wine::create(['name' => 'Malbec', 'vintage' => 2020, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+
+        $this->assertEquals('malbec-2020-1', $wine2->slug);
+    }
+
+    public function test_slug_updates_when_name_changes(): void
+    {
+        $wine = Wine::create(['name' => 'Old Name', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine->update(['name' => 'New Name']);
+
+        $this->assertEquals('new-name', $wine->fresh()->slug);
+    }
+
+    public function test_soft_delete(): void
+    {
+        $wine = Wine::create(['name' => 'To Delete', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $id = $wine->id;
+
+        $wine->delete();
+
+        $this->assertNull(Wine::find($id));
+        $this->assertNotNull(Wine::withTrashed()->find($id));
+    }
+
+    public function test_belongs_to_wine_type(): void
+    {
+        $type = WineType::create(['name' => 'Tinto', 'slug' => 'tinto']);
+        $wine = Wine::create(['name' => 'Cabernet', 'wine_type_id' => $type->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+
+        $this->assertEquals('Tinto', $wine->wineType->name);
+    }
+
+    public function test_belongs_to_country(): void
+    {
+        $country = Country::create(['name' => 'Brasil', 'code' => 'BR']);
+        $wine = Wine::create(['name' => 'Nacional', 'country_id' => $country->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+
+        $this->assertEquals('Brasil', $wine->country->name);
+    }
+
+    public function test_belongs_to_region(): void
+    {
+        $country = Country::create(['name' => 'Brasil', 'code' => 'BR']);
+        $region  = Region::create(['name' => 'Serra Gaúcha', 'country_id' => $country->id]);
+        $wine    = Wine::create(['name' => 'Serra', 'region_id' => $region->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+
+        $this->assertEquals('Serra Gaúcha', $wine->region->name);
+    }
+
+    public function test_belongs_to_producer(): void
+    {
+        $producer = Producer::create(['name' => 'Miolo']);
+        $wine     = Wine::create(['name' => 'Miolo Seleção', 'producer_id' => $producer->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+
+        $this->assertEquals('Miolo', $wine->producer->name);
+    }
+
+    public function test_belongs_to_many_grape_varieties(): void
+    {
+        $wine  = Wine::create(['name' => 'Blend', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $cab   = GrapeVariety::create(['name' => 'Cabernet Sauvignon']);
+        $merlot = GrapeVariety::create(['name' => 'Merlot']);
+
+        $wine->grapeVarieties()->attach([$cab->id => ['percentage' => 60], $merlot->id => ['percentage' => 40]]);
+
+        $this->assertCount(2, $wine->grapeVarieties);
+        $this->assertEquals(60, $wine->grapeVarieties->find($cab->id)->pivot->percentage);
+    }
+
+    public function test_belongs_to_many_foods(): void
+    {
+        $wine  = Wine::create(['name' => 'Tinto Reserva', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $food  = Food::create(['name' => 'Picanha']);
+
+        $wine->foods()->attach($food->id, ['notes' => 'Harmoniza muito bem']);
+
+        $this->assertCount(1, $wine->foods);
+        $this->assertEquals('Harmoniza muito bem', $wine->foods->first()->pivot->notes);
+    }
+
+    public function test_stock_value_attribute(): void
+    {
+        $wine = Wine::create([
+            'name'           => 'Caro',
+            'stock_quantity' => 10,
+            'sale_price'     => 150.00,
+            'stock_unit'     => 'bottle',
+        ]);
+
+        $this->assertEquals(1500.00, $wine->stock_value);
+    }
+
+    public function test_is_active_defaults_to_true(): void
+    {
+        $wine = Wine::create(['name' => 'Ativo', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+
+        $this->assertTrue($wine->is_active);
+    }
+}

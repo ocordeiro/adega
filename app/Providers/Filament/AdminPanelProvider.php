@@ -54,9 +54,9 @@ class AdminPanelProvider extends PanelProvider
                 LowStockWines::class,
             ])
             ->navigationGroups([
-                NavigationGroup::make('Catálogo')->icon('heroicon-o-book-open'),
-                NavigationGroup::make('Harmonização')->icon('heroicon-o-cake'),
-                NavigationGroup::make('Configurações')->icon('heroicon-o-cog-6-tooth'),
+                NavigationGroup::make('Catálogo'),
+                NavigationGroup::make('Harmonização'),
+                NavigationGroup::make('Configurações'),
             ])
             ->middleware([
                 EncryptCookies::class,
