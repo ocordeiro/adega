@@ -17,8 +17,10 @@ class WineSeeder extends Seeder
     public function run(): void
     {
         $images = [
-            base_path('storage/app/public/wines/wine-1.jpg'),
-            base_path('storage/app/public/wines/wine-2.jpg'),
+            database_path('seeders/images/wine-1.jpg'),
+            database_path('seeders/images/wine-2.jpg'),
+            database_path('seeders/images/wine-3.jpg'),
+            database_path('seeders/images/wine-4.jpg'),
         ];
 
         $wines = [
