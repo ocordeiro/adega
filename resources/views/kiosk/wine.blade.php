@@ -452,7 +452,7 @@
             <div class="wine-photo-shadow"></div>
             @if($photo)
                 <img class="wine-photo"
-                     src="{{ $photo->hasGeneratedConversion('card') ? $photo->getTemporaryUrl(now()->addHours(2), 'card') : $photo->getTemporaryUrl(now()->addHours(2)) }}"
+                     src="{{ $photo->hasGeneratedConversion('card') ? $photo->getUrl('card') : $photo->getUrl() }}"
                      alt="{{ $wine->name }}" draggable="false"
                      style="aspect-ratio:2/3;object-fit:cover;width:100%;">
             @else
@@ -561,7 +561,7 @@
                     @php $img = $food->getFirstMedia('image'); @endphp
                     @if($img)
                         <img class="food-mini-img" draggable="false"
-                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getTemporaryUrl(now()->addHours(2), 'thumb') : $img->getTemporaryUrl(now()->addHours(2)) }}"
+                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getUrl('thumb') : $img->getUrl() }}"
                              alt="{{ $food->name }}">
                     @else
                         <div class="food-mini-ph">🍽️</div>
@@ -621,7 +621,7 @@
                     @php $img = $food->getFirstMedia('image'); @endphp
                     @if($img)
                         <img class="food-img" draggable="false"
-                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getTemporaryUrl(now()->addHours(2), 'thumb') : $img->getTemporaryUrl(now()->addHours(2)) }}"
+                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getUrl('thumb') : $img->getUrl() }}"
                              alt="{{ $food->name }}">
                     @else
                         <div class="food-ph">🍽️</div>
@@ -660,7 +660,7 @@
             @php $rImg = $recipe->getFirstMedia('photo'); @endphp
             @if($rImg)
                 <img class="recipe-img" draggable="false"
-                     src="{{ $rImg->hasGeneratedConversion('card') ? $rImg->getTemporaryUrl(now()->addHours(2), 'card') : $rImg->getTemporaryUrl(now()->addHours(2)) }}"
+                     src="{{ $rImg->hasGeneratedConversion('card') ? $rImg->getUrl('card') : $rImg->getUrl() }}"
                      alt="{{ $recipe->name }}">
             @else
                 <div class="recipe-ph">👨‍🍳</div>
