@@ -1,13 +1,14 @@
 FROM dunglas/frankenphp:1.11.1-php8.4-alpine
 
-RUN install-php-extensions bcmath pcntl mysqli pdo_mysql intl zip redis ffi exif
-
 RUN apk add --no-cache \
     curl \
     unzip \
     nodejs \
     npm \
-    vips
+    vips \
+    vips-dev
+
+RUN install-php-extensions bcmath pcntl mysqli pdo_mysql intl zip redis ffi exif vips
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
