@@ -48,19 +48,6 @@ class WinesTable
                     ->label('País')
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('sale_price')
-                    ->label('Preço Venda')
-                    ->money('BRL')
-                    ->sortable(),
-                TextColumn::make('stock_quantity')
-                    ->label('Estoque')
-                    ->sortable()
-                    ->badge()
-                    ->color(fn (int $state): string => match (true) {
-                        $state === 0    => 'danger',
-                        $state <= 5     => 'warning',
-                        default         => 'success',
-                    }),
                 TextColumn::make('rating')
                     ->label('Pontuação')
                     ->sortable()

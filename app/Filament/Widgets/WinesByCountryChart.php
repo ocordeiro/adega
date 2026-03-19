@@ -24,7 +24,9 @@ class WinesByCountryChart extends ChartWidget
                 [
                     'label'           => 'Vinhos',
                     'data'            => $data->pluck('wines_count')->toArray(),
-                    'backgroundColor' => '#7c3aed',
+                    'backgroundColor' => 'rgba(158, 45, 76, 0.85)',
+                    'borderColor'     => 'rgb(123, 31, 58)',
+                    'borderWidth'     => 1,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),

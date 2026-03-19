@@ -27,15 +27,9 @@ class RecentWines extends TableWidget
                     ->width(40)
                     ->height(40),
                 TextColumn::make('name')->label('Nome')->limit(30),
-                TextColumn::make('wineType.name')->label('Tipo')->badge(),
+                TextColumn::make('wineType.name')->label('Tipo')->badge()->color('primary'),
+                TextColumn::make('country.name')->label('País'),
                 TextColumn::make('vintage')->label('Safra'),
-                TextColumn::make('sale_price')->label('Preço')->money('BRL'),
-                TextColumn::make('stock_quantity')->label('Estoque')->badge()
-                    ->color(fn (int $state): string => match (true) {
-                        $state === 0 => 'danger',
-                        $state <= 5  => 'warning',
-                        default      => 'success',
-                    }),
             ])
             ->paginated(false);
     }

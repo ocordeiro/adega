@@ -129,7 +129,16 @@ class WineForm
                         ->nullable(),
                 ]),
 
-                Section::make('Harmonização com Alimentos')->schema([
+                Section::make('Harmonização')->schema([
+                    Select::make('occasions')
+                        ->label('Ocasiões recomendadas')
+                        ->relationship('occasions', 'name')
+                        ->multiple()
+                        ->searchable()
+                        ->preload()
+                        ->nullable()
+                        ->columnSpanFull(),
+
                     Select::make('foods')
                         ->label('Alimentos que harmonizam')
                         ->relationship('foods', 'name')
@@ -150,42 +159,6 @@ class WineForm
                         ->label('Vinho ativo')
                         ->default(true)
                         ->inline(false),
-                ]),
-
-                Section::make('Preços')->schema([
-                    TextInput::make('cost_price')
-                        ->label('Preço de Custo')
-                        ->numeric()
-                        ->prefix('R$')
-                        ->step(0.01)
-                        ->nullable(),
-
-                    TextInput::make('sale_price')
-                        ->label('Preço de Venda')
-                        ->numeric()
-                        ->prefix('R$')
-                        ->step(0.01)
-                        ->nullable(),
-                ]),
-
-                Section::make('Estoque')->schema([
-                    TextInput::make('stock_quantity')
-                        ->label('Quantidade')
-                        ->numeric()
-                        ->minValue(0)
-                        ->default(0)
-                        ->required()
-                        ->suffix('un.'),
-
-                    Select::make('stock_unit')
-                        ->label('Unidade')
-                        ->options([
-                            'bottle'      => 'Garrafa (750ml)',
-                            'magnum'      => 'Magnum (1,5L)',
-                            'half_bottle' => 'Meia Garrafa (375ml)',
-                        ])
-                        ->default('bottle')
-                        ->required(),
                 ]),
 
                 Section::make('Fotos')->schema([

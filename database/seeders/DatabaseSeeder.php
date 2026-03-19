@@ -19,8 +19,12 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             GrapeVarietySeeder::class,
             FoodCategorySeeder::class,
+            FoodSeeder::class,
             ProducerSeeder::class,
             AdminUserSeeder::class,
+            WineSeeder::class,
+            RecipeSeeder::class,
+            OccasionSeeder::class,
         ]);
     }
 }

@@ -21,7 +21,6 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
 RUN php artisan filament:assets && \
-    php artisan route:cache && \
     php artisan view:cache
 
 EXPOSE 8000

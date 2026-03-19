@@ -29,26 +29,18 @@ class Wine extends Model implements HasMedia
         'serving_temp_min',
         'serving_temp_max',
         'rating',
-        'cost_price',
-        'sale_price',
-        'stock_quantity',
-        'stock_unit',
         'barcode',
         'is_active',
     ];
 
     protected $attributes = [
-        'is_active'      => true,
-        'stock_quantity' => 0,
+        'is_active' => true,
     ];
 
     protected $casts = [
         'is_active'       => 'boolean',
-        'cost_price'      => 'decimal:2',
-        'sale_price'      => 'decimal:2',
         'alcohol_content' => 'decimal:2',
         'vintage'         => 'integer',
-        'stock_quantity'  => 'integer',
     ];
 
     protected static function boot(): void
@@ -138,8 +130,16 @@ class Wine extends Model implements HasMedia
             ->withPivot('notes');
     }
 
-    public function getStockValueAttribute(): float
+    public function recipes(): BelongsToMany
     {
-        return ($this->stock_quantity ?? 0) * ($this->sale_price ?? 0);
+        return $this->belongsToMany(Recipe::class, 'wine_recipe')
+            ->withPivot('notes');
     }
+
+    public function occasions(): BelongsToMany
+    {
+        return $this->belongsToMany(Occasion::class, 'wine_occasion')
+            ->orderBy('sort_order');
+    }
+
 }

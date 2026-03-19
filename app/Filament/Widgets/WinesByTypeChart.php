@@ -23,7 +23,7 @@ class WinesByTypeChart extends ChartWidget
                 [
                     'label'           => 'Vinhos',
                     'data'            => $data->pluck('wines_count')->toArray(),
-                    'backgroundColor' => ['#7c3aed','#dc2626','#ea580c','#d97706','#16a34a','#0891b2','#db2777','#6d28d9'],
+                    'backgroundColor' => ['#7b1f3a','#a83256','#c2185b','#d4a373','#8b5e3c','#6d4c41','#b71c1c','#880e4f'],
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),
