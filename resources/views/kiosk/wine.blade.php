@@ -452,7 +452,7 @@
             <div class="wine-photo-shadow"></div>
             @if($photo)
                 <img class="wine-photo"
-                     src="{{ $photo->getTemporaryUrl(now()->addHours(2), 'card') }}"
+                     src="{{ $photo->hasGeneratedConversion('card') ? $photo->getTemporaryUrl(now()->addHours(2), 'card') : $photo->getTemporaryUrl(now()->addHours(2)) }}"
                      alt="{{ $wine->name }}" draggable="false"
                      style="aspect-ratio:2/3;object-fit:cover;width:100%;">
             @else
@@ -561,7 +561,7 @@
                     @php $img = $food->getFirstMedia('image'); @endphp
                     @if($img)
                         <img class="food-mini-img" draggable="false"
-                             src="{{ $img->getTemporaryUrl(now()->addHours(2), 'thumb') }}"
+                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getTemporaryUrl(now()->addHours(2), 'thumb') : $img->getTemporaryUrl(now()->addHours(2)) }}"
                              alt="{{ $food->name }}">
                     @else
                         <div class="food-mini-ph">🍽️</div>
@@ -621,7 +621,7 @@
                     @php $img = $food->getFirstMedia('image'); @endphp
                     @if($img)
                         <img class="food-img" draggable="false"
-                             src="{{ $img->getTemporaryUrl(now()->addHours(2), 'thumb') }}"
+                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getTemporaryUrl(now()->addHours(2), 'thumb') : $img->getTemporaryUrl(now()->addHours(2)) }}"
                              alt="{{ $food->name }}">
                     @else
                         <div class="food-ph">🍽️</div>
@@ -660,7 +660,7 @@
             @php $rImg = $recipe->getFirstMedia('photo'); @endphp
             @if($rImg)
                 <img class="recipe-img" draggable="false"
-                     src="{{ $rImg->getTemporaryUrl(now()->addHours(2), 'card') }}"
+                     src="{{ $rImg->hasGeneratedConversion('card') ? $rImg->getTemporaryUrl(now()->addHours(2), 'card') : $rImg->getTemporaryUrl(now()->addHours(2)) }}"
                      alt="{{ $recipe->name }}">
             @else
                 <div class="recipe-ph">👨‍🍳</div>
@@ -751,15 +751,17 @@
     document.addEventListener('dragstart',   e => e.preventDefault());
 
     document.addEventListener('pointerdown', e => {
+        if (e.pointerType === 'touch') return; // touch events handle mobile
         if (e.target.closest('.dot,.btn-close,.btn-back,.recipe-toggle,.no-slide-drag')) return;
         dragging = true; dragLocked = false;
         dragStartX = e.clientX; dragStartY = e.clientY;
         track.style.transition = 'none';
-        if (e.pointerType === 'mouse') track.setPointerCapture(e.pointerId);
+        track.setPointerCapture(e.pointerId);
         resetInactivity();
     });
 
     document.addEventListener('pointermove', e => {
+        if (e.pointerType === 'touch') return;
         if (!dragging) return;
         const dx = Math.abs(e.clientX - dragStartX), dy = Math.abs(e.clientY - dragStartY);
         if (!dragLocked) {
@@ -774,6 +776,7 @@
     });
 
     document.addEventListener('pointerup', e => {
+        if (e.pointerType === 'touch') return;
         if (!dragging || !dragLocked) { dragging = false; return; }
         dragging = false;
         const delta = e.clientX - dragStartX;
@@ -786,7 +789,8 @@
         }
     });
 
-    document.addEventListener('pointercancel', () => {
+    document.addEventListener('pointercancel', e => {
+        if (e.pointerType === 'touch') return;
         if (!dragging) return;
         dragging = false;
         track.style.transition = `transform ${CSS_DUR} ${EASE_OUT}`;
@@ -837,6 +841,12 @@
     document.addEventListener('keydown', e => {
         if (e.key === 'ArrowRight') { peeked = true; goTo(current + 1); }
         if (e.key === 'ArrowLeft')  { peeked = true; goTo(current - 1); }
+    });
+
+    /* ── close button: navegação direta no touch ── */
+    document.querySelector('.btn-close').addEventListener('touchend', e => {
+        e.preventDefault();
+        window.location.href = '/';
     });
 
     function resetInactivity() {

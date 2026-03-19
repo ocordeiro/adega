@@ -81,8 +81,7 @@ class Wine extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('photos')
-            ->useDisk('s3')
-            ->withResponsiveImages();
+            ->useDisk('s3');
     }
 
     public function registerMediaConversions(?Media $media = null): void
@@ -90,12 +89,14 @@ class Wine extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(300)
             ->height(300)
-            ->sharpen(10);
+            ->sharpen(10)
+            ->nonQueued();
 
         $this->addMediaConversion('card')
             ->width(600)
             ->height(400)
-            ->sharpen(10);
+            ->sharpen(10)
+            ->nonQueued();
     }
 
     public function wineType(): BelongsTo
