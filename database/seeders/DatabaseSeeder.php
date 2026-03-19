@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             WineSeeder::class,
             RecipeSeeder::class,
             OccasionSeeder::class,
+            SpiritTypeSeeder::class,
+            SpiritSeeder::class,
+            DrinkRecipeSeeder::class,
         ]);
     }
 }

@@ -23,7 +23,7 @@ class GrapeVarietyResource extends Resource
     protected static ?string $navigationLabel = 'Uvas / Variedades';
     protected static ?string $modelLabel = 'Uva / Variedade';
     protected static ?string $pluralModelLabel = 'Uvas / Variedades';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema { return GrapeVarietyForm::configure($schema); }
     public static function table(Table $table): Table { return GrapeVarietiesTable::configure($table); }

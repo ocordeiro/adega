@@ -23,7 +23,7 @@ class ProducerResource extends Resource
     protected static ?string $navigationLabel = 'Produtores';
     protected static ?string $modelLabel = 'Produtor';
     protected static ?string $pluralModelLabel = 'Produtores';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema { return ProducerForm::configure($schema); }
     public static function table(Table $table): Table { return ProducersTable::configure($table); }

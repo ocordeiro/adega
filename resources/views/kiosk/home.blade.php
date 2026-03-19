@@ -292,8 +292,8 @@
     </div>
 
     <a href="{{ route('kiosk.random') }}" class="demo-btn">
-        <span class="demo-btn-icon">🍷</span>
-        <span class="demo-btn-text">Ver um vinho aleatório</span>
+        <span class="demo-btn-icon">🍸</span>
+        <span class="demo-btn-text">Ver uma bebida aleatória</span>
     </a>
 </div>
 

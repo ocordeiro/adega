@@ -29,7 +29,7 @@ class WineTypeResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Tipos de Vinho';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema
     {

@@ -12,7 +12,10 @@
       "Bash(composer require:*)",
       "Bash(php artisan:*)",
       "Bash(find /Users/alan/Sites/pessoal/congresso-laravel -name *.yml -o -name *.yaml)",
-      "Bash(cat /Users/alan/Sites/pessoal/congresso-laravel/.github/workflows/*.yml)"
+      "Bash(cat /Users/alan/Sites/pessoal/congresso-laravel/.github/workflows/*.yml)",
+      "Bash(find /Users/alan/Sites/pessoal/codigo-de-barras -path */Livewire/*.php -type f)",
+      "Bash(xargs cat:*)",
+      "Bash(grep -n \"boot\\\\|booted\\\\|bootAll\\\\|clearBootedModels\\\\|$booted\" vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php)"
     ]
   }
 }

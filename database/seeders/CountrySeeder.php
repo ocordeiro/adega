@@ -43,6 +43,18 @@ class CountrySeeder extends Seeder
             ['name' => 'Líbano',           'code' => 'LB', 'regions' => ['Bekaa Valley']],
             // Ásia
             ['name' => 'Geórgia',          'code' => 'GE', 'regions' => ['Kakheti', 'Kartli', 'Imereti']],
+            ['name' => 'Japão',            'code' => 'JP', 'regions' => ['Niigata', 'Kyoto', 'Hyogo', 'Akita']],
+            // Europa do Norte
+            ['name' => 'Reino Unido',      'code' => 'GB', 'regions' => ['Escócia', 'Irlanda do Norte', 'País de Gales', 'Inglaterra']],
+            ['name' => 'Suécia',           'code' => 'SE', 'regions' => ['Skåne', 'Södermanland']],
+            ['name' => 'Irlanda',          'code' => 'IE', 'regions' => ['County Cork', 'County Antrim']],
+            // Caribe
+            ['name' => 'Cuba',             'code' => 'CU', 'regions' => ['Santiago de Cuba', 'Santa Cruz del Norte']],
+            ['name' => 'Jamaica',          'code' => 'JM', 'regions' => ['Clarendon', 'Westmoreland']],
+            ['name' => 'Barbados',         'code' => 'BB', 'regions' => []],
+            ['name' => 'Porto Rico',       'code' => 'PR', 'regions' => []],
+            // América Central
+            ['name' => 'Guatemala',        'code' => 'GT', 'regions' => ['Antigua Guatemala']],
         ];
 
         foreach ($countries as $data) {

@@ -60,7 +60,7 @@
         /* ── TRACK ────────────────────────────────────── */
         .track-wrap { width: 100vw; height: 100vh; overflow: visible; cursor: grab; touch-action: pan-y; }
         .track-wrap:active { cursor: grabbing; }
-        .track { display: flex; flex-direction: row; width: 300vw; height: 100%; will-change: transform; }
+        .track { display: flex; flex-direction: row; width: 200vw; height: 100%; will-change: transform; }
         .slide {
             width: 100vw; height: 100vh; flex-shrink: 0;
             overflow-y: auto; overflow-x: hidden;
@@ -73,8 +73,8 @@
             color: var(--muted); margin-bottom: .6rem;
         }
         @media (orientation: portrait) { .sub-label { margin-bottom: .35rem; font-size: .6rem; } }
-        .section-header { padding: 4.5rem 2.5rem 1.75rem; text-align: center; }
-        @media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 4rem 1.5rem 1.25rem; } }
+        .section-header { padding: 4.5rem clamp(1.5rem, 4vw, 2.5rem) 1.75rem; text-align: center; max-width: 900px; margin-inline: auto; width: 100%; }
+        @media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 4rem 1rem 1.25rem; } }
         .section-label {
             font-size: .67rem; letter-spacing: .22em; text-transform: uppercase;
             color: var(--gold); opacity: .7; margin-bottom: .5rem;
@@ -122,6 +122,7 @@
         }
 
         .wine-slide-inner { min-height: 100vh; display: flex; flex-direction: column; }
+        .wine-slide-inner > .wine-layout { max-width: 1600px; width: 100%; align-self: center; }
 
         /*
          * LANDSCAPE — photo left, all info stacked right
@@ -141,11 +142,11 @@
                 "photo meta"
                 "photo extras"
                 "photo harmony";
-            grid-template-columns: min(220px, 25vw) 1fr;
+            grid-template-columns: clamp(220px, 28vw, 340px) 1fr;
             grid-template-rows: auto auto auto 1fr;
             column-gap: 2.5rem;
             row-gap: 1rem;
-            padding: 4.5rem 3rem 2rem;
+            padding: 4.5rem clamp(1.5rem, 3vw, 3rem) 2rem;
             align-content: start;
         }
         .wine-photo-col  { grid-area: photo;   align-self: start; display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
@@ -153,6 +154,19 @@
         .wine-meta-box   { grid-area: meta;    min-width: 0; }
         .wine-extras     { grid-area: extras;  display: flex; flex-direction: column; gap: .8rem; min-width: 0; }
         .wine-harmony    { grid-area: harmony; display: flex; flex-direction: column; gap: .75rem; padding-bottom: .5rem; min-width: 0; overflow-x: clip; }
+
+        /* Wide landscape: extras + harmony side by side */
+        @media (orientation: landscape) and (min-width: 1024px) {
+            .wine-layout {
+                grid-template-areas:
+                    "photo title   title"
+                    "photo meta    meta"
+                    "photo extras  harmony";
+                grid-template-columns: clamp(220px, 28vw, 340px) 1fr 1fr;
+                grid-template-rows: auto auto 1fr;
+            }
+            .wine-harmony { overflow-x: clip; }
+        }
         @media (orientation: portrait) and (max-width: 599px) { .wine-harmony { gap: .55rem; } }
 
         /*
@@ -165,11 +179,11 @@
                     "photo meta"
                     "extras  extras"
                     "harmony harmony";
-                grid-template-columns: 35% 1fr;
+                grid-template-columns: 30% 1fr;
                 grid-template-rows: auto auto auto auto;
                 column-gap: .85rem;
                 row-gap: .7rem;
-                padding: 3rem 1.25rem 1rem;
+                padding: 3rem 1rem 1rem;
                 align-content: start;
             }
             .wine-photo-col { align-self: stretch; grid-row: 1 / 3; overflow: hidden; }
@@ -181,10 +195,10 @@
         /* Portrait tablets (600px+) — use landscape-like layout, photo left, all info right */
         @media (orientation: portrait) and (min-width: 600px) {
             .wine-layout {
-                grid-template-columns: min(260px, 30vw) 1fr;
+                grid-template-columns: clamp(200px, 32vw, 300px) 1fr;
                 grid-template-rows: auto auto auto auto;
                 column-gap: 2rem;
-                padding: 4rem 2.5rem 2rem;
+                padding: 4rem clamp(1.5rem, 3vw, 2.5rem) 2rem;
                 flex: 0;
             }
             .wine-photo-col { align-self: start; }
@@ -193,9 +207,9 @@
         /* Very small phones */
         @media (orientation: portrait) and (max-width: 374px) {
             .wine-layout {
-                grid-template-columns: 32% 1fr;
+                grid-template-columns: 28% 1fr;
                 column-gap: .7rem;
-                padding: 2.75rem 1rem .75rem;
+                padding: 2.75rem .75rem .75rem;
             }
         }
 
@@ -341,17 +355,17 @@
                 var(--base);
         }
 
-        .pairings-body { padding: 0 2.5rem 5rem; display: flex; flex-direction: column; gap: 2rem; }
-        @media (orientation: portrait) { .pairings-body { padding: 0 1.5rem 5rem; } }
+        .pairings-body { padding: 0 clamp(1rem, 3vw, 2.5rem) 5rem; display: flex; flex-direction: column; gap: 2rem; max-width: 1400px; width: 100%; margin-inline: auto; }
+        @media (orientation: portrait) and (max-width: 599px) { .pairings-body { padding: 0 1rem 5rem; } }
 
         /* Occasion cards */
         .occ-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(170px, 42vw), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(150px, 42vw), 1fr));
             gap: .85rem;
         }
-        @media (orientation: portrait) {
-            .occ-grid { grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+        @media (orientation: portrait) and (max-width: 599px) {
+            .occ-grid { grid-template-columns: repeat(auto-fit, minmax(min(140px, 44vw), 1fr)); gap: .7rem; }
         }
         .occ-card {
             background: var(--surface); border: 1px solid var(--border);
@@ -365,11 +379,11 @@
         /* Food cards */
         .food-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(185px, 40vw), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(160px, 40vw), 1fr));
             gap: .9rem;
         }
-        @media (orientation: portrait) {
-            .food-grid { grid-template-columns: repeat(auto-fill, minmax(min(150px, 44vw), 1fr)); gap: .7rem; }
+        @media (orientation: portrait) and (max-width: 599px) {
+            .food-grid { grid-template-columns: repeat(auto-fit, minmax(min(140px, 44vw), 1fr)); gap: .7rem; }
         }
         .food-card {
             background: var(--surface); border: 1px solid var(--border);
@@ -395,10 +409,10 @@
 
         .recipes-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(290px, 42vw), 1fr));
-            gap: 1.2rem; padding: 0 2.5rem 5rem;
+            grid-template-columns: repeat(auto-fit, minmax(min(260px, 42vw), 1fr));
+            gap: 1.2rem;
         }
-        @media (orientation: portrait) { .recipes-grid { grid-template-columns: 1fr; padding: 0 1.5rem 5rem; } }
+        @media (orientation: portrait) { .recipes-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 85vw), 1fr)); } }
 
         .recipe-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
         .recipe-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
@@ -415,16 +429,7 @@
             background: rgba(200,169,110,.05); border-left: 2px solid rgba(200,169,110,.3);
             border-radius: 0 8px 8px 0; font-size: .75rem; color: var(--muted); font-style: italic;
         }
-        .recipe-toggle {
-            display: flex; align-items: center; gap: .4rem;
-            font-size: .75rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
-            color: var(--gold); cursor: pointer;
-            padding: .5rem 0; border-top: 1px solid var(--border); touch-action: manipulation;
-        }
-        .recipe-toggle svg { transition: transform .3s; flex-shrink: 0; }
-        .recipe-toggle.open svg { transform: rotate(180deg); }
-        .recipe-steps { display: none; padding-top: .85rem; font-size: .84rem; font-weight: 300; line-height: 1.75; color: rgba(245,240,235,.52); white-space: pre-line; }
-        .recipe-steps.open { display: block; }
+        .recipe-steps { padding-top: .85rem; font-size: .84rem; font-weight: 300; line-height: 1.75; color: rgba(245,240,235,.52); white-space: pre-line; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -436,7 +441,6 @@
 <div class="dots" id="dots">
     <div class="dot active" data-slide="0"></div>
     <div class="dot" data-slide="1"></div>
-    <div class="dot" data-slide="2"></div>
 </div>
 
 <div class="track-wrap"><div class="track" id="track">
@@ -642,61 +646,47 @@
         </div>
         @endif
 
-    </div>
-</div>
-
-{{-- ═══════ SLIDE 3: RECEITAS ═══════ --}}
-<div class="slide slide-recipes">
-    <div class="section-header">
-        <p class="section-label">Receitas</p>
-        <h2 class="section-title">Prepare em casa</h2>
-        <p class="section-sub">Receitas que harmonizam com {{ $wine->name }}</p>
-    </div>
-
-    @if($wine->recipes->count())
-    <div class="recipes-grid">
-        @foreach($wine->recipes as $recipe)
-        <div class="recipe-card">
-            @php $rImg = $recipe->getFirstMedia('photo'); @endphp
-            @if($rImg)
-                <img class="recipe-img" draggable="false"
-                     src="{{ $rImg->hasGeneratedConversion('card') ? $rImg->getUrl('card') : $rImg->getUrl() }}"
-                     alt="{{ $recipe->name }}">
-            @else
-                <div class="recipe-ph">👨‍🍳</div>
-            @endif
-            <div class="recipe-body">
-                <div class="recipe-tags">
-                    <span class="recipe-tag difficulty">{{ ucfirst($recipe->difficulty) }}</span>
-                    @if($recipe->prep_time)<span class="recipe-tag time">{{ $recipe->prep_time }} min</span>@endif
+        {{-- Receitas --}}
+        @if($wine->recipes->count())
+        <div>
+            <p class="sub-label">Receitas</p>
+            <div class="recipes-grid">
+                @foreach($wine->recipes as $recipe)
+                <div class="recipe-card">
+                    @php $rImg = $recipe->getFirstMedia('photo'); @endphp
+                    @if($rImg)
+                        <img class="recipe-img" draggable="false"
+                             src="{{ $rImg->hasGeneratedConversion('card') ? $rImg->getUrl('card') : $rImg->getUrl() }}"
+                             alt="{{ $recipe->name }}">
+                    @else
+                        <div class="recipe-ph">👨‍🍳</div>
+                    @endif
+                    <div class="recipe-body">
+                        <div class="recipe-tags">
+                            <span class="recipe-tag difficulty">{{ ucfirst($recipe->difficulty) }}</span>
+                            @if($recipe->prep_time)<span class="recipe-tag time">{{ $recipe->prep_time }} min</span>@endif
+                        </div>
+                        <h3 class="recipe-name">{{ $recipe->name }}</h3>
+                        @if($recipe->description)<p class="recipe-desc">{{ $recipe->description }}</p>@endif
+                        @if($recipe->pivot->notes)<div class="recipe-note">{{ $recipe->pivot->notes }}</div>@endif
+                        @if($recipe->instructions)
+                        <div class="recipe-steps">{{ $recipe->instructions }}</div>
+                        @endif
+                    </div>
                 </div>
-                <h3 class="recipe-name">{{ $recipe->name }}</h3>
-                @if($recipe->description)<p class="recipe-desc">{{ $recipe->description }}</p>@endif
-                @if($recipe->pivot->notes)<div class="recipe-note">{{ $recipe->pivot->notes }}</div>@endif
-                @if($recipe->instructions)
-                <div class="recipe-toggle" onclick="toggleRecipe(this)">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                    Ver modo de preparo
-                </div>
-                <div class="recipe-steps">{{ $recipe->instructions }}</div>
-                @endif
+                @endforeach
             </div>
         </div>
-        @endforeach
+        @endif
+
     </div>
-    @else
-    <div class="empty-state">
-        <p style="font-size:2rem;margin-bottom:.7rem">👨‍🍳</p>
-        <p>Receitas ainda não cadastradas.</p>
-    </div>
-    @endif
 </div>
 
 </div></div>{{-- /track /track-wrap --}}
 
 <script>
 (function () {
-    const TOTAL        = 3;
+    const TOTAL        = 2;
     const INACTIVITY   = 60000;
     const PEEK_DELAY   = 5000;
     const PEEK_REPEAT  = 30000;
@@ -752,7 +742,7 @@
 
     document.addEventListener('pointerdown', e => {
         if (e.pointerType === 'touch') return; // touch events handle mobile
-        if (e.target.closest('.dot,.btn-close,.btn-back,.recipe-toggle,.no-slide-drag')) return;
+        if (e.target.closest('.dot,.btn-close,.btn-back,.no-slide-drag')) return;
         dragging = true; dragLocked = false;
         dragStartX = e.clientX; dragStartY = e.clientY;
         track.style.transition = 'none';
@@ -801,7 +791,7 @@
     let touchStartX = 0, touchStartY = 0, touchLocked = false, touchDragging = false;
 
     document.addEventListener('touchstart', e => {
-        if (e.target.closest('.dot,.btn-close,.btn-back,.recipe-toggle,.no-slide-drag')) return;
+        if (e.target.closest('.dot,.btn-close,.btn-back,.no-slide-drag')) return;
         const t = e.touches[0];
         touchStartX = t.clientX; touchStartY = t.clientY;
         touchDragging = true; touchLocked = false;
@@ -860,12 +850,7 @@
     schedulePeek(PEEK_DELAY);
 })();
 
-function toggleRecipe(el) {
-    el.classList.toggle('open');
-    const steps = el.nextElementSibling;
-    steps.classList.toggle('open');
-    el.innerHTML = el.innerHTML.replace(/Ver|Ocultar/, steps.classList.contains('open') ? 'Ocultar' : 'Ver');
-}
+
 </script>
 </body>
 </html>

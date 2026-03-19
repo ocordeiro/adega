@@ -66,6 +66,24 @@ class RecipeSeeder extends Seeder
                 'wines'       => ['Catena Zapata Adrianna', 'Château Margaux Grand Vin'],
                 'wine_notes'  => 'A intensidade do cordeiro pede um tinto de altitude com taninos maduros e bouquet complexo.',
             ],
+            [
+                'name'        => 'Ceviche de Peixe Branco',
+                'description' => 'Peixe branco curado no limão com cebola roxa, coentro e pimenta dedo-de-moça.',
+                'difficulty'  => 'fácil',
+                'prep_time'   => 20,
+                'instructions' => "1. Corte 400g de peixe branco (tilápia ou robalo) em cubos de 2cm.\n2. Tempere com sal e cubra completamente com suco de limão (≈ 150ml). Deixe curar por 10 min.\n3. Escorra metade do suco. Adicione cebola roxa em fatias finas, coentro picado e pimenta a gosto.\n4. Ajuste sal e sirva imediatamente com chips de mandioca ou torradas.",
+                'wines'       => ['Miolo Brut Nature', 'Esporão Reserva Branco'],
+                'wine_notes'  => 'A acidez cítrica do prato pede um vinho de boa frescura e mineralidade para equilibrar.',
+            ],
+            [
+                'name'        => 'Filé Mignon ao Molho Madeira',
+                'description' => 'Medalhões de filé mignon selados na manteiga com clássico molho de vinho Madeira.',
+                'difficulty'  => 'médio',
+                'prep_time'   => 30,
+                'instructions' => "1. Tempere os medalhões com sal e pimenta. Sele em frigideira bem quente com manteiga e azeite, 2 min por lado.\n2. Reserve a carne e na mesma frigideira refogue 1 cebola pequena picada até dourar.\n3. Acrescente 100ml de vinho Madeira e raspe o fundo da frigideira. Deixe reduzir à metade.\n4. Adicione 200ml de caldo de carne e 1 colher de extrato de tomate. Cozinhe por 5 min.\n5. Finalize com 1 colher de manteiga gelada para brilho. Sirva os medalhões cobertos com o molho.",
+                'wines'       => ['Concha y Toro Don Melchor', 'Miolo Lote 43'],
+                'wine_notes'  => 'O Cabernet Sauvignon encorpado dialoga perfeitamente com os taninos do molho de vinho reduzido.',
+            ],
         ];
 
         $created = 0;

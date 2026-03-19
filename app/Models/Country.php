@@ -26,4 +26,9 @@ class Country extends Model
     {
         return $this->hasMany(Wine::class);
     }
+
+    public function spirits(): HasMany
+    {
+        return $this->hasMany(Spirit::class);
+    }
 }

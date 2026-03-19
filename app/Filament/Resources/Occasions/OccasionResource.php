@@ -23,7 +23,7 @@ class OccasionResource extends Resource
     protected static ?string $navigationLabel = 'Ocasiões';
     protected static ?string $modelLabel = 'Ocasião';
     protected static ?string $pluralModelLabel = 'Ocasiões';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema { return OccasionForm::configure($schema); }
     public static function table(Table $table): Table { return OccasionsTable::configure($table); }

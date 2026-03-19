@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Occasion;
+use App\Models\Spirit;
 use App\Models\Wine;
 use Illuminate\Database\Seeder;
 
@@ -43,6 +44,24 @@ class OccasionSeeder extends Seeder
 
             $ids = Occasion::whereIn('name', $occasionNames)->pluck('id');
             $wine->occasions()->syncWithoutDetaching($ids);
+        }
+
+        // Link occasions to seeded spirits
+        $spiritPairings = [
+            'Absolut Vodka'           => ['Festa e Confraternização', 'Aperitivo', 'Fim de Semana em Casa'],
+            'Jack Daniel\'s Old No. 7' => ['Churrasco', 'Fim de Semana em Casa', 'Celebração', 'Almoço de Negócios'],
+            'Bacardi Carta Branca'    => ['Festa e Confraternização', 'Praia e Campo', 'Aperitivo'],
+            'Tanqueray London Dry'    => ['Aperitivo', 'Festa e Confraternização', 'Jantar Romântico'],
+            'José Cuervo Especial'    => ['Festa e Confraternização', 'Praia e Campo', 'Celebração'],
+            'Ypióca Prata'            => ['Churrasco', 'Festa e Confraternização', 'Almoço em Família', 'Praia e Campo'],
+        ];
+
+        foreach ($spiritPairings as $spiritName => $occasionNames) {
+            $spirit = Spirit::where('name', $spiritName)->first();
+            if (! $spirit) continue;
+
+            $ids = Occasion::whereIn('name', $occasionNames)->pluck('id');
+            $spirit->occasions()->syncWithoutDetaching($ids);
         }
 
         $this->command->info('OccasionSeeder: ' . count($occasions) . ' ocasiões criadas.');
