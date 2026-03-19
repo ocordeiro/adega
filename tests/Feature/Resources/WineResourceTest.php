@@ -16,7 +16,7 @@ class WineResourceTest extends TestCase
     public function test_can_list_wines(): void
     {
         $user = $this->createAdminUser();
-        Wine::create(['name' => 'Listado', 'stock_quantity' => 5, 'stock_unit' => 'bottle']);
+        Wine::create(['name' => 'Listado']);
 
         $response = $this->actingAs($user)->get('/admin/wines');
 
@@ -41,15 +41,13 @@ class WineResourceTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Nome do Vinho');
         $response->assertSee('Safra (Ano)');
-        $response->assertSee('Preço de Venda');
-        $response->assertSee('Estoque');
-        $response->assertSee('Harmonização com Alimentos');
+        $response->assertSee('Harmonização');
     }
 
     public function test_can_access_edit_wine_page(): void
     {
         $user = $this->createAdminUser();
-        $wine = Wine::create(['name' => 'Editável', 'stock_quantity' => 3, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'Editável']);
 
         $response = $this->actingAs($user)->get("/admin/wines/{$wine->id}/edit");
 
@@ -59,8 +57,8 @@ class WineResourceTest extends TestCase
     public function test_wine_list_shows_active_wines(): void
     {
         $user = $this->createAdminUser();
-        Wine::create(['name' => 'Ativo', 'is_active' => true, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
-        Wine::create(['name' => 'Inativo', 'is_active' => false, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        Wine::create(['name' => 'Ativo', 'is_active' => true]);
+        Wine::create(['name' => 'Inativo', 'is_active' => false]);
 
         $response = $this->actingAs($user)->get('/admin/wines');
 
@@ -70,7 +68,7 @@ class WineResourceTest extends TestCase
     public function test_soft_deleted_wine_not_in_list(): void
     {
         $user = $this->createAdminUser();
-        $wine = Wine::create(['name' => 'Deletado', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'Deletado']);
         $wine->delete();
 
         $this->assertSoftDeleted('wines', ['id' => $wine->id]);
@@ -92,10 +90,6 @@ class WineResourceTest extends TestCase
             'region_id'      => $region->id,
             'producer_id'    => $producer->id,
             'vintage'        => 2020,
-            'stock_quantity' => 12,
-            'stock_unit'     => 'bottle',
-            'sale_price'     => 89.90,
-            'cost_price'     => 45.00,
             'alcohol_content'=> 13.5,
             'rating'         => 92,
             'is_active'      => true,

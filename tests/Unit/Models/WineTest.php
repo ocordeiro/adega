@@ -21,8 +21,6 @@ class WineTest extends TestCase
         $wine = Wine::create([
             'name'           => 'Château Margaux',
             'vintage'        => 2015,
-            'stock_quantity' => 10,
-            'stock_unit'     => 'bottle',
         ]);
 
         $this->assertEquals('chateau-margaux-2015', $wine->slug);
@@ -32,8 +30,6 @@ class WineTest extends TestCase
     {
         $wine = Wine::create([
             'name'           => 'Gran Reserva',
-            'stock_quantity' => 5,
-            'stock_unit'     => 'bottle',
         ]);
 
         $this->assertEquals('gran-reserva', $wine->slug);
@@ -41,15 +37,15 @@ class WineTest extends TestCase
 
     public function test_duplicate_slug_gets_numeric_suffix(): void
     {
-        Wine::create(['name' => 'Malbec', 'vintage' => 2020, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
-        $wine2 = Wine::create(['name' => 'Malbec', 'vintage' => 2020, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        Wine::create(['name' => 'Malbec', 'vintage' => 2020]);
+        $wine2 = Wine::create(['name' => 'Malbec', 'vintage' => 2020]);
 
         $this->assertEquals('malbec-2020-1', $wine2->slug);
     }
 
     public function test_slug_updates_when_name_changes(): void
     {
-        $wine = Wine::create(['name' => 'Old Name', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'Old Name']);
         $wine->update(['name' => 'New Name']);
 
         $this->assertEquals('new-name', $wine->fresh()->slug);
@@ -57,7 +53,7 @@ class WineTest extends TestCase
 
     public function test_soft_delete(): void
     {
-        $wine = Wine::create(['name' => 'To Delete', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'To Delete']);
         $id = $wine->id;
 
         $wine->delete();
@@ -69,7 +65,7 @@ class WineTest extends TestCase
     public function test_belongs_to_wine_type(): void
     {
         $type = WineType::create(['name' => 'Tinto', 'slug' => 'tinto']);
-        $wine = Wine::create(['name' => 'Cabernet', 'wine_type_id' => $type->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'Cabernet', 'wine_type_id' => $type->id]);
 
         $this->assertEquals('Tinto', $wine->wineType->name);
     }
@@ -77,7 +73,7 @@ class WineTest extends TestCase
     public function test_belongs_to_country(): void
     {
         $country = Country::create(['name' => 'Brasil', 'code' => 'BR']);
-        $wine = Wine::create(['name' => 'Nacional', 'country_id' => $country->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'Nacional', 'country_id' => $country->id]);
 
         $this->assertEquals('Brasil', $wine->country->name);
     }
@@ -86,7 +82,7 @@ class WineTest extends TestCase
     {
         $country = Country::create(['name' => 'Brasil', 'code' => 'BR']);
         $region  = Region::create(['name' => 'Serra Gaúcha', 'country_id' => $country->id]);
-        $wine    = Wine::create(['name' => 'Serra', 'region_id' => $region->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine    = Wine::create(['name' => 'Serra', 'region_id' => $region->id]);
 
         $this->assertEquals('Serra Gaúcha', $wine->region->name);
     }
@@ -94,14 +90,14 @@ class WineTest extends TestCase
     public function test_belongs_to_producer(): void
     {
         $producer = Producer::create(['name' => 'Miolo']);
-        $wine     = Wine::create(['name' => 'Miolo Seleção', 'producer_id' => $producer->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine     = Wine::create(['name' => 'Miolo Seleção', 'producer_id' => $producer->id]);
 
         $this->assertEquals('Miolo', $wine->producer->name);
     }
 
     public function test_belongs_to_many_grape_varieties(): void
     {
-        $wine  = Wine::create(['name' => 'Blend', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine  = Wine::create(['name' => 'Blend']);
         $cab   = GrapeVariety::create(['name' => 'Cabernet Sauvignon']);
         $merlot = GrapeVariety::create(['name' => 'Merlot']);
 
@@ -113,7 +109,7 @@ class WineTest extends TestCase
 
     public function test_belongs_to_many_foods(): void
     {
-        $wine  = Wine::create(['name' => 'Tinto Reserva', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine  = Wine::create(['name' => 'Tinto Reserva']);
         $food  = Food::create(['name' => 'Picanha']);
 
         $wine->foods()->attach($food->id, ['notes' => 'Harmoniza muito bem']);
@@ -122,21 +118,9 @@ class WineTest extends TestCase
         $this->assertEquals('Harmoniza muito bem', $wine->foods->first()->pivot->notes);
     }
 
-    public function test_stock_value_attribute(): void
-    {
-        $wine = Wine::create([
-            'name'           => 'Caro',
-            'stock_quantity' => 10,
-            'sale_price'     => 150.00,
-            'stock_unit'     => 'bottle',
-        ]);
-
-        $this->assertEquals(1500.00, $wine->stock_value);
-    }
-
     public function test_is_active_defaults_to_true(): void
     {
-        $wine = Wine::create(['name' => 'Ativo', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'Ativo']);
 
         $this->assertTrue($wine->is_active);
     }

@@ -26,7 +26,7 @@ class FoodTest extends TestCase
     public function test_belongs_to_many_wines(): void
     {
         $food = Food::create(['name' => 'Queijo Brie']);
-        $wine = Wine::create(['name' => 'Chardonnay', 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        $wine = Wine::create(['name' => 'Chardonnay']);
 
         $food->wines()->attach($wine->id, ['notes' => 'Ótima combinação']);
 

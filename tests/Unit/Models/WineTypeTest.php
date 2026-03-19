@@ -33,8 +33,8 @@ class WineTypeTest extends TestCase
     public function test_has_many_wines(): void
     {
         $type = WineType::create(['name' => 'Branco']);
-        Wine::create(['name' => 'Sauvignon', 'wine_type_id' => $type->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
-        Wine::create(['name' => 'Chardonnay', 'wine_type_id' => $type->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        Wine::create(['name' => 'Sauvignon', 'wine_type_id' => $type->id]);
+        Wine::create(['name' => 'Chardonnay', 'wine_type_id' => $type->id]);
 
         $this->assertCount(2, $type->wines);
     }

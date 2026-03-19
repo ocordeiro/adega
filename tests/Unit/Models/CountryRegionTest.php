@@ -30,7 +30,7 @@ class CountryRegionTest extends TestCase
     public function test_country_has_many_wines(): void
     {
         $country = Country::create(['name' => 'Argentina', 'code' => 'AR']);
-        Wine::create(['name' => 'Malbec', 'country_id' => $country->id, 'stock_quantity' => 1, 'stock_unit' => 'bottle']);
+        Wine::create(['name' => 'Malbec', 'country_id' => $country->id]);
 
         $this->assertCount(1, $country->wines);
     }
