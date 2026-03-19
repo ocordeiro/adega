@@ -1,15 +1,6 @@
 {
-    frankenphp {
-		php_ini {
-			opcache.enable 1
-			opcache.enable_cli 1
-			opcache.jit_buffer_size 100M
-			opcache.jit tracing
-			ffi.enable 1
-		}
-	}
+    frankenphp
     order php_server before file_server
-
 }
 
 :8000 {

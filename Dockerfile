@@ -5,8 +5,7 @@ RUN apk add --no-cache \
     unzip \
     nodejs \
     npm \
-    vips \
-    vips-dev
+    vips
 
 RUN install-php-extensions bcmath pcntl mysqli pdo_mysql intl zip redis ffi exif vips
 
