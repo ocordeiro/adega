@@ -51,4 +51,33 @@ class BeverageController extends Controller
 
         return response()->json(['message' => 'Bebida não encontrada.'], 404);
     }
+
+    public function random(): WineResource|SpiritResource|JsonResponse
+    {
+        $wine = Wine::where('is_active', true)
+            ->whereNotNull('barcode')
+            ->inRandomOrder()
+            ->first();
+
+        $spirit = Spirit::where('is_active', true)
+            ->whereNotNull('barcode')
+            ->inRandomOrder()
+            ->first();
+
+        $candidates = collect();
+        if ($wine) {
+            $candidates->push($wine);
+        }
+        if ($spirit) {
+            $candidates->push($spirit);
+        }
+
+        if ($candidates->isEmpty()) {
+            return response()->json(['message' => 'Nenhuma bebida cadastrada.'], 404);
+        }
+
+        $chosen = $candidates->random();
+
+        return $this->show($chosen->barcode);
+    }
 }
