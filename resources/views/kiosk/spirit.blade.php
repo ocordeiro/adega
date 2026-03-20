@@ -55,8 +55,7 @@
             overflow: hidden;
         }
         .slide-drinks {
-            overflow-y: auto; overflow-x: hidden;
-            -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+            display: flex; flex-direction: column; overflow: hidden;
         }
 
         /* ════════════════════════════════════════════════
@@ -257,10 +256,11 @@
         .slide-drinks { background: var(--bg-alt); }
 
         .section-header {
-            padding: 4rem clamp(1.5rem, 4vw, 2.5rem) 1.5rem;
+            flex-shrink: 0;
+            padding: 2rem clamp(1.5rem, 4vw, 2.5rem) .75rem;
             text-align: center; max-width: 900px; margin-inline: auto; width: 100%;
         }
-        @media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 3.5rem 1rem 1rem; } }
+        @media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 1.5rem 1rem .5rem; } }
 
         .section-label {
             font-size: .65rem; letter-spacing: .22em; text-transform: uppercase;
@@ -295,21 +295,22 @@
         /* Drink cards */
         .drinks-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(260px, 42vw), 1fr));
-            gap: 1.1rem;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 1fr;
+            gap: clamp(.5rem, 1.2vw, 1.1rem);
+            flex: 1; min-height: 0;
         }
-        @media (orientation: portrait) { .drinks-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 85vw), 1fr)); } }
 
-        .drink-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); }
-        .drink-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
-        .drink-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2.4rem; }
-        .drink-body { padding: .9rem 1.1rem; }
+        .drink-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
+        .drink-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; flex-shrink: 0; }
+        .drink-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2.4rem; flex-shrink: 0; }
+        .drink-body { padding: .7rem 1rem; flex: 1; min-height: 0; overflow: hidden; }
         .drink-tags { display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: .55rem; }
         .drink-tag  { font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; padding: .18rem .6rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
         .drink-tag.difficulty { color: var(--muted); }
         .drink-tag.time       { color: var(--primary); }
-        .drink-name { font-size: clamp(1rem,2.4vw,1.3rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .35rem; }
-        .drink-desc { font-size: .82rem; font-weight: 300; color: var(--muted); line-height: 1.6; margin-bottom: .75rem; }
+        .drink-name { font-size: clamp(.9rem,2vw,1.2rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .3rem; }
+        .drink-desc { font-size: .8rem; font-weight: 300; color: var(--muted); line-height: 1.55; margin-bottom: .5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
         .drink-ingredients {
             margin-bottom: .75rem; padding: .6rem .8rem;
@@ -329,10 +330,16 @@
         .drink-ingredient-name { font-weight: 400; }
         .drink-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: .73rem; white-space: nowrap; }
 
-        .drink-steps { padding-top: .8rem; font-size: .82rem; font-weight: 300; line-height: 1.75; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
+        .drink-steps { padding-top: .6rem; font-size: .78rem; font-weight: 300; line-height: 1.6; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .drinks-body { padding: 0 clamp(1rem, 3vw, 2.5rem) 5rem; display: flex; flex-direction: column; gap: 1.75rem; max-width: 1400px; width: 100%; margin-inline: auto; }
-        @media (orientation: portrait) and (max-width: 599px) { .drinks-body { padding: 0 1rem 5rem; } }
+        .drinks-body {
+            flex: 1; min-height: 0; overflow: hidden;
+            padding: 0 clamp(1rem, 3vw, 2.5rem) 1.25rem;
+            display: flex; flex-direction: column; gap: .75rem;
+            max-width: 1400px; width: 100%; margin-inline: auto;
+        }
+        .drinks-body > div { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+        @media (orientation: portrait) and (max-width: 599px) { .drinks-body { padding: 0 1rem 1rem; } }
 
         .empty-state { text-align: center; padding: 3rem 2rem; color: var(--muted); font-size: .95rem; }
     </style>
@@ -455,11 +462,12 @@
 
     <div class="drinks-body">
 
-        @if($drinkRecipes->count())
+        @php $slideDrinks = $drinkRecipes->take(3); @endphp
+        @if($slideDrinks->count())
         <div>
             <p class="sub-label">Receitas de drinks</p>
             <div class="drinks-grid">
-                @foreach($drinkRecipes as $drink)
+                @foreach($slideDrinks as $drink)
                 <div class="drink-card">
                     @php $dImg = $drink->getFirstMedia('photo'); @endphp
                     @if($dImg)
