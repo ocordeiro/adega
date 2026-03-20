@@ -301,36 +301,36 @@
             flex: 1; min-height: 0;
         }
 
-        .drink-card { container-type: size; background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
+        .drink-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
         .drink-img  { width: 100%; aspect-ratio: 5/1; object-fit: cover; display: block; flex-shrink: 0; }
-        .drink-ph   { width: 100%; aspect-ratio: 5/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: max(1rem, 3cqh); flex-shrink: 0; }
-        .drink-body { padding: max(.3rem,.8cqh) max(.5rem,1.2cqh); flex: 1; min-height: 0; display: flex; flex-direction: column; }
-        .drink-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: max(.12rem,.4cqh); flex-shrink: 0; }
-        .drink-tag  { font-size: max(.48rem, 1.3cqh); letter-spacing: .06em; text-transform: uppercase; padding: .12rem .45rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
+        .drink-ph   { width: 100%; aspect-ratio: 5/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2.5em; flex-shrink: 0; }
+        .drink-body { padding: .45em .75em; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+        .drink-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: .28em; flex-shrink: 0; }
+        .drink-tag  { font-size: .75em; letter-spacing: .06em; text-transform: uppercase; padding: .15em .5em; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
         .drink-tag.difficulty { color: var(--muted); }
         .drink-tag.time       { color: var(--primary); }
-        .drink-name { font-size: max(.72rem, 2.8cqh); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: max(.12rem,.4cqh); flex-shrink: 0; }
-        .drink-desc { font-size: max(.6rem, 2cqh); font-weight: 300; color: var(--muted); line-height: 1.45; margin-bottom: max(.15rem,.45cqh); flex-shrink: 0; }
+        .drink-name { font-size: 1.7em; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .28em; flex-shrink: 0; }
+        .drink-desc { font-size: 1.1em; font-weight: 300; color: var(--muted); line-height: 1.45; margin-bottom: .3em; flex-shrink: 0; }
 
         .drink-ingredients {
-            margin-bottom: max(.2rem,.55cqh); padding: max(.2rem,.5cqh) max(.4rem,.8cqh);
+            margin-bottom: .45em; padding: .38em .55em;
             background: rgba(217,63,53,.04); border: 1px solid rgba(217,63,53,.12);
             border-radius: 8px; flex-shrink: 0;
         }
         .drink-ingredients-title {
-            font-size: max(.45rem, 1.3cqh); letter-spacing: .12em; text-transform: uppercase;
-            color: var(--primary); opacity: .8; margin-bottom: max(.1rem,.35cqh);
+            font-size: .78em; letter-spacing: .12em; text-transform: uppercase;
+            color: var(--primary); opacity: .8; margin-bottom: .22em;
         }
         .drink-ingredient {
             display: flex; justify-content: space-between; align-items: baseline;
-            font-size: max(.55rem, 1.8cqh); color: var(--text); padding: .1rem 0;
+            font-size: 1em; color: var(--text); padding: .12em 0;
             border-bottom: 1px solid var(--border);
         }
         .drink-ingredient:last-child { border-bottom: none; }
         .drink-ingredient-name { font-weight: 400; }
-        .drink-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: max(.5rem, 1.6cqh); white-space: nowrap; }
+        .drink-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: .9em; white-space: nowrap; }
 
-        .drink-steps { padding-top: max(.2rem,.55cqh); font-size: max(.55rem, 1.8cqh); font-weight: 300; line-height: 1.5; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
+        .drink-steps { padding-top: .4em; font-size: 1em; font-weight: 300; line-height: 1.5; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
 
         .drinks-body {
             flex: 1; min-height: 0; overflow: hidden;
@@ -562,6 +562,29 @@
     document.addEventListener('pointerdown', resetInactivity);
 
     goTo(0);
+
+    // Ajusta font-size dos drink cards dinamicamente, uniforme entre todos
+    function fitDrinkCards() {
+        const cards = Array.from(document.querySelectorAll('.drink-card'));
+        if (!cards.length) return;
+        let minFs = Infinity;
+        cards.forEach(card => {
+            const body = card.querySelector('.drink-body');
+            if (!body) return;
+            card.style.fontSize = '';
+            let lo = 8, hi = 52;
+            card.style.fontSize = hi + 'px';
+            for (let i = 0; i < 14; i++) {
+                const mid = (lo + hi) / 2;
+                card.style.fontSize = mid + 'px';
+                body.scrollHeight <= body.clientHeight ? (lo = mid) : (hi = mid);
+            }
+            minFs = Math.min(minFs, Math.floor(lo));
+        });
+        cards.forEach(card => card.style.fontSize = minFs + 'px');
+    }
+    fitDrinkCards();
+    let _drt; window.addEventListener('resize', () => { clearTimeout(_drt); _drt = setTimeout(fitDrinkCards, 120); });
 })();
 </script>
 </body>

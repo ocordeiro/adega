@@ -372,18 +372,18 @@
             flex: 1; min-height: 0;
         }
 
-        .recipe-card { container-type: size; background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
+        .recipe-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
         .recipe-img  { width: 100%; aspect-ratio: 4/1; object-fit: cover; display: block; flex-shrink: 0; }
-        .recipe-ph   { width: 100%; aspect-ratio: 4/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: max(1rem, 3cqh); flex-shrink: 0; }
-        .recipe-body { padding: max(.3rem,.8cqh) max(.5rem,1.2cqh); flex: 1; min-height: 0; display: flex; flex-direction: column; }
-        .recipe-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: max(.15rem,.5cqh); flex-shrink: 0; }
-        .recipe-tag  { font-size: max(.5rem, 1.4cqh); letter-spacing: .07em; text-transform: uppercase; padding: .12rem .45rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
+        .recipe-ph   { width: 100%; aspect-ratio: 4/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2.5em; flex-shrink: 0; }
+        .recipe-body { padding: .45em .75em; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+        .recipe-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: .28em; flex-shrink: 0; }
+        .recipe-tag  { font-size: .75em; letter-spacing: .07em; text-transform: uppercase; padding: .15em .5em; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
         .recipe-tag.difficulty { color: var(--muted); }
         .recipe-tag.time       { color: var(--primary); }
-        .recipe-name { font-size: max(.75rem, 2.8cqh); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: max(.15rem,.5cqh); flex-shrink: 0; }
-        .recipe-desc { font-size: max(.62rem, 2cqh); font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: max(.15rem,.5cqh); flex-shrink: 0; }
-        .recipe-note { margin-bottom: max(.15rem,.5cqh); padding: max(.18rem,.5cqh) max(.4rem,.8cqh); background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: max(.55rem, 1.7cqh); color: var(--muted); font-style: italic; flex-shrink: 0; }
-        .recipe-steps { padding-top: max(.25rem,.6cqh); font-size: max(.55rem, 1.8cqh); font-weight: 300; line-height: 1.55; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
+        .recipe-name { font-size: 1.7em; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .28em; flex-shrink: 0; }
+        .recipe-desc { font-size: 1.1em; font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: .3em; flex-shrink: 0; }
+        .recipe-note { margin-bottom: .3em; padding: .32em .55em; background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: 1em; color: var(--muted); font-style: italic; flex-shrink: 0; }
+        .recipe-steps { padding-top: .4em; font-size: 1em; font-weight: 300; line-height: 1.55; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -620,6 +620,29 @@
     document.addEventListener('pointerdown', resetInactivity);
 
     goTo(0);
+
+    // Ajusta font-size dos recipe cards dinamicamente, uniforme entre todos
+    function fitRecipeCards() {
+        const cards = Array.from(document.querySelectorAll('.recipe-card'));
+        if (!cards.length) return;
+        let minFs = Infinity;
+        cards.forEach(card => {
+            const body = card.querySelector('.recipe-body');
+            if (!body) return;
+            card.style.fontSize = '';
+            let lo = 8, hi = 52;
+            card.style.fontSize = hi + 'px';
+            for (let i = 0; i < 14; i++) {
+                const mid = (lo + hi) / 2;
+                card.style.fontSize = mid + 'px';
+                body.scrollHeight <= body.clientHeight ? (lo = mid) : (hi = mid);
+            }
+            minFs = Math.min(minFs, Math.floor(lo));
+        });
+        cards.forEach(card => card.style.fontSize = minFs + 'px');
+    }
+    fitRecipeCards();
+    let _rrt; window.addEventListener('resize', () => { clearTimeout(_rrt); _rrt = setTimeout(fitRecipeCards, 120); });
 })();
 </script>
 </body>
