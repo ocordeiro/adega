@@ -15,7 +15,8 @@
       "Bash(cat /Users/alan/Sites/pessoal/congresso-laravel/.github/workflows/*.yml)",
       "Bash(find /Users/alan/Sites/pessoal/codigo-de-barras -path */Livewire/*.php -type f)",
       "Bash(xargs cat:*)",
-      "Bash(grep -n \"boot\\\\|booted\\\\|bootAll\\\\|clearBootedModels\\\\|$booted\" vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php)"
+      "Bash(grep -n \"boot\\\\|booted\\\\|bootAll\\\\|clearBootedModels\\\\|$booted\" vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }
