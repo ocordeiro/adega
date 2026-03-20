@@ -540,6 +540,7 @@
         track.style.transition = `transform ${DUR} ${EASE}`;
         track.style.transform  = `translateX(${-idx * 100}vw)`;
         resetInactivity();
+        if (idx === 1) fitDrinkCards();
     }
 
     const btnVerMais = document.getElementById('btn-ver-mais');
@@ -596,7 +597,7 @@
         });
         cards.forEach(card => card.style.fontSize = minFs + 'px');
     }
-    fitDrinkCards();
+    requestAnimationFrame(fitDrinkCards);
     let _drt; window.addEventListener('resize', () => { clearTimeout(_drt); _drt = setTimeout(fitDrinkCards, 120); });
 })();
 </script>

@@ -633,6 +633,7 @@
         track.style.transition = `transform ${DUR} ${EASE}`;
         track.style.transform  = `translateX(${-idx * 100}vw)`;
         resetInactivity();
+        if (idx === 1) fitRecipeCards();
     }
 
     const btnVerMais = document.getElementById('btn-ver-mais');
@@ -689,7 +690,7 @@
         });
         cards.forEach(card => card.style.fontSize = minFs + 'px');
     }
-    fitRecipeCards();
+    requestAnimationFrame(fitRecipeCards);
     let _rrt; window.addEventListener('resize', () => { clearTimeout(_rrt); _rrt = setTimeout(fitRecipeCards, 120); });
 })();
 </script>
