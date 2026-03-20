@@ -48,6 +48,49 @@ func (a *App) RandomBeverage() BeverageResult {
 	return a.fetchBeverage(url)
 }
 
+// FetchAds returns a list of active ad video URLs
+func (a *App) FetchAds() []string {
+	url := fmt.Sprintf("%s/api/v1/anuncios", apiBaseURL)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiToken)
+
+	resp, err := a.client.Do(req)
+	if err != nil {
+		return nil
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil
+	}
+
+	var result struct {
+		Data []struct {
+			VideoURL string `json:"video_url"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil
+	}
+
+	var urls []string
+	for _, ad := range result.Data {
+		if ad.VideoURL != "" {
+			urls = append(urls, ad.VideoURL)
+		}
+	}
+	return urls
+}
+
 func (a *App) fetchBeverage(url string) BeverageResult {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

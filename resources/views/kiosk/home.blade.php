@@ -54,15 +54,15 @@
         /* logo */
         .logo {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2rem, 4.5vw, 3.2rem);
+            font-size: clamp(2.4rem, 5.4vw, 3.84rem);
             font-weight: 300;
             letter-spacing: .35em;
             color: var(--primary);
             text-transform: uppercase;
-            margin-bottom: .4rem;
+            margin-bottom: .5rem;
         }
         .logo-sub {
-            font-size: clamp(.7rem, 1.4vw, .9rem);
+            font-size: clamp(.84rem, 1.7vw, 1.08rem);
             font-weight: 400;
             letter-spacing: .45em;
             color: var(--muted);
@@ -73,7 +73,7 @@
         /* divider */
         .rule {
             width: 1px;
-            height: clamp(1.8rem, 4vh, 3rem);
+            height: clamp(2.16rem, 4.8vh, 3.6rem);
             background: linear-gradient(to bottom, transparent, var(--border), transparent);
             margin-bottom: 2.5rem;
         }
@@ -87,7 +87,7 @@
 
         /* glow */
         .scanner-glow {
-            position: absolute; inset: -36px;
+            position: absolute; inset: -43px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(217,63,53,.08) 0%, transparent 70%);
             animation: glowPulse 3s ease-in-out infinite;
@@ -101,8 +101,8 @@
         /* corner brackets */
         .scanner-frame {
             position: relative;
-            width: clamp(160px, 22vw, 230px);
-            height: clamp(160px, 22vw, 230px);
+            width: clamp(192px, 26vw, 276px);
+            height: clamp(192px, 26vw, 276px);
         }
         .scanner-frame::before,
         .scanner-frame::after,
@@ -110,7 +110,7 @@
         .corner-br::before {
             content: '';
             position: absolute;
-            width: 28px; height: 28px;
+            width: 34px; height: 34px;
             border-color: rgba(217,63,53,.55);
             border-style: solid;
         }
@@ -138,26 +138,26 @@
 
         /* barcode icon */
         .scanner-inner {
-            position: absolute; inset: 24px;
+            position: absolute; inset: 29px;
             display: flex; align-items: center; justify-content: center;
         }
-        .barcode-icon { opacity: .1; }
+        .barcode-icon { opacity: .1; width: 106px; height: 77px; }
 
         /* instruction */
         .instruction {
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
         .instruction-main {
-            font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+            font-size: clamp(1.56rem, 3.36vw, 2.28rem);
             font-weight: 700;
             color: var(--text);
             letter-spacing: .01em;
             line-height: 1.25;
         }
         .instruction-sub {
-            margin-top: .5rem;
-            font-size: clamp(.72rem, 1.4vw, .85rem);
+            margin-top: .6rem;
+            font-size: clamp(.86rem, 1.7vw, 1.02rem);
             font-weight: 400;
             color: var(--muted);
             letter-spacing: .1em;
@@ -166,12 +166,12 @@
 
         /* demo button — igual btn-ver-mais dos outros slides */
         .demo-btn {
-            display: inline-flex; align-items: center; gap: .45rem;
+            display: inline-flex; align-items: center; gap: .55rem;
             background: var(--primary); color: var(--white);
             border: none; border-radius: 100px;
-            padding: .72rem 2rem;
+            padding: .86rem 2.4rem;
             font-family: 'Nunito', sans-serif;
-            font-size: .9rem; font-weight: 700; letter-spacing: .02em;
+            font-size: 1.08rem; font-weight: 700; letter-spacing: .02em;
             text-decoration: none;
             box-shadow:
                 inset 0 1px 0 rgba(255,255,255,.22),
@@ -191,9 +191,9 @@
             bottom: 3rem; left: 50%; transform: translateX(-50%);
             background: rgba(220,38,38,.9);
             color: #fff;
-            padding: .75rem 1.75rem;
+            padding: .9rem 2.1rem;
             border-radius: 100px;
-            font-size: .9rem; font-weight: 600;
+            font-size: 1.08rem; font-weight: 600;
             opacity: 0; transition: opacity .4s;
             pointer-events: none;
             white-space: nowrap;
@@ -206,7 +206,7 @@
         .footer {
             position: fixed; bottom: 1.25rem; left: 0; right: 0;
             text-align: center;
-            font-size: .62rem;
+            font-size: .74rem;
             letter-spacing: .18em;
             text-transform: uppercase;
             color: var(--muted);
@@ -214,9 +214,9 @@
         }
 
         @media (max-height: 500px) {
-            .rule { height: 1.2rem; margin-bottom: 1.2rem; }
+            .rule { height: 1.4rem; margin-bottom: 1.2rem; }
             .logo-sub { margin-bottom: 1.2rem; }
-            .scanner-frame { width: 120px; height: 120px; }
+            .scanner-frame { width: 144px; height: 144px; }
             .scanner-wrap { margin-bottom: 1.2rem; }
         }
 
@@ -240,7 +240,7 @@
             position: absolute; bottom: 2rem; left: 50%;
             transform: translateX(-50%);
             color: rgba(255,255,255,.45);
-            font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
+            font-size: .9rem; letter-spacing: .2em; text-transform: uppercase;
             white-space: nowrap;
             animation: adPulse 2.2s ease-in-out infinite;
             pointer-events: none;
