@@ -302,15 +302,15 @@
         }
 
         .drink-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
-        .drink-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; flex-shrink: 0; }
-        .drink-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2.4rem; flex-shrink: 0; }
-        .drink-body { padding: .7rem 1rem; flex: 1; min-height: 0; overflow: hidden; }
-        .drink-tags { display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: .55rem; }
-        .drink-tag  { font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; padding: .18rem .6rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
+        .drink-img  { width: 100%; aspect-ratio: 4/1; object-fit: cover; display: block; flex-shrink: 0; }
+        .drink-ph   { width: 100%; aspect-ratio: 4/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 1.8rem; flex-shrink: 0; }
+        .drink-body { padding: .5rem .75rem; flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+        .drink-tags { display: flex; gap: .3rem; flex-wrap: wrap; margin-bottom: .3rem; flex-shrink: 0; }
+        .drink-tag  { font-size: .6rem; letter-spacing: .07em; text-transform: uppercase; padding: .14rem .5rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
         .drink-tag.difficulty { color: var(--muted); }
         .drink-tag.time       { color: var(--primary); }
-        .drink-name { font-size: clamp(.9rem,2vw,1.2rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .3rem; }
-        .drink-desc { font-size: .8rem; font-weight: 300; color: var(--muted); line-height: 1.55; margin-bottom: .5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .drink-name { font-size: clamp(.82rem,1.6vw,1.05rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .25rem; flex-shrink: 0; }
+        .drink-desc { font-size: .73rem; font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: .35rem; flex-shrink: 0; }
 
         .drink-ingredients {
             margin-bottom: .75rem; padding: .6rem .8rem;

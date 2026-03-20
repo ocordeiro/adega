@@ -373,17 +373,17 @@
         }
 
         .recipe-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
-        .recipe-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; flex-shrink: 0; }
-        .recipe-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2.4rem; flex-shrink: 0; }
-        .recipe-body { padding: .7rem 1rem; flex: 1; min-height: 0; overflow: hidden; }
-        .recipe-tags { display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: .45rem; }
-        .recipe-tag  { font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; padding: .18rem .6rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
+        .recipe-img  { width: 100%; aspect-ratio: 4/1; object-fit: cover; display: block; flex-shrink: 0; }
+        .recipe-ph   { width: 100%; aspect-ratio: 4/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 1.8rem; flex-shrink: 0; }
+        .recipe-body { padding: .5rem .75rem; flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+        .recipe-tags { display: flex; gap: .3rem; flex-wrap: wrap; margin-bottom: .3rem; flex-shrink: 0; }
+        .recipe-tag  { font-size: .6rem; letter-spacing: .07em; text-transform: uppercase; padding: .14rem .5rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
         .recipe-tag.difficulty { color: var(--muted); }
         .recipe-tag.time       { color: var(--primary); }
-        .recipe-name { font-size: clamp(.9rem,2vw,1.2rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .3rem; }
-        .recipe-desc { font-size: .8rem; font-weight: 300; color: var(--muted); line-height: 1.55; margin-bottom: .5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .recipe-note { margin-bottom: .5rem; padding: .35rem .65rem; background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: .7rem; color: var(--muted); font-style: italic; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .recipe-steps { padding-top: .6rem; font-size: .78rem; font-weight: 300; line-height: 1.6; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        .recipe-name { font-size: clamp(.82rem,1.6vw,1.05rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .25rem; flex-shrink: 0; }
+        .recipe-desc { font-size: .73rem; font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: .35rem; flex-shrink: 0; }
+        .recipe-note { margin-bottom: .35rem; padding: .28rem .55rem; background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: .66rem; color: var(--muted); font-style: italic; flex-shrink: 0; }
+        .recipe-steps { padding-top: .4rem; font-size: .7rem; font-weight: 300; line-height: 1.55; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); flex: 1; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -526,51 +526,19 @@
 </div>{{-- /wine-layout --}}
 </div></div>{{-- /inner /slide --}}
 
-{{-- ═══════ SLIDE 2: HARMONIZAÇÕES completo ═══════ --}}
+{{-- ═══════ SLIDE 2: RECEITAS ═══════ --}}
 <div class="slide slide-pairings">
     <div class="section-header">
-        <p class="section-label">Harmonizações</p>
-        <h2 class="section-title">O que combina com este vinho?</h2>
+        <p class="section-label">Receitas</p>
+        <h2 class="section-title">Receitas que combinam com este vinho</h2>
         <p class="section-sub">{{ $wine->name }}{{ $wine->vintage ? ' · '.$wine->vintage : '' }}</p>
     </div>
 
     <div class="pairings-body">
 
-        @php $slideFoods = $wine->foods->take(3); @endphp
-        @if($slideFoods->count())
-        <div>
-            <p class="sub-label">Alimentos que combinam</p>
-            <div class="food-grid">
-                @foreach($slideFoods as $food)
-                <div class="food-card">
-                    @php $img = $food->getFirstMedia('image'); @endphp
-                    @if($img)
-                        <img class="food-img" draggable="false"
-                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getUrl('thumb') : $img->getUrl() }}"
-                             alt="{{ $food->name }}">
-                    @else
-                        <div class="food-ph">🍽️</div>
-                    @endif
-                    <div class="food-body">
-                        <p class="food-name">{{ $food->name }}</p>
-                        @if($food->foodCategory)<p class="food-cat">{{ $food->foodCategory->name }}</p>@endif
-                        @if($food->pivot->notes)<p class="food-notes">{{ $food->pivot->notes }}</p>@endif
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @else
-        <div class="empty-state">
-            <p style="font-size:2rem;margin-bottom:.7rem">🍷</p>
-            <p>Harmonizações ainda não cadastradas.</p>
-        </div>
-        @endif
-
         @php $slideRecipes = $wine->recipes->take(3); @endphp
         @if($slideRecipes->count())
         <div>
-            <p class="sub-label">Receitas</p>
             <div class="recipes-grid">
                 @foreach($slideRecipes as $recipe)
                 <div class="recipe-card">
@@ -597,6 +565,11 @@
                 </div>
                 @endforeach
             </div>
+        </div>
+        @else
+        <div class="empty-state">
+            <p style="font-size:2rem;margin-bottom:.7rem">👨‍🍳</p>
+            <p>Receitas ainda não cadastradas.</p>
         </div>
         @endif
 
