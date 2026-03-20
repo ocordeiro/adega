@@ -17,8 +17,8 @@ class Occasion extends Model
         'sort_order' => 'integer',
     ];
 
-    public function wines(): BelongsToMany
+    public function foods(): BelongsToMany
     {
-        return $this->belongsToMany(Wine::class, 'wine_occasion');
+        return $this->belongsToMany(Food::class, 'food_occasion');
     }
 }

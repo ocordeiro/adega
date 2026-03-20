@@ -147,20 +147,27 @@ class BeverageApiTest extends TestCase
         $this->assertEquals('Combinação perfeita', $foods[0]['notes']);
     }
 
-    public function test_wine_includes_active_occasions(): void
+    public function test_food_includes_active_occasions(): void
     {
         $wine = Wine::create(['name' => 'Espumante', 'barcode' => 'OCC01', 'is_active' => true]);
+        $category = FoodCategory::create(['name' => 'Carnes']);
+        $food = Food::create(['name' => 'Picanha', 'food_category_id' => $category->id]);
+
+        $wine->foods()->attach($food->id, ['notes' => null]);
 
         $active = Occasion::create(['name' => 'Celebração', 'icon' => '🎉', 'is_active' => true, 'sort_order' => 1]);
         $inactive = Occasion::create(['name' => 'Inativa', 'icon' => '❌', 'is_active' => false, 'sort_order' => 2]);
 
-        $wine->occasions()->attach([$active->id, $inactive->id]);
+        $food->occasions()->attach([$active->id, $inactive->id]);
 
         $response = $this->getJson('/api/v1/bebida/OCC01', $this->apiHeaders());
 
         $response->assertOk();
 
-        $occasions = $response->json('data.occasions');
+        $foods = $response->json('data.foods');
+        $this->assertCount(1, $foods);
+
+        $occasions = $foods[0]['occasions'];
         $this->assertCount(1, $occasions);
         $this->assertEquals('Celebração', $occasions[0]['name']);
     }

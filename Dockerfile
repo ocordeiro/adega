@@ -5,9 +5,10 @@ RUN apk add --no-cache \
     unzip \
     nodejs \
     npm \
-    vips
+    imagemagick \
+    imagemagick-dev
 
-RUN install-php-extensions bcmath pcntl mysqli pdo_mysql intl zip redis ffi exif vips
+RUN install-php-extensions bcmath pcntl mysqli pdo_mysql intl zip redis ffi exif imagick
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

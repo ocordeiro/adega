@@ -44,4 +44,10 @@ class Food extends Model implements HasMedia
         return $this->belongsToMany(Wine::class, 'wine_food')
             ->withPivot('notes');
     }
+
+    public function occasions(): BelongsToMany
+    {
+        return $this->belongsToMany(Occasion::class, 'food_occasion')
+            ->orderBy('sort_order');
+    }
 }

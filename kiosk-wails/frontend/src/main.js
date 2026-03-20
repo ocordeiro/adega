@@ -153,8 +153,23 @@ function getOrigin(data) {
 // ════════════════════════════════════════════
 function renderWine(w) {
     currentView = 'detail';
-    const hasOccasions = w.occasions && w.occasions.length;
     const hasFoods = w.foods && w.foods.length;
+    // Collect unique occasions from all foods
+    const allOccasions = [];
+    const seenOccIds = new Set();
+    if (hasFoods) {
+        w.foods.forEach(f => {
+            if (f.occasions && f.occasions.length) {
+                f.occasions.forEach(o => {
+                    if (!seenOccIds.has(o.id)) {
+                        seenOccIds.add(o.id);
+                        allOccasions.push(o);
+                    }
+                });
+            }
+        });
+    }
+    const hasOccasions = allOccasions.length > 0;
     const hasRecipes = w.recipes && w.recipes.length;
     const TOTAL = hasRecipes ? 3 : 2;
     const photo = getPhoto(w);
@@ -198,7 +213,7 @@ function renderWine(w) {
     let occChipsHTML = '';
     if (hasOccasions) {
         occChipsHTML = `<div><p class="sub-label">Momentos ideais</p><div class="occ-chips-row no-slide-drag">` +
-            w.occasions.map(o => `<div class="occ-chip"><span class="oi">${esc(o.icon)}</span>${esc(o.name)}</div>`).join('') +
+            allOccasions.map(o => `<div class="occ-chip"><span class="oi">${esc(o.icon)}</span>${esc(o.name)}</div>`).join('') +
             '</div></div>';
     }
 
@@ -218,7 +233,7 @@ function renderWine(w) {
     let occCardsHTML = '';
     if (hasOccasions) {
         occCardsHTML = `<div><p class="sub-label">Momentos ideais</p><div class="occ-grid">` +
-            w.occasions.map(o => `<div class="occ-card"><div class="occ-card-icon">${esc(o.icon)}</div><div class="occ-card-name">${esc(o.name)}</div>${o.description ? `<div class="occ-card-desc">${esc(o.description)}</div>` : ''}</div>`).join('') +
+            allOccasions.map(o => `<div class="occ-card"><div class="occ-card-icon">${esc(o.icon)}</div><div class="occ-card-name">${esc(o.name)}</div>${o.description ? `<div class="occ-card-desc">${esc(o.description)}</div>` : ''}</div>`).join('') +
             '</div></div>';
     }
 
@@ -321,7 +336,6 @@ ${hasRecipes ? `<div class="slide slide-recipes">
 // ════════════════════════════════════════════
 function renderSpirit(s) {
     currentView = 'detail';
-    const hasOccasions = s.occasions && s.occasions.length;
     const hasDrinks = s.drink_recipes && s.drink_recipes.length;
     const TOTAL = 2;
     const sPhoto = getPhoto(s);
@@ -345,14 +359,6 @@ function renderSpirit(s) {
     if (s.country) metaRows += `<div class="meta-row"><span class="meta-label">Origem</span><span class="meta-value">${esc(s.country.name)}</span></div>`;
     if (s.alcohol_content) metaRows += `<div class="meta-row"><span class="meta-label">Teor alcoólico</span><span class="meta-value">${Number(s.alcohol_content).toFixed(1)}%</span></div>`;
 
-    // Occasions chips (slide 1)
-    let occChipsHTML = '';
-    if (hasOccasions) {
-        occChipsHTML = `<div><p class="sub-label">Momentos ideais</p><div class="occ-chips-row">` +
-            s.occasions.map(o => `<div class="occ-chip"><span class="oi">${esc(o.icon)}</span>${esc(o.name)}</div>`).join('') +
-            '</div></div>';
-    }
-
     // Drink mini preview (slide 1)
     let drinkMiniHTML = '';
     if (hasDrinks) {
@@ -363,15 +369,6 @@ function renderSpirit(s) {
                     : `<div class="drink-mini-ph">🍸</div>`;
                 return `<div class="drink-mini">${img}<div class="drink-mini-body"><p class="drink-mini-name">${esc(d.name)}</p><p class="drink-mini-diff">${esc(d.difficulty)}</p></div></div>`;
             }).join('') + '</div></div>';
-    }
-
-    // Slide 2: Occasions full
-    let occCardsHTML = '';
-    if (hasOccasions) {
-        occCardsHTML = `<div style="padding: 0 clamp(1rem, 3vw, 2.5rem) 2rem; max-width: 1400px; width: 100%; margin-inline: auto;">
-            <p class="sub-label">Momentos ideais</p><div class="occ-grid">` +
-            s.occasions.map(o => `<div class="occ-card"><div class="occ-card-icon">${esc(o.icon)}</div><div class="occ-card-name">${esc(o.name)}</div>${o.description ? `<div class="occ-card-desc">${esc(o.description)}</div>` : ''}</div>`).join('') +
-            '</div></div>';
     }
 
     // Slide 2: Drink cards
@@ -421,8 +418,7 @@ function renderSpirit(s) {
         ${s.description ? `<p class="spirit-desc">${esc(s.description)}</p>` : ''}
     </div>
     <div class="spirit-drinks">
-        ${(hasOccasions || hasDrinks) ? '<div class="divider"></div>' : ''}
-        ${occChipsHTML}
+        ${hasDrinks ? '<div class="divider"></div>' : ''}
         ${drinkMiniHTML}
     </div>
 </div>
@@ -435,7 +431,6 @@ function renderSpirit(s) {
         <h2 class="section-title">O que preparar com ${esc(s.name)}?</h2>
         <p class="section-sub">Receitas de coquetéis e drinks</p>
     </div>
-    ${occCardsHTML}
     ${drinkCardsHTML}
 </div>
 

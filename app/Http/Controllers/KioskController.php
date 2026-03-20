@@ -57,7 +57,7 @@ class KioskController extends Controller
                 'producer',
                 'grapeVarieties',
                 'foods.foodCategory',
-                'occasions' => fn ($q) => $q->where('is_active', true),
+                'foods.occasions' => fn ($q) => $q->where('is_active', true),
                 'recipes' => fn ($q) => $q->where('is_active', true),
             ])
             ->first();
@@ -86,7 +86,6 @@ class KioskController extends Controller
                 'spiritType',
                 'country',
                 'producer',
-                'occasions' => fn ($q) => $q->where('is_active', true),
             ])
             ->first();
 

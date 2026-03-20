@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Food;
 use App\Models\Occasion;
-use App\Models\Spirit;
-use App\Models\Wine;
 use Illuminate\Database\Seeder;
 
 class OccasionSeeder extends Seeder
@@ -28,40 +27,34 @@ class OccasionSeeder extends Seeder
             Occasion::firstOrCreate(['name' => $data['name']], $data);
         }
 
-        // Link occasions to seeded wines
-        $pairings = [
-            'Miolo Lote 43'              => ['Jantar Romântico', 'Almoço em Família', 'Fim de Semana em Casa'],
-            'Catena Zapata Adrianna'     => ['Churrasco', 'Celebração', 'Almoço de Negócios', 'Presente Especial'],
-            'Château Margaux Grand Vin'  => ['Jantar Romântico', 'Celebração', 'Almoço de Negócios', 'Presente Especial'],
-            'Miolo Brut Nature'          => ['Aperitivo', 'Celebração', 'Festa e Confraternização'],
-            'Concha y Toro Don Melchor'  => ['Churrasco', 'Celebração', 'Jantar Romântico', 'Presente Especial'],
-            'Esporão Reserva Branco'     => ['Almoço em Família', 'Praia e Campo', 'Aperitivo', 'Fim de Semana em Casa'],
+        // Link occasions to foods
+        $foodPairings = [
+            'Picanha'           => ['Churrasco', 'Almoço em Família', 'Fim de Semana em Casa'],
+            'Costela'           => ['Churrasco', 'Almoço em Família'],
+            'Filé Mignon'       => ['Jantar Romântico', 'Almoço de Negócios', 'Celebração'],
+            'Cordeiro'          => ['Jantar Romântico', 'Celebração', 'Presente Especial'],
+            'Salmão'            => ['Jantar Romântico', 'Almoço de Negócios'],
+            'Camarão'           => ['Jantar Romântico', 'Celebração', 'Aperitivo'],
+            'Lagosta'           => ['Jantar Romântico', 'Celebração', 'Presente Especial'],
+            'Ostra'             => ['Aperitivo', 'Jantar Romântico', 'Celebração'],
+            'Brie'              => ['Aperitivo', 'Fim de Semana em Casa', 'Praia e Campo'],
+            'Gorgonzola'        => ['Jantar Romântico', 'Aperitivo'],
+            'Parmesão'          => ['Almoço em Família', 'Fim de Semana em Casa'],
+            'Presunto Parma'    => ['Aperitivo', 'Praia e Campo', 'Festa e Confraternização'],
+            'Bruschetta'        => ['Aperitivo', 'Festa e Confraternização', 'Praia e Campo'],
+            'Tábua de Frios'    => ['Aperitivo', 'Festa e Confraternização', 'Fim de Semana em Casa'],
+            'Lasanha'           => ['Almoço em Família', 'Fim de Semana em Casa'],
+            'Chocolate Amargo'  => ['Jantar Romântico', 'Presente Especial', 'Fim de Semana em Casa'],
+            'Frango Grelhado'   => ['Almoço em Família', 'Fim de Semana em Casa', 'Praia e Campo'],
+            'Azeitonas'         => ['Aperitivo', 'Praia e Campo', 'Festa e Confraternização'],
         ];
 
-        foreach ($pairings as $wineName => $occasionNames) {
-            $wine = Wine::where('name', $wineName)->first();
-            if (! $wine) continue;
+        foreach ($foodPairings as $foodName => $occasionNames) {
+            $food = Food::where('name', $foodName)->first();
+            if (! $food) continue;
 
             $ids = Occasion::whereIn('name', $occasionNames)->pluck('id');
-            $wine->occasions()->syncWithoutDetaching($ids);
-        }
-
-        // Link occasions to seeded spirits
-        $spiritPairings = [
-            'Absolut Vodka'           => ['Festa e Confraternização', 'Aperitivo', 'Fim de Semana em Casa'],
-            'Jack Daniel\'s Old No. 7' => ['Churrasco', 'Fim de Semana em Casa', 'Celebração', 'Almoço de Negócios'],
-            'Bacardi Carta Branca'    => ['Festa e Confraternização', 'Praia e Campo', 'Aperitivo'],
-            'Tanqueray London Dry'    => ['Aperitivo', 'Festa e Confraternização', 'Jantar Romântico'],
-            'José Cuervo Especial'    => ['Festa e Confraternização', 'Praia e Campo', 'Celebração'],
-            'Ypióca Prata'            => ['Churrasco', 'Festa e Confraternização', 'Almoço em Família', 'Praia e Campo'],
-        ];
-
-        foreach ($spiritPairings as $spiritName => $occasionNames) {
-            $spirit = Spirit::where('name', $spiritName)->first();
-            if (! $spirit) continue;
-
-            $ids = Occasion::whereIn('name', $occasionNames)->pluck('id');
-            $spirit->occasions()->syncWithoutDetaching($ids);
+            $food->occasions()->syncWithoutDetaching($ids);
         }
 
         $this->command->info('OccasionSeeder: ' . count($occasions) . ' ocasiões criadas.');

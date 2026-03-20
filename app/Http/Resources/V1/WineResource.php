@@ -45,18 +45,20 @@ class WineResource extends JsonResource
                 'name' => $gv->name,
                 'percentage' => $gv->pivot->percentage,
             ])),
-            'occasions' => $this->whenLoaded('occasions', fn () => $this->occasions->map(fn ($o) => [
-                'id' => $o->id,
-                'name' => $o->name,
-                'icon' => $o->icon,
-                'description' => $o->description,
-            ])),
             'foods' => $this->whenLoaded('foods', fn () => $this->foods->map(fn ($f) => [
                 'id' => $f->id,
                 'name' => $f->name,
                 'category' => $f->foodCategory?->name,
                 'notes' => $f->pivot->notes,
                 'image' => $f->getFirstMediaUrl('image', 'thumb') ?: null,
+                'occasions' => $f->relationLoaded('occasions')
+                    ? $f->occasions->map(fn ($o) => [
+                        'id' => $o->id,
+                        'name' => $o->name,
+                        'icon' => $o->icon,
+                        'description' => $o->description,
+                    ])
+                    : [],
             ])),
             'recipes' => $this->whenLoaded('recipes', fn () => $this->recipes->map(fn ($r) => [
                 'id' => $r->id,

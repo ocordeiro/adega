@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Wine extends Model implements HasMedia
@@ -87,15 +88,15 @@ class Wine extends Model implements HasMedia
     public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-            ->width(300)
-            ->height(300)
+            ->fit(Fit::Contain, 200, 400)
             ->sharpen(10)
+            ->keepOriginalImageFormat()
             ->nonQueued();
 
         $this->addMediaConversion('card')
-            ->width(600)
-            ->height(400)
+            ->fit(Fit::Contain, 512, 1024)
             ->sharpen(10)
+            ->keepOriginalImageFormat()
             ->nonQueued();
     }
 
@@ -137,10 +138,5 @@ class Wine extends Model implements HasMedia
             ->withPivot('notes');
     }
 
-    public function occasions(): BelongsToMany
-    {
-        return $this->belongsToMany(Occasion::class, 'wine_occasion')
-            ->orderBy('sort_order');
-    }
 
 }

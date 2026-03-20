@@ -19,7 +19,7 @@ class OccasionsTable
                 TextColumn::make('icon')->label('')->searchable(false)->sortable(false),
                 TextColumn::make('name')->label('Ocasião')->searchable()->sortable(),
                 TextColumn::make('description')->label('Descrição')->limit(60)->toggleable(),
-                TextColumn::make('wines_count')->label('Vinhos')->counts('wines')->badge()->sortable(),
+                TextColumn::make('foods_count')->label('Alimentos')->counts('foods')->badge()->sortable(),
                 TextColumn::make('sort_order')->label('Ordem')->sortable(),
                 IconColumn::make('is_active')->label('Ativa')->boolean(),
             ])

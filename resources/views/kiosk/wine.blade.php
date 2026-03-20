@@ -5,443 +5,388 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>{{ $wine->name }} — Adega Sommelier</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --gold:    #c8a96e;
-            --gold-lt: #e2c98a;
-            --cream:   #f5f0eb;
-            --muted:   rgba(245,240,235,.45);
-            --base:    #0d0d0f;
-            --surface: rgba(255,255,255,.04);
-            --border:  rgba(255,255,255,.08);
+            --primary:   #d93f35;
+            --primary-dk:#b83028;
+            --bg:        #dce9f0;
+            --bg-alt:    #eaf2f7;
+            --white:     #ffffff;
+            --text:      #1a1a2e;
+            --muted:     #6b7280;
+            --border:    rgba(0,0,0,.1);
+            --shadow:    rgba(0,0,0,.12);
             --slide-dur: 380ms;
-            --ease-out: cubic-bezier(.25,.46,.45,.94);
-            --ease-in:  cubic-bezier(.55,.06,.68,.19);
+            --ease-out:  cubic-bezier(.25,.46,.45,.94);
+            --ease-in:   cubic-bezier(.55,.06,.68,.19);
         }
 
         html, body {
             width: 100%; height: 100%; overflow: hidden;
-            background: var(--base);
-            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            font-family: 'Nunito', sans-serif;
             -webkit-font-smoothing: antialiased;
             user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+            color: var(--text);
         }
 
-        /* ── CLOSE BUTTON ─────────────────────────────── */
-        .btn-close {
-            position: fixed; top: 1.25rem; right: 1.5rem; z-index: 50;
+        /* ── BACK BUTTON (fixed, top-left) ───────────── */
+        .btn-back-fixed {
+            position: fixed; top: 1.1rem; left: 1.25rem; z-index: 50;
             display: flex; align-items: center; justify-content: center;
-            width: 2.4rem; height: 2.4rem;
-            background: rgba(13,13,15,.75); border: 1px solid var(--border);
-            border-radius: 100px; color: rgba(245,240,235,.55);
+            width: 2.2rem; height: 2.2rem;
+            background: rgba(255,255,255,.8); border: 1px solid var(--border);
+            border-radius: 100px; color: var(--muted);
             text-decoration: none;
-            backdrop-filter: blur(12px); transition: background .2s, color .2s;
+            backdrop-filter: blur(10px); transition: background .2s, color .2s;
             touch-action: manipulation;
         }
-        .btn-close:active { background: rgba(255,255,255,.06); color: var(--cream); }
+        .btn-back-fixed:active { background: var(--white); color: var(--text); }
 
-        /* ── DOTS ─────────────────────────────────────── */
-        .dots {
-            position: fixed; z-index: 40;
-            display: flex; align-items: center; gap: .55rem;
-            bottom: 1.75rem; left: 50%; transform: translateX(-50%);
-        }
-        .dot {
-            width: 6px; height: 6px; border-radius: 100px;
-            background: rgba(255,255,255,.2);
-            transition: all .3s var(--ease-out);
-            cursor: pointer; touch-action: manipulation; flex-shrink: 0;
-        }
-        .dot.active { width: 22px; background: var(--gold); }
 
         /* ── TRACK ────────────────────────────────────── */
-        .track-wrap { width: 100vw; height: 100vh; overflow: visible; cursor: grab; touch-action: pan-y; }
-        .track-wrap:active { cursor: grabbing; }
+        .track-wrap { width: 100vw; height: 100vh; overflow: hidden; }
         .track { display: flex; flex-direction: row; width: 200vw; height: 100%; will-change: transform; }
         .slide {
             width: 100vw; height: 100vh; flex-shrink: 0;
+            overflow: hidden;
+        }
+        .slide-pairings {
             overflow-y: auto; overflow-x: hidden;
             -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
         }
 
-        /* ── Shared ───────────────────────────────────── */
-        .sub-label {
-            font-size: .64rem; letter-spacing: .2em; text-transform: uppercase;
-            color: var(--muted); margin-bottom: .6rem;
-        }
-        @media (orientation: portrait) { .sub-label { margin-bottom: .35rem; font-size: .6rem; } }
-        .section-header { padding: 4.5rem clamp(1.5rem, 4vw, 2.5rem) 1.75rem; text-align: center; max-width: 900px; margin-inline: auto; width: 100%; }
-        @media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 4rem 1rem 1.25rem; } }
-        .section-label {
-            font-size: .67rem; letter-spacing: .22em; text-transform: uppercase;
-            color: var(--gold); opacity: .7; margin-bottom: .5rem;
-        }
-        .section-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.5rem, 3vw, 2.4rem); font-weight: 300; color: var(--cream);
-        }
-        .section-sub { margin-top: .4rem; font-size: .84rem; font-weight: 300; color: var(--muted); }
-
-        .divider { height: 1px; background: var(--border); }
-
-        /* Occasion chip (small, for slide 1 preview) */
-        .occ-chip {
-            display: inline-flex; align-items: center; gap: .32rem;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 100px; padding: .34rem .8rem;
-            font-size: .78rem; color: var(--cream); white-space: nowrap;
-        }
-        .occ-chip .oi { font-size: .88rem; line-height: 1; }
-        @media (orientation: portrait) {
-            .occ-chip { padding: .28rem .6rem; font-size: .7rem; }
-            .occ-chip .oi { font-size: .78rem; }
-        }
-
-        /* Horizontal filmstrip */
-        .strip {
-            display: flex; overflow-x: auto; overflow-y: hidden;
-            scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-            gap: .55rem; scrollbar-width: none;
-            mask-image: linear-gradient(to right, black calc(100% - 1.5rem), transparent);
-            -webkit-mask-image: linear-gradient(to right, black calc(100% - 1.5rem), transparent);
-        }
-        .strip::-webkit-scrollbar { display: none; }
-        .strip > * { flex: 0 0 auto; scroll-snap-align: start; }
-
         /* ════════════════════════════════════════════════
            SLIDE 1 — VINHO + preview harmonizações
-           Grid areas (landscape vs portrait differ)
         ════════════════════════════════════════════════ */
-        .slide-wine {
-            background:
-                radial-gradient(ellipse 55% 40% at 65% 35%, rgba(200,169,110,.06) 0%, transparent 60%),
-                var(--base);
+        .slide-wine { background: var(--white); }
+
+        .wine-slide-inner {
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
         }
 
-        .wine-slide-inner { min-height: 100vh; display: flex; flex-direction: column; }
-        .wine-slide-inner > .wine-layout { max-width: 1600px; width: 100%; align-self: center; }
-
-        /*
-         * LANDSCAPE — photo left, all info stacked right
-         * ┌──────┬───────────────────────────┐
-         * │      │  title                    │
-         * │ photo│  meta                     │
-         * │      │  extras (desc + grapes)   │
-         * │      ├───────────────────────────┤
-         * │      │  harmony preview          │
-         * └──────┴───────────────────────────┘
-         */
+        /* LANDSCAPE: foto esquerda, info direita */
         .wine-layout {
             flex: 1;
             display: grid;
-            grid-template-areas:
-                "photo title"
-                "photo meta"
-                "photo extras"
-                "photo harmony";
-            grid-template-columns: clamp(220px, 28vw, 340px) 1fr;
-            grid-template-rows: auto auto auto 1fr;
-            column-gap: 2.5rem;
-            row-gap: 1rem;
-            padding: 4.5rem clamp(1.5rem, 3vw, 3rem) 2rem;
-            align-content: start;
-        }
-        .wine-photo-col  { grid-area: photo;   align-self: start; display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; }
-        .wine-title      { grid-area: title;   display: flex; flex-direction: column; gap: .55rem; min-width: 0; }
-        .wine-meta-box   { grid-area: meta;    min-width: 0; }
-        .wine-extras     { grid-area: extras;  display: flex; flex-direction: column; gap: .8rem; min-width: 0; }
-        .wine-harmony    { grid-area: harmony; display: flex; flex-direction: column; gap: .75rem; padding-bottom: .5rem; min-width: 0; overflow-x: clip; }
-
-        /* Wide landscape: extras + harmony side by side */
-        @media (orientation: landscape) and (min-width: 1024px) {
-            .wine-layout {
-                grid-template-areas:
-                    "photo title   title"
-                    "photo meta    meta"
-                    "photo extras  harmony";
-                grid-template-columns: clamp(220px, 28vw, 340px) 1fr 1fr;
-                grid-template-rows: auto auto 1fr;
-            }
-            .wine-harmony { overflow-x: clip; }
-        }
-        @media (orientation: portrait) and (max-width: 599px) { .wine-harmony { gap: .55rem; } }
-
-        /*
-         * PORTRAIT (phones) — photo | title+meta side by side, extras+harmony full-width below
-         */
-        @media (orientation: portrait) and (max-width: 599px) {
-            .wine-layout {
-                grid-template-areas:
-                    "photo title"
-                    "photo meta"
-                    "extras  extras"
-                    "harmony harmony";
-                grid-template-columns: 30% 1fr;
-                grid-template-rows: auto auto auto auto;
-                column-gap: .85rem;
-                row-gap: .7rem;
-                padding: 3rem 1rem 1rem;
-                align-content: start;
-            }
-            .wine-photo-col { align-self: stretch; grid-row: 1 / 3; overflow: hidden; }
-            .wine-meta-box  { align-self: start; }
-            .wine-meta      { justify-content: flex-start; }
-            .wine-harmony   { overflow-x: visible; }
+            grid-template-columns: clamp(240px, 38vw, 440px) 1fr;
+            grid-template-areas: "photo info";
+            height: 100%;
+            overflow: hidden;
         }
 
-        /* Portrait tablets (600px+) — use landscape-like layout, photo left, all info right */
-        @media (orientation: portrait) and (min-width: 600px) {
-            .wine-layout {
-                grid-template-columns: clamp(200px, 32vw, 300px) 1fr;
-                grid-template-rows: auto auto auto auto;
-                column-gap: 2rem;
-                padding: 4rem clamp(1.5rem, 3vw, 2.5rem) 2rem;
-                flex: 0;
-            }
-            .wine-photo-col { align-self: start; }
+        /* ── Coluna da foto ──────────────────────────── */
+        .wine-photo-col {
+            grid-area: photo;
+            background: linear-gradient(160deg, #f0f2f5 0%, #e4e7ed 100%);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 2rem 1.5rem;
+            position: relative;
         }
 
-        /* Very small phones */
-        @media (orientation: portrait) and (max-width: 374px) {
-            .wine-layout {
-                grid-template-columns: 28% 1fr;
-                column-gap: .7rem;
-                padding: 2.75rem .75rem .75rem;
-            }
-        }
-
-        /* Short screens — compress vertical spacing */
-        @media (orientation: portrait) and (max-width: 599px) and (max-height: 680px) {
-            .wine-layout {
-                padding-top: 2.5rem;
-                row-gap: .45rem;
-            }
-            .wine-desc { font-size: .68rem; line-height: 1.5; }
-            .grape-tags { gap: .2rem; }
-            .grape-tag { padding: .18rem .5rem; font-size: .62rem; }
-            .wine-harmony { gap: .4rem; }
-            .divider { margin-bottom: 0; }
-        }
-
-        /* ── Photo ──────────────────────────────────── */
-        .wine-photo-frame { position: relative; width: 100%; }
-        @media (orientation: portrait) and (max-width: 599px) {
-            .wine-photo-col { display: flex; flex-direction: column; }
-            .wine-photo-frame { flex: 1; min-height: 0; }
-            .wine-photo { height: 100% !important; width: 100% !important; object-fit: cover !important; object-position: top !important; aspect-ratio: unset !important; }
-            .wine-photo-placeholder { height: 100%; aspect-ratio: unset; }
-        }
-
-        .wine-photo-shadow {
-            position: absolute; inset: 0; border-radius: 12px;
-            box-shadow: 0 0 50px rgba(200,169,110,.12), 0 20px 44px rgba(0,0,0,.7);
-        }
-        .wine-photo { position: relative; z-index: 1; width: 100%; border-radius: 12px; object-fit: cover; display: block; }
-        .wine-photo-placeholder {
-            position: relative; z-index: 1; width: 100%; aspect-ratio: 1/2.2;
-            background: linear-gradient(160deg, #1e1e22, #141418);
-            border-radius: 12px; border: 1px solid var(--border);
+        .wine-photo-frame {
+            position: relative; width: 100%;
             display: flex; align-items: center; justify-content: center;
         }
-        .stars { display: flex; gap: .2rem; justify-content: center; }
-        .star       { color: var(--gold); font-size: .95rem; }
-        .star.empty { color: rgba(200,169,110,.2); }
-        /* stars-photo-col shown in landscape/tablet, hidden in portrait phones */
-        /* stars-extras hidden in landscape/tablet, shown in portrait phones */
-        @media (orientation: portrait) and (max-width: 599px) {
-            .stars-photo-col { display: none; }
+        .wine-photo {
+            max-width: 100%; max-height: 70vh;
+            width: auto; height: auto;
+            object-fit: contain; display: block;
+            filter: drop-shadow(0 24px 40px rgba(0,0,0,.28)) drop-shadow(0 6px 12px rgba(0,0,0,.16));
         }
-        @media not all and (orientation: portrait) { .stars-extras { display: none; } }
-        @media (orientation: portrait) and (min-width: 600px) { .stars-extras { display: none; } }
+        .wine-photo-placeholder {
+            width: 100%; aspect-ratio: 2/3;
+            display: flex; align-items: center; justify-content: center;
+        }
 
-        /* ── Title ───────────────────────────────────── */
+        .stars { display: flex; gap: .2rem; justify-content: center; margin-top: .75rem; }
+        .star       { color: var(--primary); font-size: .9rem; }
+        .star.empty { color: rgba(217,63,53,.25); }
+
+        /* ── Coluna de info ──────────────────────────── */
+        .wine-info-col {
+            grid-area: info;
+            background: var(--white);
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            padding: 3rem clamp(1.5rem, 4vw, 3rem) 2rem;
+            gap: 1rem;
+        }
+
+
         .wine-badge {
-            display: inline-flex; align-items: center; gap: .35rem;
-            background: rgba(200,169,110,.1); border: 1px solid rgba(200,169,110,.22);
-            border-radius: 100px; padding: .25rem .8rem;
-            font-size: .67rem; font-weight: 500; letter-spacing: .13em; text-transform: uppercase;
-            color: var(--gold); width: fit-content;
+            display: inline-flex; align-items: center; gap: .3rem;
+            background: rgba(217,63,53,.1); border: 1px solid rgba(217,63,53,.2);
+            border-radius: 100px; padding: .2rem .75rem;
+            font-size: .65rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+            color: var(--primary); width: fit-content;
         }
+
         .wine-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.6rem, 3.3vw, 3rem);
-            line-height: 1.1; color: var(--cream); font-weight: 400;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            line-height: 1.15; color: var(--primary); font-weight: 800;
+            text-align: center;
         }
-        @media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(1.15rem, 4.5vw, 1.7rem); } }
+        @media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(1.4rem, 5vw, 1.9rem); } }
+
         .wine-vintage {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; color: var(--gold); font-size: 1.1rem; font-weight: 300;
+            font-style: italic; color: var(--muted); font-size: .95rem; font-weight: 400;
+            margin-top: -.4rem; text-align: center;
         }
-        @media (orientation: portrait) and (max-width: 599px) { .wine-vintage { font-size: .92rem; } }
 
-        /* ── Meta ────────────────────────────────────── */
-        .wine-meta {
-            display: flex; flex-direction: column; gap: .38rem;
-            padding: .8rem 1rem;
-            background: var(--surface); border-radius: 12px; border: 1px solid var(--border);
-        }
-        @media (orientation: portrait) and (max-width: 599px) { .wine-meta { padding: .45rem .6rem; gap: .2rem; } }
-        .meta-row { display: flex; justify-content: space-between; align-items: center; font-size: .83rem; }
-        @media (orientation: portrait) and (max-width: 599px) { .meta-row { font-size: .68rem; } }
-        .meta-label { color: var(--muted); font-weight: 300; letter-spacing: .03em; white-space: nowrap; }
-        .meta-value { color: var(--cream); font-weight: 500; text-align: right; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-        /* ── Extras ──────────────────────────────────── */
         .wine-desc {
-            font-size: .88rem; font-weight: 300; line-height: 1.7;
-            color: rgba(245,240,235,.62); font-style: italic;
+            font-size: .86rem; font-weight: 400; line-height: 1.65;
+            color: var(--muted); max-width: 480px;
         }
-        @media (orientation: portrait) and (max-width: 599px) {
-            .wine-desc { font-size: .75rem; }
+        @media (orientation: portrait) and (max-width: 599px) { .wine-desc { font-size: .75rem; } }
+
+        /* Meta: produtor, origem etc. — compact row */
+        .wine-meta-row {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem .9rem;
+            padding: .6rem .85rem;
+            background: #f5f5f7; border-radius: 10px;
+            border: 1px solid var(--border);
         }
-        .grape-tags { display: flex; flex-wrap: wrap; gap: .28rem; }
+        .meta-item { display: flex; flex-direction: column; align-items: center; gap: .1rem; }
+        .meta-label { font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+        .meta-value { font-size: .8rem; font-weight: 700; color: var(--text); }
+
+        .grape-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem; }
         .grape-tag {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 100px; padding: .22rem .65rem;
-            font-size: .7rem; color: rgba(245,240,235,.5);
+            background: #f5f5f7; border: 1px solid var(--border);
+            border-radius: 100px; padding: .2rem .6rem;
+            font-size: .68rem; color: var(--muted);
         }
 
-        /* ── Harmony preview ─────────────────────────── */
-        /* Chips wrap into multiple lines */
-        .occ-chips-row {
-            display: flex; flex-wrap: wrap;
-            gap: .42rem;
+        /* ── Seção "Combina com" ─────────────────────── */
+        .harmony-section { display: flex; flex-direction: column; align-items: center; gap: .65rem; flex: 1; margin-top: .5rem; }
+
+        .harmony-divider {
+            height: 1px; background: var(--border); margin-bottom: .2rem; align-self: stretch;
         }
 
-        /* food mini grid — wraps into rows */
-        .food-mini-grid {
+        .harmony-title {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-weight: 800; color: var(--primary); letter-spacing: .01em;
+            text-align: center;
+        }
+
+        /* Grid de 3 colunas: ocasião + alimento */
+        .pairing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100px, 28%), 1fr));
-            gap: .5rem;
+            grid-template-columns: repeat(3, clamp(72px, 9vw, 200px));
+            gap: clamp(.5rem, 1.2vw, 2rem);
+            margin-top: auto; margin-bottom: auto;
         }
         @media (orientation: portrait) and (max-width: 599px) {
-            .food-mini-grid { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: .45rem; }
-        }
-        @media (orientation: portrait) and (max-width: 599px) and (max-height: 680px) {
-            .food-mini-grid { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: .35rem; }
+            .pairing-grid { gap: .5rem; }
         }
 
-        .food-mini {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 11px; overflow: hidden;
+        .pairing-col {
+            display: flex; flex-direction: column;
+            align-items: center; gap: .35rem;
+            text-align: center;
         }
-        .food-mini-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
-        .food-mini-ph  { width: 100%; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 1.6rem; }
-        @media (orientation: portrait) and (max-width: 599px) and (max-height: 680px) {
-            .food-mini-ph  { aspect-ratio: 1/1; font-size: 1.2rem; }
-            .food-mini-img { aspect-ratio: 1/1; }
-        }
-        .food-mini-body { padding: .4rem .5rem; }
-        .food-mini-name { font-size: .72rem; font-weight: 600; color: var(--cream); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .food-mini-cat  { font-size: .58rem; color: var(--gold); letter-spacing: .05em; text-transform: uppercase; margin-top: .1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* Legal notice */
-        .legal-notice {
-            padding: .6rem 1.5rem; text-align: center;
-            font-size: .6rem; color: rgba(245,240,235,.2); letter-spacing: .04em;
-            border-top: 1px solid rgba(255,255,255,.04);
+        .pairing-occ-label {
+            font-size: .67rem; color: var(--muted); font-weight: 400;
+            letter-spacing: .02em; line-height: 1.3;
+            min-height: 1.8em;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .pairing-img-wrap {
+            width: clamp(56px, 8vw, 160px);
+            height: clamp(56px, 8vw, 160px);
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--white);
+            box-shadow: 0 4px 14px var(--shadow);
+            flex-shrink: 0;
+        }
+        .pairing-img-wrap img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .pairing-img-ph {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; background: var(--bg-alt);
+        }
+
+        .pairing-food-name {
+            font-size: .78rem; font-weight: 600; color: var(--text);
+            line-height: 1.3; overflow: hidden; text-overflow: ellipsis;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            max-width: 100%;
+        }
+        .pairing-food-cat {
+            font-size: .63rem; color: var(--primary); letter-spacing: .04em;
+            text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            max-width: 100%;
+        }
+        @media (orientation: portrait) and (max-width: 599px) {
+            .pairing-img-wrap { width: 56px; height: 56px; }
+            .pairing-food-name { font-size: .68rem; }
+            .pairing-food-cat  { font-size: .57rem; }
+            .pairing-occ-label { font-size: .58rem; }
+        }
+
+        /* ── Botão "Ver mais" ───────────────────────── */
+        .btn-ver-mais {
+            display: inline-flex; align-items: center; gap: .45rem;
+            background: var(--primary); color: var(--white);
+            border: none; border-radius: 100px;
+            padding: .72rem 2rem;
+            font-family: 'Nunito', sans-serif;
+            font-size: .9rem; font-weight: 700; letter-spacing: .02em;
+            cursor: pointer; touch-action: manipulation;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.22),
+                inset 0 -2px 0 rgba(0,0,0,.18),
+                0 4px 14px rgba(217,63,53,.4);
+            transition: box-shadow .15s, background .15s;
+            width: fit-content; align-self: center;
+            margin-top: auto;
+        }
+        .btn-ver-mais:active {
+            background: var(--primary-dk);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(217,63,53,.3);
+        }
+        @media (orientation: portrait) and (max-width: 599px) {
+            .btn-ver-mais { font-size: .78rem; padding: .6rem 1.4rem; }
+        }
+
+
+        /* ── PORTRAIT phones — layout empilhado ──────── */
+        @media (orientation: portrait) and (max-width: 599px) {
+            .wine-layout {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "photo"
+                    "info";
+                min-height: unset;
+            }
+            .wine-photo-col {
+                padding: 1.5rem 2rem 1rem;
+                min-height: 200px;
+            }
+            .wine-info-col {
+                padding: 1.25rem 1rem 1rem;
+                gap: .75rem;
+            }
+            .wine-meta-row { display: none; }
+        }
+
+        /* Portrait tablets */
+        @media (orientation: portrait) and (min-width: 600px) {
+            .wine-layout {
+                grid-template-columns: clamp(180px, 30vw, 260px) 1fr;
+            }
         }
 
         /* ════════════════════════════════════════════════
-           SLIDE 2 — HARMONIZAÇÕES (completo)
-           Occasion cards + food grid with notes
+           SLIDE 2 — HARMONIZAÇÕES completo
         ════════════════════════════════════════════════ */
-        .slide-pairings {
-            background:
-                radial-gradient(ellipse 65% 35% at 50% 0%, rgba(200,169,110,.05) 0%, transparent 55%),
-                var(--base);
-        }
+        .slide-pairings { background: var(--bg-alt); }
 
-        .pairings-body { padding: 0 clamp(1rem, 3vw, 2.5rem) 5rem; display: flex; flex-direction: column; gap: 2rem; max-width: 1400px; width: 100%; margin-inline: auto; }
+        .section-header {
+            padding: 4rem clamp(1.5rem, 4vw, 2.5rem) 1.5rem;
+            text-align: center; max-width: 900px; margin-inline: auto; width: 100%;
+        }
+        @media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 3.5rem 1rem 1rem; } }
+
+        .section-label {
+            font-size: .65rem; letter-spacing: .22em; text-transform: uppercase;
+            color: var(--primary); opacity: .8; margin-bottom: .4rem;
+        }
+        .section-title {
+            font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 800; color: var(--text);
+        }
+        .section-sub { margin-top: .35rem; font-size: .84rem; font-weight: 300; color: var(--muted); }
+
+        .sub-label {
+            font-size: .63rem; letter-spacing: .2em; text-transform: uppercase;
+            color: var(--muted); margin-bottom: .55rem;
+        }
+        .pairings-body {
+            padding: 0 clamp(1rem, 3vw, 2.5rem) 5rem;
+            display: flex; flex-direction: column; gap: 1.75rem;
+            max-width: 1400px; width: 100%; margin-inline: auto;
+        }
         @media (orientation: portrait) and (max-width: 599px) { .pairings-body { padding: 0 1rem 5rem; } }
 
         /* Occasion cards */
         .occ-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(150px, 42vw), 1fr));
-            gap: .85rem;
-        }
-        @media (orientation: portrait) and (max-width: 599px) {
-            .occ-grid { grid-template-columns: repeat(auto-fit, minmax(min(140px, 44vw), 1fr)); gap: .7rem; }
+            gap: .8rem;
         }
         .occ-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 14px; padding: 1rem 1rem .9rem;
-            display: flex; flex-direction: column; gap: .45rem;
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: 14px; padding: .9rem 1rem;
+            display: flex; flex-direction: column; gap: .4rem;
+            box-shadow: 0 2px 8px var(--shadow);
         }
-        .occ-card-icon { font-size: 1.75rem; line-height: 1; }
-        .occ-card-name { font-size: .88rem; font-weight: 600; color: var(--cream); }
-        .occ-card-desc { font-size: .75rem; font-weight: 300; color: var(--muted); line-height: 1.5; }
+        .occ-card-icon { font-size: 1.6rem; line-height: 1; }
+        .occ-card-name { font-size: .86rem; font-weight: 600; color: var(--text); }
+        .occ-card-desc { font-size: .73rem; font-weight: 300; color: var(--muted); line-height: 1.5; }
 
         /* Food cards */
         .food-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(160px, 40vw), 1fr));
-            gap: .9rem;
+            gap: .85rem;
         }
         @media (orientation: portrait) and (max-width: 599px) {
-            .food-grid { grid-template-columns: repeat(auto-fit, minmax(min(140px, 44vw), 1fr)); gap: .7rem; }
+            .food-grid { grid-template-columns: repeat(auto-fit, minmax(min(140px, 44vw), 1fr)); gap: .65rem; }
         }
         .food-card {
-            background: var(--surface); border: 1px solid var(--border);
+            background: var(--white); border: 1px solid var(--border);
             border-radius: 13px; overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
         }
         .food-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
-        .food-ph  { width: 100%; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 2rem; }
-        .food-body  { padding: .7rem .85rem; }
-        .food-name  { font-size: .88rem; font-weight: 600; color: var(--cream); margin-bottom: .12rem; }
-        .food-cat   { font-size: .66rem; color: var(--gold); letter-spacing: .06em; text-transform: uppercase; }
-        .food-notes { margin-top: .38rem; font-size: .73rem; color: var(--muted); line-height: 1.5; font-style: italic; }
+        .food-ph  { width: 100%; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2rem; }
+        .food-body  { padding: .65rem .8rem; }
+        .food-name  { font-size: .86rem; font-weight: 600; color: var(--text); margin-bottom: .1rem; }
+        .food-cat   { font-size: .63rem; color: var(--primary); letter-spacing: .06em; text-transform: uppercase; }
+        .food-notes { margin-top: .35rem; font-size: .72rem; color: var(--muted); line-height: 1.5; font-style: italic; }
 
         .empty-state { text-align: center; padding: 3rem 2rem; color: var(--muted); font-size: .95rem; }
 
-        /* ════════════════════════════════════════════════
-           SLIDE 3 — RECEITAS
-        ════════════════════════════════════════════════ */
-        .slide-recipes {
-            background:
-                radial-gradient(ellipse 60% 35% at 50% 0%, rgba(120,80,200,.05) 0%, transparent 55%),
-                var(--base);
-        }
-
+        /* Recipes */
         .recipes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(260px, 42vw), 1fr));
-            gap: 1.2rem;
+            gap: 1.1rem;
         }
         @media (orientation: portrait) { .recipes-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 85vw), 1fr)); } }
 
-        .recipe-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .recipe-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); }
         .recipe-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
-        .recipe-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 2.4rem; }
-        .recipe-body { padding: 1rem 1.2rem; }
-        .recipe-tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .6rem; }
-        .recipe-tag  { font-size: .67rem; letter-spacing: .08em; text-transform: uppercase; padding: .2rem .65rem; border-radius: 100px; background: var(--surface); border: 1px solid var(--border); }
-        .recipe-tag.difficulty { color: rgba(245,240,235,.5); }
-        .recipe-tag.time       { color: var(--gold); }
-        .recipe-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.15rem,2.4vw,1.55rem); font-weight: 400; color: var(--cream); line-height: 1.2; margin-bottom: .4rem; }
-        .recipe-desc { font-size: .84rem; font-weight: 300; color: var(--muted); line-height: 1.6; margin-bottom: .8rem; }
-        .recipe-note {
-            margin-bottom: .8rem; padding: .48rem .78rem;
-            background: rgba(200,169,110,.05); border-left: 2px solid rgba(200,169,110,.3);
-            border-radius: 0 8px 8px 0; font-size: .75rem; color: var(--muted); font-style: italic;
-        }
-        .recipe-steps { padding-top: .85rem; font-size: .84rem; font-weight: 300; line-height: 1.75; color: rgba(245,240,235,.52); white-space: pre-line; border-top: 1px solid var(--border); }
+        .recipe-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 2.4rem; }
+        .recipe-body { padding: .9rem 1.1rem; }
+        .recipe-tags { display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: .55rem; }
+        .recipe-tag  { font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; padding: .18rem .6rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
+        .recipe-tag.difficulty { color: var(--muted); }
+        .recipe-tag.time       { color: var(--primary); }
+        .recipe-name { font-size: clamp(1rem,2.4vw,1.3rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .35rem; }
+        .recipe-desc { font-size: .82rem; font-weight: 300; color: var(--muted); line-height: 1.6; margin-bottom: .75rem; }
+        .recipe-note { margin-bottom: .75rem; padding: .45rem .75rem; background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: .73rem; color: var(--muted); font-style: italic; }
+        .recipe-steps { padding-top: .8rem; font-size: .82rem; font-weight: 300; line-height: 1.75; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
-<a href="/" class="btn-close" title="Fechar">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+<a href="/" class="btn-back-fixed" title="Voltar">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
 </a>
 
-<div class="dots" id="dots">
-    <div class="dot active" data-slide="0"></div>
-    <div class="dot" data-slide="1"></div>
-</div>
 
 <div class="track-wrap"><div class="track" id="track">
 
@@ -453,66 +398,72 @@
     <div class="wine-photo-col">
         @php $photo = $wine->getFirstMedia('photos'); @endphp
         <div class="wine-photo-frame">
-            <div class="wine-photo-shadow"></div>
             @if($photo)
                 <img class="wine-photo"
                      src="{{ $photo->hasGeneratedConversion('card') ? $photo->getUrl('card') : $photo->getUrl() }}"
-                     alt="{{ $wine->name }}" draggable="false"
-                     style="aspect-ratio:2/3;object-fit:cover;width:100%;">
+                     alt="{{ $wine->name }}" draggable="false">
             @else
                 <div class="wine-photo-placeholder">
-                    <svg width="36" height="64" viewBox="0 0 90 160" fill="none" opacity=".28">
-                        <rect x="36" y="4" width="18" height="22" rx="4" fill="#c8a96e"/>
-                        <path d="M28 36 Q20 50 18 70 L18 138 Q18 148 28 150 L62 150 Q72 148 72 138 L72 70 Q70 50 62 36 Z" fill="#c8a96e"/>
+                    <svg width="36" height="64" viewBox="0 0 90 160" fill="none" opacity=".35">
+                        <rect x="36" y="4" width="18" height="22" rx="4" fill="#d93f35"/>
+                        <path d="M28 36 Q20 50 18 70 L18 138 Q18 148 28 150 L62 150 Q72 148 72 138 L72 70 Q70 50 62 36 Z" fill="#d93f35"/>
                     </svg>
                 </div>
             @endif
         </div>
         @if($wine->rating)
-        <div class="stars stars-photo-col">
+        <div class="stars">
             @for($i=1;$i<=5;$i++)<span class="star {{ $i<=round($wine->rating)?'':'empty' }}">★</span>@endfor
         </div>
         @endif
     </div>
 
-    {{-- Título: badge + nome + safra --}}
-    <div class="wine-title">
+    {{-- Info --}}
+    <div class="wine-info-col">
+
+        {{-- Badge + nome + safra --}}
         @if($wine->wineType)
         <div class="wine-badge">
-            <svg width="7" height="7" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+            <svg width="6" height="6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
             {{ $wine->wineType->name }}
         </div>
         @endif
         <h1 class="wine-name">{{ $wine->name }}</h1>
         @if($wine->vintage)<p class="wine-vintage">{{ $wine->vintage }}</p>@endif
-    </div>
 
-    {{-- Meta: produtor, origem, álcool, temperatura --}}
-    <div class="wine-meta-box">
-        <div class="wine-meta">
+        {{-- Descrição --}}
+        @if($wine->description)<p class="wine-desc">{{ $wine->description }}</p>@endif
+
+        {{-- Meta compact --}}
+        @php
+            $hasMeta = $wine->producer || $wine->country || $wine->alcohol_content
+                       || $wine->serving_temp_min || $wine->serving_temp_max;
+        @endphp
+        @if($hasMeta)
+        <div class="wine-meta-row">
             @if($wine->producer)
-            <div class="meta-row">
+            <div class="meta-item">
                 <span class="meta-label">Produtor</span>
                 <span class="meta-value">{{ $wine->producer->name }}</span>
             </div>
             @endif
             @if($wine->country)
-            <div class="meta-row">
+            <div class="meta-item">
                 <span class="meta-label">Origem</span>
                 <span class="meta-value">{{ $wine->country->name }}{{ $wine->region ? ', '.$wine->region->name : '' }}</span>
             </div>
             @endif
             @if($wine->alcohol_content)
-            <div class="meta-row">
-                <span class="meta-label">Teor alcoólico</span>
+            <div class="meta-item">
+                <span class="meta-label">Álcool</span>
                 <span class="meta-value">{{ number_format($wine->alcohol_content, 1) }}%</span>
             </div>
             @endif
             @if($wine->serving_temp_min || $wine->serving_temp_max)
-            <div class="meta-row">
+            <div class="meta-item">
                 <span class="meta-label">Temperatura</span>
                 <span class="meta-value">
-                    @if($wine->serving_temp_min && $wine->serving_temp_max){{ $wine->serving_temp_min }}°C – {{ $wine->serving_temp_max }}°C
+                    @if($wine->serving_temp_min && $wine->serving_temp_max){{ $wine->serving_temp_min }}°C–{{ $wine->serving_temp_max }}°C
                     @elseif($wine->serving_temp_min){{ $wine->serving_temp_min }}°C
                     @else{{ $wine->serving_temp_max }}°C
                     @endif
@@ -520,16 +471,9 @@
             </div>
             @endif
         </div>
-    </div>
-
-    {{-- Extras: estrelas (portrait only) + descrição + uvas --}}
-    <div class="wine-extras">
-        @if($wine->rating)
-        <div class="stars stars-extras">
-            @for($i=1;$i<=5;$i++)<span class="star {{ $i<=round($wine->rating)?'':'empty' }}">★</span>@endfor
-        </div>
         @endif
-        @if($wine->description)<p class="wine-desc">{{ $wine->description }}</p>@endif
+
+        {{-- Uvas --}}
         @if($wine->grapeVarieties->count())
         <div class="grape-tags">
             @foreach($wine->grapeVarieties as $grape)
@@ -537,54 +481,44 @@
             @endforeach
         </div>
         @endif
-    </div>
 
-    {{-- Harmonizações preview --}}
-    <div class="wine-harmony">
-        @if($wine->occasions->count() || $wine->foods->count())
-        <div class="divider"></div>
-        @endif
-
-        @if($wine->occasions->count())
-        <div>
-            <p class="sub-label">Momentos ideais</p>
-            <div class="occ-chips-row no-slide-drag" id="occ-chips-1">
-                @foreach($wine->occasions as $occ)
-                <div class="occ-chip"><span class="oi">{{ $occ->icon }}</span>{{ $occ->name }}</div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-
-        @if($wine->foods->count())
-        <div>
-            <p class="sub-label">Harmoniza com</p>
-            <div class="food-mini-grid" id="foods-strip-1">
-                @foreach($wine->foods as $food)
-                <div class="food-mini">
-                    @php $img = $food->getFirstMedia('image'); @endphp
-                    @if($img)
-                        <img class="food-mini-img" draggable="false"
-                             src="{{ $img->hasGeneratedConversion('thumb') ? $img->getUrl('thumb') : $img->getUrl() }}"
-                             alt="{{ $food->name }}">
-                    @else
-                        <div class="food-mini-ph">🍽️</div>
-                    @endif
-                    <div class="food-mini-body">
-                        <p class="food-mini-name">{{ $food->name }}</p>
-                        @if($food->foodCategory)<p class="food-mini-cat">{{ $food->foodCategory->name }}</p>@endif
+        {{-- Harmonizações preview: até 3 pratos --}}
+        @php $previewFoods = $wine->foods->take(3); @endphp
+        @if($previewFoods->count())
+        <div class="harmony-section">
+            <div class="harmony-divider"></div>
+            <p class="harmony-title">Combina com</p>
+            <div class="pairing-grid">
+                @foreach($previewFoods as $food)
+                <div class="pairing-col">
+                    <div class="pairing-img-wrap">
+                        @php $img = $food->getFirstMedia('image'); @endphp
+                        @if($img)
+                            <img src="{{ $img->hasGeneratedConversion('thumb') ? $img->getUrl('thumb') : $img->getUrl() }}"
+                                 alt="{{ $food->name }}" draggable="false">
+                        @else
+                            <div class="pairing-img-ph">🍽️</div>
+                        @endif
                     </div>
+                    <p class="pairing-food-name">{{ $food->name }}</p>
+                    @if($food->foodCategory)<p class="pairing-food-cat">{{ $food->foodCategory->name }}</p>@endif
                 </div>
                 @endforeach
             </div>
         </div>
         @endif
-    </div>
+
+        {{-- Botão ver mais --}}
+        @if($wine->foods->count() > 0 || $wine->recipes->count() > 0)
+        <button class="btn-ver-mais" id="btn-ver-mais">
+            Ver mais
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        @endif
+
+    </div>{{-- /wine-info-col --}}
 
 </div>{{-- /wine-layout --}}
-<div class="legal-notice">
-    🔞 Venda proibida para menores de 18 anos &nbsp;·&nbsp; Beba com moderação
-</div>
 </div></div>{{-- /inner /slide --}}
 
 {{-- ═══════ SLIDE 2: HARMONIZAÇÕES completo ═══════ --}}
@@ -597,30 +531,12 @@
 
     <div class="pairings-body">
 
-        {{-- Ocasiões como cards com descrição --}}
-        @if($wine->occasions->count())
-        <div>
-            <p class="sub-label">Momentos ideais</p>
-            <div class="occ-grid">
-                @foreach($wine->occasions as $occ)
-                <div class="occ-card">
-                    <div class="occ-card-icon">{{ $occ->icon }}</div>
-                    <div class="occ-card-name">{{ $occ->name }}</div>
-                    @if($occ->description)
-                    <div class="occ-card-desc">{{ $occ->description }}</div>
-                    @endif
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-
-        {{-- Alimentos com notas de harmonização --}}
-        @if($wine->foods->count())
+        @php $slideFoods = $wine->foods->take(3); @endphp
+        @if($slideFoods->count())
         <div>
             <p class="sub-label">Alimentos que combinam</p>
             <div class="food-grid">
-                @foreach($wine->foods as $food)
+                @foreach($slideFoods as $food)
                 <div class="food-card">
                     @php $img = $food->getFirstMedia('image'); @endphp
                     @if($img)
@@ -646,12 +562,12 @@
         </div>
         @endif
 
-        {{-- Receitas --}}
-        @if($wine->recipes->count())
+        @php $slideRecipes = $wine->recipes->take(3); @endphp
+        @if($slideRecipes->count())
         <div>
             <p class="sub-label">Receitas</p>
             <div class="recipes-grid">
-                @foreach($wine->recipes as $recipe)
+                @foreach($slideRecipes as $recipe)
                 <div class="recipe-card">
                     @php $rImg = $recipe->getFirstMedia('photo'); @endphp
                     @if($rImg)
@@ -686,155 +602,35 @@
 
 <script>
 (function () {
-    const TOTAL        = 2;
-    const INACTIVITY   = 60000;
-    const PEEK_DELAY   = 5000;
-    const PEEK_REPEAT  = 30000;
-    const PEEK_PX      = 72;
-    const PEEK_OUT_MS  = 420;
-    const PEEK_BACK_MS = 300;
+    const TOTAL      = 2;
+    const INACTIVITY = 60000;
+    const DUR        = '380ms';
+    const EASE       = 'cubic-bezier(.25,.46,.45,.94)';
 
-    let current = 0, peeked = false;
-    let inactTimer, peekTimer;
+    let current = 0;
+    let inactTimer;
 
     const track = document.getElementById('track');
-    const dots  = document.querySelectorAll('.dot');
-    const CSS_DUR  = getComputedStyle(document.documentElement).getPropertyValue('--slide-dur').trim() || '380ms';
-    const EASE_OUT = getComputedStyle(document.documentElement).getPropertyValue('--ease-out').trim() || 'ease';
-
-    function applyTransform(idx, extraPx = 0) {
-        track.style.transform = `translateX(calc(${-idx * 100}vw - ${extraPx}px))`;
-    }
-
     function goTo(idx) {
         if (idx < 0 || idx >= TOTAL) return;
         current = idx;
-        track.style.transition = `transform ${CSS_DUR} ${EASE_OUT}`;
-        applyTransform(current);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        track.style.transition = `transform ${DUR} ${EASE}`;
+        track.style.transform  = `translateX(${-idx * 100}vw)`;
         resetInactivity();
     }
 
-    function peek() {
-        if (peeked || dragging || current >= TOTAL - 1) return;
-        track.style.transition = `transform ${PEEK_OUT_MS}ms var(--ease-out)`;
-        applyTransform(current, PEEK_PX);
-        setTimeout(() => {
-            track.style.transition = `transform ${PEEK_BACK_MS}ms var(--ease-in)`;
-            applyTransform(current);
-        }, PEEK_OUT_MS + 60);
+    const btnVerMais = document.getElementById('btn-ver-mais');
+    if (btnVerMais) {
+        btnVerMais.addEventListener('click',    () => goTo(1));
+        btnVerMais.addEventListener('touchend', e => { e.preventDefault(); goTo(1); });
     }
-
-    function schedulePeek(delay) {
-        clearTimeout(peekTimer);
-        if (peeked) return;
-        peekTimer = setTimeout(() => { peek(); schedulePeek(PEEK_REPEAT); }, delay);
-    }
-
-    dots.forEach(d => d.addEventListener('click', () => { peeked = true; goTo(+d.dataset.slide); }));
-
-    /* ── drag ────────────────────────────────── */
-    let dragStartX = 0, dragStartY = 0, dragging = false, dragLocked = false;
-    const DRAG_THRESHOLD = 8, SNAP_THRESHOLD = 50;
-
-    document.addEventListener('selectstart', e => { if (dragLocked) e.preventDefault(); });
-    document.addEventListener('dragstart',   e => e.preventDefault());
-
-    document.addEventListener('pointerdown', e => {
-        if (e.pointerType === 'touch') return; // touch events handle mobile
-        if (e.target.closest('.dot,.btn-close,.btn-back,.no-slide-drag')) return;
-        dragging = true; dragLocked = false;
-        dragStartX = e.clientX; dragStartY = e.clientY;
-        track.style.transition = 'none';
-        track.setPointerCapture(e.pointerId);
-        resetInactivity();
-    });
-
-    document.addEventListener('pointermove', e => {
-        if (e.pointerType === 'touch') return;
-        if (!dragging) return;
-        const dx = Math.abs(e.clientX - dragStartX), dy = Math.abs(e.clientY - dragStartY);
-        if (!dragLocked) {
-            if (dx < DRAG_THRESHOLD && dy < DRAG_THRESHOLD) return;
-            if (dy > dx) { dragging = false; return; }
-            dragLocked = true;
-        }
-        e.preventDefault();
-        const off = current * window.innerWidth - (e.clientX - dragStartX);
-        const clamped = Math.max(-60, Math.min((TOTAL - 1) * window.innerWidth + 60, off));
-        track.style.transform = `translateX(${-clamped}px)`;
-    });
-
-    document.addEventListener('pointerup', e => {
-        if (e.pointerType === 'touch') return;
-        if (!dragging || !dragLocked) { dragging = false; return; }
-        dragging = false;
-        const delta = e.clientX - dragStartX;
-        track.style.transition = `transform ${CSS_DUR} ${EASE_OUT}`;
-        if (Math.abs(delta) > SNAP_THRESHOLD) {
-            peeked = true; clearTimeout(peekTimer);
-            goTo(delta < 0 ? current + 1 : current - 1);
-        } else {
-            applyTransform(current);
-        }
-    });
-
-    document.addEventListener('pointercancel', e => {
-        if (e.pointerType === 'touch') return;
-        if (!dragging) return;
-        dragging = false;
-        track.style.transition = `transform ${CSS_DUR} ${EASE_OUT}`;
-        applyTransform(current);
-    });
-
-    /* ── touch fallback (more reliable on mobile) ── */
-    let touchStartX = 0, touchStartY = 0, touchLocked = false, touchDragging = false;
-
-    document.addEventListener('touchstart', e => {
-        if (e.target.closest('.dot,.btn-close,.btn-back,.no-slide-drag')) return;
-        const t = e.touches[0];
-        touchStartX = t.clientX; touchStartY = t.clientY;
-        touchDragging = true; touchLocked = false;
-        track.style.transition = 'none';
-        resetInactivity();
-    }, { passive: true });
-
-    document.addEventListener('touchmove', e => {
-        if (!touchDragging) return;
-        const t = e.touches[0];
-        const dx = Math.abs(t.clientX - touchStartX), dy = Math.abs(t.clientY - touchStartY);
-        if (!touchLocked) {
-            if (dx < DRAG_THRESHOLD && dy < DRAG_THRESHOLD) return;
-            if (dy > dx) { touchDragging = false; return; }
-            touchLocked = true;
-        }
-        e.preventDefault();
-        const off = current * window.innerWidth - (t.clientX - touchStartX);
-        const clamped = Math.max(-60, Math.min((TOTAL - 1) * window.innerWidth + 60, off));
-        track.style.transform = `translateX(${-clamped}px)`;
-    }, { passive: false });
-
-    document.addEventListener('touchend', e => {
-        if (!touchDragging || !touchLocked) { touchDragging = false; return; }
-        touchDragging = false;
-        const t = e.changedTouches[0];
-        const delta = t.clientX - touchStartX;
-        track.style.transition = `transform ${CSS_DUR} ${EASE_OUT}`;
-        if (Math.abs(delta) > SNAP_THRESHOLD) {
-            peeked = true; clearTimeout(peekTimer);
-            goTo(delta < 0 ? current + 1 : current - 1);
-        } else {
-            applyTransform(current);
-        }
-    });
 
     document.addEventListener('keydown', e => {
-        if (e.key === 'ArrowRight') { peeked = true; goTo(current + 1); }
-        if (e.key === 'ArrowLeft')  { peeked = true; goTo(current - 1); }
+        if (e.key === 'ArrowRight') goTo(current + 1);
+        if (e.key === 'ArrowLeft')  goTo(current - 1);
     });
 
-    /* ── close button: navegação direta no touch ── */
-    document.querySelector('.btn-close').addEventListener('touchend', e => {
+    document.querySelector('.btn-back-fixed').addEventListener('touchend', e => {
         e.preventDefault();
         window.location.href = '/';
     });
@@ -845,12 +641,8 @@
     }
     document.addEventListener('pointerdown', resetInactivity);
 
-
     goTo(0);
-    schedulePeek(PEEK_DELAY);
 })();
-
-
 </script>
 </body>
 </html>

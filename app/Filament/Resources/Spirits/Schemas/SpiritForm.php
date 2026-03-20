@@ -81,17 +81,6 @@ class SpiritForm
                         ->nullable(),
                 ]),
 
-                Section::make('Ocasiões')->schema([
-                    Select::make('occasions')
-                        ->label('Momentos ideais')
-                        ->relationship('occasions', 'name')
-                        ->multiple()
-                        ->searchable()
-                        ->preload()
-                        ->nullable()
-                        ->columnSpanFull(),
-                ]),
-
             ]),
 
             // ── SIDEBAR (1/3) ──────────────────────────────────────────────

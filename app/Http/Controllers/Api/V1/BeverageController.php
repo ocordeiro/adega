@@ -24,7 +24,7 @@ class BeverageController extends Controller
                 'grapeVarieties',
                 'foods.foodCategory',
                 'foods.media',
-                'occasions' => fn ($q) => $q->where('is_active', true),
+                'foods.occasions' => fn ($q) => $q->where('is_active', true),
                 'recipes' => fn ($q) => $q->where('is_active', true),
                 'recipes.media',
                 'media',

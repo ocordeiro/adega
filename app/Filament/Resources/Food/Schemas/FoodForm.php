@@ -27,6 +27,14 @@ class FoodForm
                     ]),
             ]),
             Textarea::make('description')->label('Descrição')->nullable()->rows(3)->columnSpanFull(),
+            Select::make('occasions')
+                ->label('Situações que combinam')
+                ->relationship('occasions', 'name')
+                ->multiple()
+                ->searchable()
+                ->preload()
+                ->nullable()
+                ->columnSpanFull(),
             SpatieMediaLibraryFileUpload::make('image')
                 ->label('Imagem')
                 ->collection('image')

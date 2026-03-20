@@ -130,15 +130,6 @@ class WineForm
                 ]),
 
                 Section::make('Harmonização')->schema([
-                    Select::make('occasions')
-                        ->label('Ocasiões recomendadas')
-                        ->relationship('occasions', 'name')
-                        ->multiple()
-                        ->searchable()
-                        ->preload()
-                        ->nullable()
-                        ->columnSpanFull(),
-
                     Select::make('foods')
                         ->label('Alimentos que harmonizam')
                         ->relationship('foods', 'name')
