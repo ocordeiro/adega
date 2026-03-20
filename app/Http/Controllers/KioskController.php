@@ -79,7 +79,7 @@ class KioskController extends Controller
             // Seleciona até 3 foods com ocasiões distintas para o preview
             $seenOccasions = [];
             $previewFoods = collect();
-            foreach ($wine->foods as $food) {
+            foreach ($wine->foods->shuffle() as $food) {
                 $occ = $food->occasions->first();
                 $key = $occ ? $occ->id : 'none_'.$food->id;
                 if (! in_array($key, $seenOccasions)) {
@@ -127,7 +127,7 @@ class KioskController extends Controller
         // Seleciona até 3 drinks com ocasiões distintas para o preview
         $seenOccasions = [];
         $previewDrinks = collect();
-        foreach ($drinkRecipes as $drink) {
+        foreach ($drinkRecipes->shuffle() as $drink) {
             $occ = $drink->occasions->first();
             $key = $occ ? $occ->id : 'none_'.$drink->id;
             if (! in_array($key, $seenOccasions)) {
