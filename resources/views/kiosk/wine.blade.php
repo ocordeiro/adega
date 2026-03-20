@@ -38,13 +38,14 @@
             position: fixed; top: 1.1rem; left: 1.25rem; z-index: 50;
             display: flex; align-items: center; justify-content: center;
             width: 2.2rem; height: 2.2rem;
-            background: rgba(255,255,255,.8); border: 1px solid var(--border);
-            border-radius: 100px; color: var(--muted);
-            text-decoration: none;
-            backdrop-filter: blur(10px); transition: background .2s, color .2s;
+            background: var(--primary); border: none;
+            border-radius: 100px; color: var(--white);
+            text-decoration: none; cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.18), 0 4px 14px rgba(217,63,53,.4);
+            transition: background .15s, box-shadow .15s;
             touch-action: manipulation;
         }
-        .btn-back-fixed:active { background: var(--white); color: var(--text); }
+        .btn-back-fixed:active { background: var(--primary-dk); box-shadow: inset 0 2px 4px rgba(0,0,0,.25); }
 
 
         /* ── TRACK ────────────────────────────────────── */
@@ -383,6 +384,25 @@
         .recipe-name { font-size: 1.7em; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .28em; flex-shrink: 0; }
         .recipe-desc { font-size: 1.1em; font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: .3em; flex-shrink: 0; }
         .recipe-note { margin-bottom: .3em; padding: .32em .55em; background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: 1em; color: var(--muted); font-style: italic; flex-shrink: 0; }
+
+        .recipe-ingredients {
+            margin-bottom: .45em; padding: .38em .55em;
+            background: rgba(217,63,53,.04); border: 1px solid rgba(217,63,53,.12);
+            border-radius: 8px; flex-shrink: 0;
+        }
+        .recipe-ingredients-title {
+            font-size: .78em; letter-spacing: .12em; text-transform: uppercase;
+            color: var(--primary); opacity: .8; margin-bottom: .22em;
+        }
+        .recipe-ingredient {
+            display: flex; justify-content: space-between; align-items: baseline;
+            font-size: 1em; color: var(--text); padding: .12em 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .recipe-ingredient:last-child { border-bottom: none; }
+        .recipe-ingredient-name { font-weight: 400; }
+        .recipe-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: .9em; white-space: nowrap; }
+
         .recipe-steps { padding-top: .4em; font-size: 1em; font-weight: 300; line-height: 1.55; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
     </style>
 </head>
@@ -487,8 +507,7 @@
         </div>
         @endif
 
-        {{-- Harmonizações preview: até 3 pratos --}}
-        @php $previewFoods = $wine->foods->take(3); @endphp
+        {{-- Harmonizações preview: até 3 pratos com ocasiões distintas --}}
         @if($previewFoods->count())
         <div class="harmony-section">
             <div class="harmony-divider"></div>
@@ -496,6 +515,8 @@
             <div class="pairing-grid">
                 @foreach($previewFoods as $food)
                 <div class="pairing-col">
+                    @php $occ = $food->occasions->first(); @endphp
+                    @if($occ)<p class="pairing-occ-label">{{ $occ->icon }} {{ $occ->name }}</p>@endif
                     <div class="pairing-img-wrap">
                         @php $img = $food->getFirstMedia('image'); @endphp
                         @if($img)
@@ -558,6 +579,22 @@
                         <h3 class="recipe-name">{{ $recipe->name }}</h3>
                         @if($recipe->description)<p class="recipe-desc">{{ $recipe->description }}</p>@endif
                         @if($recipe->pivot->notes)<div class="recipe-note">{{ $recipe->pivot->notes }}</div>@endif
+
+                        @if($recipe->ingredients->count())
+                        <div class="recipe-ingredients">
+                            <p class="recipe-ingredients-title">Ingredientes</p>
+                            @foreach($recipe->ingredients as $ing)
+                            <div class="recipe-ingredient">
+                                <span class="recipe-ingredient-name">{{ $ing->name }}</span>
+                                <span class="recipe-ingredient-qty">
+                                    @if($ing->quantity){{ $ing->quantity }}@endif
+                                    @if($ing->unit) {{ $ing->unit }}@endif
+                                </span>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
+
                         @if($recipe->instructions)
                         <div class="recipe-steps">{{ $recipe->instructions }}</div>
                         @endif
@@ -580,10 +617,11 @@
 
 <script>
 (function () {
-    const TOTAL      = 2;
-    const INACTIVITY = 60000;
-    const DUR        = '380ms';
-    const EASE       = 'cubic-bezier(.25,.46,.45,.94)';
+    const TOTAL           = 2;
+    const INACTIVITY_HOME = 60000;
+    const INACTIVITY_READ = 180000;
+    const DUR             = '380ms';
+    const EASE            = 'cubic-bezier(.25,.46,.45,.94)';
 
     let current = 0;
     let inactTimer;
@@ -608,14 +646,24 @@
         if (e.key === 'ArrowLeft')  goTo(current - 1);
     });
 
-    document.querySelector('.btn-back-fixed').addEventListener('touchend', e => {
+    const btnBack = document.querySelector('.btn-back-fixed');
+    let _backTouched = false;
+    btnBack.addEventListener('touchend', e => {
         e.preventDefault();
-        window.location.href = '/';
+        _backTouched = true;
+        setTimeout(() => _backTouched = false, 300);
+        if (current > 0) goTo(current - 1); else window.location.href = '/';
+    });
+    btnBack.addEventListener('click', e => {
+        e.preventDefault();
+        if (_backTouched) return;
+        if (current > 0) goTo(current - 1); else window.location.href = '/';
     });
 
     function resetInactivity() {
         clearTimeout(inactTimer);
-        inactTimer = setTimeout(() => window.location.href = '/', INACTIVITY);
+        const delay = current === 0 ? INACTIVITY_HOME : INACTIVITY_READ;
+        inactTimer = setTimeout(() => window.location.href = '/', delay);
     }
     document.addEventListener('pointerdown', resetInactivity);
 

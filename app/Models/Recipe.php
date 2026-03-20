@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -47,6 +48,11 @@ class Recipe extends Model implements HasMedia
             ->height(500)
             ->sharpen(10)
             ->nonQueued();
+    }
+
+    public function ingredients(): HasMany
+    {
+        return $this->hasMany(RecipeIngredient::class)->orderBy('sort_order');
     }
 
     public function wines(): BelongsToMany

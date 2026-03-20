@@ -38,13 +38,14 @@
             position: fixed; top: 1.1rem; left: 1.25rem; z-index: 50;
             display: flex; align-items: center; justify-content: center;
             width: 2.2rem; height: 2.2rem;
-            background: rgba(255,255,255,.8); border: 1px solid var(--border);
-            border-radius: 100px; color: var(--muted);
-            text-decoration: none;
-            backdrop-filter: blur(10px); transition: background .2s, color .2s;
+            background: var(--primary); border: none;
+            border-radius: 100px; color: var(--white);
+            text-decoration: none; cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.18), 0 4px 14px rgba(217,63,53,.4);
+            transition: background .15s, box-shadow .15s;
             touch-action: manipulation;
         }
-        .btn-back-fixed:active { background: var(--white); color: var(--text); }
+        .btn-back-fixed:active { background: var(--primary-dk); box-shadow: inset 0 2px 4px rgba(0,0,0,.25); }
 
 
         /* ── TRACK ────────────────────────────────────── */
@@ -414,8 +415,7 @@
         </div>
         @endif
 
-        {{-- Preview: até 3 drinks --}}
-        @php $previewDrinks = $drinkRecipes->take(3); @endphp
+        {{-- Preview: até 3 drinks com ocasiões distintas --}}
         @if($previewDrinks->count())
         <div class="harmony-section">
             <div class="harmony-divider"></div>
@@ -423,6 +423,8 @@
             <div class="pairing-grid">
                 @foreach($previewDrinks as $drink)
                 <div class="pairing-col">
+                    @php $occ = $drink->occasions->first(); @endphp
+                    @if($occ)<p class="pairing-occ-label">{{ $occ->icon }} {{ $occ->name }}</p>@endif
                     <div class="pairing-img-wrap">
                         @php $dImg = $drink->getFirstMedia('photo'); @endphp
                         @if($dImg)
@@ -522,10 +524,11 @@
 
 <script>
 (function () {
-    const TOTAL      = 2;
-    const INACTIVITY = 60000;
-    const DUR        = '380ms';
-    const EASE       = 'cubic-bezier(.25,.46,.45,.94)';
+    const TOTAL           = 2;
+    const INACTIVITY_HOME = 60000;
+    const INACTIVITY_READ = 180000;
+    const DUR             = '380ms';
+    const EASE            = 'cubic-bezier(.25,.46,.45,.94)';
 
     let current = 0;
     let inactTimer;
@@ -550,14 +553,24 @@
         if (e.key === 'ArrowLeft')  goTo(current - 1);
     });
 
-    document.querySelector('.btn-back-fixed').addEventListener('touchend', e => {
+    const btnBack = document.querySelector('.btn-back-fixed');
+    let _backTouched = false;
+    btnBack.addEventListener('touchend', e => {
         e.preventDefault();
-        window.location.href = '/';
+        _backTouched = true;
+        setTimeout(() => _backTouched = false, 300);
+        if (current > 0) goTo(current - 1); else window.location.href = '/';
+    });
+    btnBack.addEventListener('click', e => {
+        e.preventDefault();
+        if (_backTouched) return;
+        if (current > 0) goTo(current - 1); else window.location.href = '/';
     });
 
     function resetInactivity() {
         clearTimeout(inactTimer);
-        inactTimer = setTimeout(() => window.location.href = '/', INACTIVITY);
+        const delay = current === 0 ? INACTIVITY_HOME : INACTIVITY_READ;
+        inactTimer = setTimeout(() => window.location.href = '/', delay);
     }
     document.addEventListener('pointerdown', resetInactivity);
 

@@ -21,4 +21,9 @@ class Occasion extends Model
     {
         return $this->belongsToMany(Food::class, 'food_occasion');
     }
+
+    public function drinkRecipes(): BelongsToMany
+    {
+        return $this->belongsToMany(DrinkRecipe::class, 'drink_recipe_occasion');
+    }
 }

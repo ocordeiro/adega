@@ -26,6 +26,7 @@ class BeverageController extends Controller
                 'foods.media',
                 'foods.occasions' => fn ($q) => $q->where('is_active', true),
                 'recipes' => fn ($q) => $q->where('is_active', true),
+                'recipes.ingredients',
                 'recipes.media',
                 'media',
             ])
@@ -43,7 +44,7 @@ class BeverageController extends Controller
         if ($spirit) {
             $drinkRecipes = DrinkRecipe::where('is_active', true)
                 ->whereHas('ingredients', fn ($q) => $q->where('spirit_id', $spirit->id))
-                ->with(['ingredients.spirit', 'media'])
+                ->with(['ingredients.spirit', 'media', 'occasions' => fn ($q) => $q->where('is_active', true)])
                 ->get();
 
             return new SpiritResource($spirit, $drinkRecipes);

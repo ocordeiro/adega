@@ -54,6 +54,14 @@ class SpiritResource extends JsonResource
                     'unit' => $i->unit,
                     'spirit_name' => $i->spirit?->name,
                 ]),
+                'occasions' => $dr->relationLoaded('occasions')
+                    ? $dr->occasions->map(fn ($o) => [
+                        'id' => $o->id,
+                        'name' => $o->name,
+                        'icon' => $o->icon,
+                        'description' => $o->description,
+                    ])
+                    : [],
             ])),
             'photos' => $this->whenLoaded('media', fn () => $this->getMedia('photos')->map(fn ($m) => [
                 'original' => $m->getUrl(),

@@ -33,7 +33,7 @@ class WineSeeder extends Seeder
                 'temp_max'    => 18,
                 'rating'      => 4,
                 'grapes'      => ['Cabernet Sauvignon' => 60, 'Merlot' => 40],
-                'foods'       => ['Picanha', 'Filé Mignon', 'Costela', 'Queijos', 'Chocolate Amargo'],
+                'foods'       => ['Picanha', 'Filé Mignon', 'Tábua de Frios', 'Costela', 'Chocolate Amargo'],
             ],
         ];
 

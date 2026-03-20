@@ -11,6 +11,7 @@ use App\Models\GrapeVariety;
 use App\Models\Occasion;
 use App\Models\Producer;
 use App\Models\Recipe;
+use App\Models\RecipeIngredient;
 use App\Models\Region;
 use App\Models\Spirit;
 use App\Models\SpiritType;
@@ -194,6 +195,28 @@ class BeverageApiTest extends TestCase
         $this->assertEquals('Ótima combinação', $recipes[0]['notes']);
     }
 
+    public function test_recipe_includes_ingredients(): void
+    {
+        $wine = Wine::create(['name' => 'Chardonnay', 'barcode' => 'ING01', 'is_active' => true]);
+
+        $recipe = Recipe::create(['name' => 'Risoto de Cogumelos', 'instructions' => 'Passo a passo...', 'is_active' => true]);
+
+        RecipeIngredient::create(['recipe_id' => $recipe->id, 'name' => 'Arroz arbóreo', 'quantity' => '200', 'unit' => 'g', 'sort_order' => 1]);
+        RecipeIngredient::create(['recipe_id' => $recipe->id, 'name' => 'Cogumelos', 'quantity' => '100', 'unit' => 'g', 'sort_order' => 2]);
+
+        $wine->recipes()->attach($recipe->id, ['notes' => null]);
+
+        $response = $this->getJson('/api/v1/bebida/ING01', $this->apiHeaders());
+
+        $response->assertOk();
+
+        $ingredients = $response->json('data.recipes.0.ingredients');
+        $this->assertCount(2, $ingredients);
+        $this->assertEquals('Arroz arbóreo', $ingredients[0]['name']);
+        $this->assertEquals('200', $ingredients[0]['quantity']);
+        $this->assertEquals('g', $ingredients[0]['unit']);
+    }
+
     public function test_inactive_wine_returns_404(): void
     {
         Wine::create(['name' => 'Inativo', 'barcode' => 'INACT01', 'is_active' => false]);
@@ -289,6 +312,43 @@ class BeverageApiTest extends TestCase
         $this->assertEquals('Gin Test', $ingredients[0]['spirit_name']);
         $this->assertEquals('Água tônica', $ingredients[1]['name']);
         $this->assertNull($ingredients[1]['spirit_name']);
+    }
+
+    public function test_drink_recipe_includes_active_occasions(): void
+    {
+        $spirit = Spirit::create(['name' => 'Rum', 'barcode' => 'OCC_DRINK01', 'is_active' => true]);
+
+        $recipe = DrinkRecipe::create([
+            'name' => 'Mojito',
+            'instructions' => 'Amasse o limão...',
+            'is_active' => true,
+        ]);
+
+        DrinkRecipeIngredient::create([
+            'drink_recipe_id' => $recipe->id,
+            'spirit_id' => $spirit->id,
+            'name' => 'Rum',
+            'quantity' => '50',
+            'unit' => 'ml',
+            'sort_order' => 1,
+        ]);
+
+        $active = Occasion::create(['name' => 'Praia e Campo', 'icon' => '🌊', 'is_active' => true, 'sort_order' => 1]);
+        $inactive = Occasion::create(['name' => 'Inativa', 'icon' => '❌', 'is_active' => false, 'sort_order' => 2]);
+
+        $recipe->occasions()->attach([$active->id, $inactive->id]);
+
+        $response = $this->getJson('/api/v1/bebida/OCC_DRINK01', $this->apiHeaders());
+
+        $response->assertOk();
+
+        $drinks = $response->json('data.drink_recipes');
+        $this->assertCount(1, $drinks);
+
+        $occasions = $drinks[0]['occasions'];
+        $this->assertCount(1, $occasions);
+        $this->assertEquals('Praia e Campo', $occasions[0]['name']);
+        $this->assertEquals('🌊', $occasions[0]['icon']);
     }
 
     public function test_spirit_excludes_inactive_drink_recipes(): void

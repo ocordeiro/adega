@@ -45,21 +45,34 @@ class WineResource extends JsonResource
                 'name' => $gv->name,
                 'percentage' => $gv->pivot->percentage,
             ])),
-            'foods' => $this->whenLoaded('foods', fn () => $this->foods->map(fn ($f) => [
-                'id' => $f->id,
-                'name' => $f->name,
-                'category' => $f->foodCategory?->name,
-                'notes' => $f->pivot->notes,
-                'image' => $f->getFirstMediaUrl('image', 'thumb') ?: null,
-                'occasions' => $f->relationLoaded('occasions')
-                    ? $f->occasions->map(fn ($o) => [
-                        'id' => $o->id,
-                        'name' => $o->name,
-                        'icon' => $o->icon,
-                        'description' => $o->description,
-                    ])
-                    : [],
-            ])),
+            'foods' => $this->whenLoaded('foods', function () {
+                $seenOccasions = [];
+                $preview = collect();
+                foreach ($this->foods as $food) {
+                    $occ = $food->relationLoaded('occasions') ? $food->occasions->first() : null;
+                    $key = $occ ? $occ->id : 'none_'.$food->id;
+                    if (! in_array($key, $seenOccasions)) {
+                        $seenOccasions[] = $key;
+                        $preview->push($food);
+                        if ($preview->count() === 3) break;
+                    }
+                }
+                return $preview->map(fn ($f) => [
+                    'id' => $f->id,
+                    'name' => $f->name,
+                    'category' => $f->foodCategory?->name,
+                    'notes' => $f->pivot->notes,
+                    'image' => $f->getFirstMediaUrl('image', 'thumb') ?: null,
+                    'occasions' => $f->relationLoaded('occasions')
+                        ? $f->occasions->map(fn ($o) => [
+                            'id' => $o->id,
+                            'name' => $o->name,
+                            'icon' => $o->icon,
+                            'description' => $o->description,
+                        ])
+                        : [],
+                ]);
+            }),
             'recipes' => $this->whenLoaded('recipes', fn () => $this->recipes->map(fn ($r) => [
                 'id' => $r->id,
                 'name' => $r->name,
@@ -69,6 +82,13 @@ class WineResource extends JsonResource
                 'difficulty' => $r->difficulty,
                 'notes' => $r->pivot->notes,
                 'photo' => $r->getFirstMediaUrl('photo', 'card') ?: null,
+                'ingredients' => $r->relationLoaded('ingredients')
+                    ? $r->ingredients->map(fn ($i) => [
+                        'name' => $i->name,
+                        'quantity' => $i->quantity,
+                        'unit' => $i->unit,
+                    ])
+                    : [],
             ])),
             'photos' => $this->whenLoaded('media', fn () => $this->getMedia('photos')->map(fn ($m) => [
                 'original' => $m->getUrl(),

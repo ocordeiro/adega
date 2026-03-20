@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ad;
 use App\Models\DrinkRecipe;
 use App\Models\Spirit;
 use App\Models\Wine;
@@ -10,9 +11,21 @@ use Illuminate\View\View;
 
 class KioskController extends Controller
 {
+    private function activeAdUrls(): array
+    {
+        return Ad::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get()
+            ->map(fn (Ad $ad) => $ad->getFirstMediaUrl('video'))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
     public function home(): View
     {
-        return view('kiosk.home');
+        $adUrls = $this->activeAdUrls();
+        return view('kiosk.home', compact('adUrls'));
     }
 
     public function random(): RedirectResponse
@@ -58,12 +71,25 @@ class KioskController extends Controller
                 'grapeVarieties',
                 'foods.foodCategory',
                 'foods.occasions' => fn ($q) => $q->where('is_active', true),
-                'recipes' => fn ($q) => $q->where('is_active', true),
+                'recipes' => fn ($q) => $q->where('is_active', true)->with('ingredients'),
             ])
             ->first();
 
         if ($wine) {
-            return view('kiosk.wine', compact('wine'));
+            // Seleciona até 3 foods com ocasiões distintas para o preview
+            $seenOccasions = [];
+            $previewFoods = collect();
+            foreach ($wine->foods as $food) {
+                $occ = $food->occasions->first();
+                $key = $occ ? $occ->id : 'none_'.$food->id;
+                if (! in_array($key, $seenOccasions)) {
+                    $seenOccasions[] = $key;
+                    $previewFoods->push($food);
+                    if ($previewFoods->count() === 3) break;
+                }
+            }
+
+            return view('kiosk.wine', compact('wine', 'previewFoods'));
         }
 
         // Fallback: buscar em destilados
@@ -95,9 +121,22 @@ class KioskController extends Controller
 
         $drinkRecipes = DrinkRecipe::where('is_active', true)
             ->whereHas('ingredients', fn ($q) => $q->where('spirit_id', $spirit->id))
-            ->with('ingredients')
+            ->with(['ingredients', 'occasions' => fn ($q) => $q->where('is_active', true)])
             ->get();
 
-        return view('kiosk.spirit', compact('spirit', 'drinkRecipes'));
+        // Seleciona até 3 drinks com ocasiões distintas para o preview
+        $seenOccasions = [];
+        $previewDrinks = collect();
+        foreach ($drinkRecipes as $drink) {
+            $occ = $drink->occasions->first();
+            $key = $occ ? $occ->id : 'none_'.$drink->id;
+            if (! in_array($key, $seenOccasions)) {
+                $seenOccasions[] = $key;
+                $previewDrinks->push($drink);
+                if ($previewDrinks->count() === 3) break;
+            }
+        }
+
+        return view('kiosk.spirit', compact('spirit', 'drinkRecipes', 'previewDrinks'));
     }
 }

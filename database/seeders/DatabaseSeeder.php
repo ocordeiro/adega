@@ -24,10 +24,12 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             WineSeeder::class,
             RecipeSeeder::class,
+            RecipeIngredientSeeder::class,
             OccasionSeeder::class,
             SpiritTypeSeeder::class,
             SpiritSeeder::class,
             DrinkRecipeSeeder::class,
+            AdSeeder::class,
         ]);
     }
 }

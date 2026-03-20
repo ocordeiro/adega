@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Recipes\Schemas;
 
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -50,6 +51,33 @@ class RecipeForm
                 ->label('Modo de Preparo')
                 ->rows(8)
                 ->nullable()
+                ->columnSpanFull(),
+
+            Repeater::make('ingredients')
+                ->label('Ingredientes')
+                ->relationship()
+                ->reorderable('sort_order')
+                ->schema([
+                    Grid::make(3)->schema([
+                        TextInput::make('name')
+                            ->label('Ingrediente')
+                            ->required()
+                            ->maxLength(200),
+
+                        TextInput::make('quantity')
+                            ->label('Quantidade')
+                            ->nullable()
+                            ->maxLength(50),
+
+                        TextInput::make('unit')
+                            ->label('Unidade')
+                            ->nullable()
+                            ->maxLength(50)
+                            ->placeholder('ml, unidade, colher...'),
+                    ]),
+                ])
+                ->defaultItems(0)
+                ->addActionLabel('Adicionar ingrediente')
                 ->columnSpanFull(),
 
             SpatieMediaLibraryFileUpload::make('photo')
