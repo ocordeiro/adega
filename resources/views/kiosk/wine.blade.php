@@ -374,16 +374,16 @@
 
         .recipe-card { container-type: size; background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
         .recipe-img  { width: 100%; aspect-ratio: 4/1; object-fit: cover; display: block; flex-shrink: 0; }
-        .recipe-ph   { width: 100%; aspect-ratio: 4/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: clamp(1rem, 3cqh, 2rem); flex-shrink: 0; }
-        .recipe-body { padding: clamp(.3rem,.8cqh,.6rem) clamp(.5rem,1cqh,.85rem); flex: 1; min-height: 0; display: flex; flex-direction: column; }
-        .recipe-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: clamp(.15rem,.5cqh,.35rem); flex-shrink: 0; }
-        .recipe-tag  { font-size: clamp(.48rem, 1.4cqh, .65rem); letter-spacing: .07em; text-transform: uppercase; padding: .12rem .45rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
+        .recipe-ph   { width: 100%; aspect-ratio: 4/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: max(1rem, 3cqh); flex-shrink: 0; }
+        .recipe-body { padding: max(.3rem,.8cqh) max(.5rem,1.2cqh); flex: 1; min-height: 0; display: flex; flex-direction: column; }
+        .recipe-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: max(.15rem,.5cqh); flex-shrink: 0; }
+        .recipe-tag  { font-size: max(.5rem, 1.4cqh); letter-spacing: .07em; text-transform: uppercase; padding: .12rem .45rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
         .recipe-tag.difficulty { color: var(--muted); }
         .recipe-tag.time       { color: var(--primary); }
-        .recipe-name { font-size: clamp(.72rem, 2.8cqh, 1.15rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: clamp(.15rem,.5cqh,.3rem); flex-shrink: 0; }
-        .recipe-desc { font-size: clamp(.6rem, 2cqh, .88rem); font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: clamp(.15rem,.5cqh,.35rem); flex-shrink: 0; }
-        .recipe-note { margin-bottom: clamp(.15rem,.5cqh,.35rem); padding: clamp(.18rem,.5cqh,.3rem) clamp(.4rem,.8cqh,.6rem); background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: clamp(.55rem, 1.7cqh, .75rem); color: var(--muted); font-style: italic; flex-shrink: 0; }
-        .recipe-steps { padding-top: clamp(.25rem,.6cqh,.45rem); font-size: clamp(.55rem, 1.8cqh, .78rem); font-weight: 300; line-height: 1.55; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
+        .recipe-name { font-size: max(.75rem, 2.8cqh); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: max(.15rem,.5cqh); flex-shrink: 0; }
+        .recipe-desc { font-size: max(.62rem, 2cqh); font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: max(.15rem,.5cqh); flex-shrink: 0; }
+        .recipe-note { margin-bottom: max(.15rem,.5cqh); padding: max(.18rem,.5cqh) max(.4rem,.8cqh); background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: max(.55rem, 1.7cqh); color: var(--muted); font-style: italic; flex-shrink: 0; }
+        .recipe-steps { padding-top: max(.25rem,.6cqh); font-size: max(.55rem, 1.8cqh); font-weight: 300; line-height: 1.55; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>

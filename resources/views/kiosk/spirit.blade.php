@@ -303,34 +303,34 @@
 
         .drink-card { container-type: size; background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
         .drink-img  { width: 100%; aspect-ratio: 5/1; object-fit: cover; display: block; flex-shrink: 0; }
-        .drink-ph   { width: 100%; aspect-ratio: 5/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: clamp(1rem, 3cqh, 2rem); flex-shrink: 0; }
-        .drink-body { padding: clamp(.3rem,.8cqh,.55rem) clamp(.5rem,1cqh,.75rem); flex: 1; min-height: 0; display: flex; flex-direction: column; }
-        .drink-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: clamp(.12rem,.4cqh,.25rem); flex-shrink: 0; }
-        .drink-tag  { font-size: clamp(.45rem, 1.3cqh, .62rem); letter-spacing: .06em; text-transform: uppercase; padding: .12rem .45rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
+        .drink-ph   { width: 100%; aspect-ratio: 5/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: max(1rem, 3cqh); flex-shrink: 0; }
+        .drink-body { padding: max(.3rem,.8cqh) max(.5rem,1.2cqh); flex: 1; min-height: 0; display: flex; flex-direction: column; }
+        .drink-tags { display: flex; gap: .25rem; flex-wrap: wrap; margin-bottom: max(.12rem,.4cqh); flex-shrink: 0; }
+        .drink-tag  { font-size: max(.48rem, 1.3cqh); letter-spacing: .06em; text-transform: uppercase; padding: .12rem .45rem; border-radius: 100px; background: var(--bg); border: 1px solid var(--border); }
         .drink-tag.difficulty { color: var(--muted); }
         .drink-tag.time       { color: var(--primary); }
-        .drink-name { font-size: clamp(.72rem, 2.8cqh, 1.1rem); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: clamp(.12rem,.4cqh,.25rem); flex-shrink: 0; }
-        .drink-desc { font-size: clamp(.6rem, 2cqh, .85rem); font-weight: 300; color: var(--muted); line-height: 1.45; margin-bottom: clamp(.15rem,.45cqh,.3rem); flex-shrink: 0; }
+        .drink-name { font-size: max(.72rem, 2.8cqh); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: max(.12rem,.4cqh); flex-shrink: 0; }
+        .drink-desc { font-size: max(.6rem, 2cqh); font-weight: 300; color: var(--muted); line-height: 1.45; margin-bottom: max(.15rem,.45cqh); flex-shrink: 0; }
 
         .drink-ingredients {
-            margin-bottom: clamp(.2rem,.55cqh,.45rem); padding: clamp(.2rem,.5cqh,.38rem) clamp(.4rem,.8cqh,.65rem);
+            margin-bottom: max(.2rem,.55cqh); padding: max(.2rem,.5cqh) max(.4rem,.8cqh);
             background: rgba(217,63,53,.04); border: 1px solid rgba(217,63,53,.12);
             border-radius: 8px; flex-shrink: 0;
         }
         .drink-ingredients-title {
-            font-size: clamp(.45rem, 1.3cqh, .62rem); letter-spacing: .12em; text-transform: uppercase;
-            color: var(--primary); opacity: .8; margin-bottom: clamp(.1rem,.35cqh,.22rem);
+            font-size: max(.45rem, 1.3cqh); letter-spacing: .12em; text-transform: uppercase;
+            color: var(--primary); opacity: .8; margin-bottom: max(.1rem,.35cqh);
         }
         .drink-ingredient {
             display: flex; justify-content: space-between; align-items: baseline;
-            font-size: clamp(.55rem, 1.8cqh, .78rem); color: var(--text); padding: .1rem 0;
+            font-size: max(.55rem, 1.8cqh); color: var(--text); padding: .1rem 0;
             border-bottom: 1px solid var(--border);
         }
         .drink-ingredient:last-child { border-bottom: none; }
         .drink-ingredient-name { font-weight: 400; }
-        .drink-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: clamp(.5rem, 1.6cqh, .7rem); white-space: nowrap; }
+        .drink-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: max(.5rem, 1.6cqh); white-space: nowrap; }
 
-        .drink-steps { padding-top: clamp(.2rem,.55cqh,.4rem); font-size: clamp(.55rem, 1.8cqh, .76rem); font-weight: 300; line-height: 1.5; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
+        .drink-steps { padding-top: max(.2rem,.55cqh); font-size: max(.55rem, 1.8cqh); font-weight: 300; line-height: 1.5; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
 
         .drinks-body {
             flex: 1; min-height: 0; overflow: hidden;
