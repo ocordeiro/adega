@@ -407,7 +407,7 @@ html, body {
     background: rgba(var(--gold-rgb),.1); border: 1px solid rgba(var(--gold-rgb),.2);
     border-radius: 100px; padding: .24rem .9rem;
     font-size: .78rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--gold); width: fit-content;
+    color: var(--gold); width: fit-content; white-space: nowrap;
 }
 
 /* Title */
@@ -425,7 +425,7 @@ html, body {
 
 .wine-desc {
     font-size: 1.03rem; font-weight: 400; line-height: 1.65;
-    color: var(--muted); max-width: 520px;
+    color: var(--muted); max-width: 65ch;
 }
 @media (orientation: portrait) and (max-width: 599px) { .wine-desc { font-size: .9rem; } }
 
@@ -698,7 +698,7 @@ html, body {
 
 .spirit-desc {
     font-size: 1.03rem; font-weight: 400; line-height: 1.65;
-    color: var(--muted); max-width: 520px; text-align: center;
+    color: var(--muted); max-width: 65ch; text-align: center;
 }
 @media (orientation: portrait) and (max-width: 599px) { .spirit-desc { font-size: .9rem; } }
 
@@ -841,3 +841,84 @@ html, body {
     margin-top: -.1em;
     opacity: .75;
 }
+
+/* ── NOT FOUND SCREEN ──────────────────────────────── */
+.nf-step {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: nfFadeIn .35s ease;
+}
+.nf-step.active { display: flex; }
+
+@keyframes nfFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.nf-icon { margin-bottom: 2rem; }
+.nf-check { margin-bottom: 1.5rem; }
+
+.nf-title {
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.25;
+    margin-bottom: .6rem;
+}
+.nf-sub {
+    font-size: clamp(.92rem, 1.8vw, 1.08rem);
+    font-weight: 400;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    max-width: 420px;
+}
+
+.nf-btns {
+    display: flex; gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nf-btn {
+    display: inline-flex; align-items: center; gap: .55rem;
+    border: none; border-radius: 100px;
+    padding: .86rem 2.4rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.08rem; font-weight: 700; letter-spacing: .02em;
+    cursor: pointer;
+    transition: box-shadow .15s, background .15s, transform .1s;
+    touch-action: manipulation;
+}
+.nf-btn:active { transform: scale(.97); }
+
+.nf-btn-primary {
+    background: var(--gold); color: var(--base);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -2px 0 rgba(0,0,0,.18),
+        0 4px 14px rgba(var(--gold-rgb),.35);
+}
+.nf-btn-primary:active {
+    filter: brightness(.9);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(var(--gold-rgb),.3);
+}
+
+.nf-btn-outline {
+    background: transparent; color: var(--muted);
+    border: 2px solid var(--border);
+}
+.nf-btn-outline:active { background: rgba(255,255,255,.04); }
+
+.nf-btn-wine {
+    background: #722F37; color: #fff;
+    box-shadow: 0 4px 14px rgba(114,47,55,.35);
+}
+.nf-btn-wine:active { background: #5a252c; }
+
+.nf-btn-spirit {
+    background: #b8860b; color: #fff;
+    box-shadow: 0 4px 14px rgba(184,134,11,.35);
+}
+.nf-btn-spirit:active { background: #996f09; }

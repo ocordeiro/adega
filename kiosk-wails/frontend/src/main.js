@@ -1,6 +1,6 @@
 import './style.css';
 import 'flag-icons/css/flag-icons.min.css';
-import { LookupBarcode, RandomBeverage, FetchAds, FetchSettings } from '../wailsjs/go/main/App';
+import { LookupBarcode, RandomBeverage, ReportBeverage, FetchAds, FetchSettings } from '../wailsjs/go/main/App';
 
 // ── State ──
 let currentView = 'scanner'; // 'scanner' | 'detail'
@@ -242,12 +242,90 @@ async function fetchByBarcode(barcode) {
         if (result.success) {
             renderBeverage(result.data);
         } else {
-            showFlash(result.error || 'Produto não encontrado');
+            showNotFound(barcode);
         }
     } catch (e) {
         hideLoading();
         showFlash('Erro de conexão');
     }
+}
+
+// ═══════════════════════════════════════════════
+// NOT FOUND SCREEN
+// ═══════════════════════════════════════════════
+function showNotFound(barcode) {
+    currentView = 'detail';
+    clearTimeout(adTimer);
+    document.getElementById('app').innerHTML = `
+<div class="bg"></div>
+<div class="page">
+    ${getLogoHTML()}
+    <div class="rule"></div>
+
+    <div class="nf-step active" id="nf-step-1">
+        <div class="nf-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.18;color:var(--cream)">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+        </div>
+        <p class="nf-title">Produto não encontrado</p>
+        <p class="nf-sub">O produto é uma bebida?</p>
+        <div class="nf-btns">
+            <button class="nf-btn nf-btn-primary" id="nf-yes">Sim</button>
+            <button class="nf-btn nf-btn-outline" id="nf-no">Não</button>
+        </div>
+    </div>
+
+    <div class="nf-step" id="nf-step-2">
+        <div class="nf-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.18;color:var(--cream)">
+                <path d="M8 2h8l-1 9H9L8 2z"/>
+                <path d="M12 11v7"/><path d="M8 22h8"/><path d="M7 2h10"/>
+            </svg>
+        </div>
+        <p class="nf-title">A bebida em questão é:</p>
+        <p class="nf-sub">Selecione o tipo para nos ajudar a cadastrar</p>
+        <div class="nf-btns">
+            <button class="nf-btn nf-btn-wine" id="nf-wine">Vinho</button>
+            <button class="nf-btn nf-btn-spirit" id="nf-spirit">Destilado</button>
+        </div>
+    </div>
+
+    <div class="nf-step" id="nf-step-3">
+        <svg class="nf-check" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="64" height="64">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <p class="nf-title">Obrigado!</p>
+        <p class="nf-sub">Em breve estaremos adicionando as informações deste produto.</p>
+        <div class="nf-btns">
+            <button class="nf-btn nf-btn-primary" id="nf-home">Voltar ao início</button>
+        </div>
+    </div>
+</div>
+`;
+
+    function goStep(n) {
+        document.querySelectorAll('.nf-step').forEach(s => s.classList.remove('active'));
+        document.getElementById('nf-step-' + n).classList.add('active');
+    }
+
+    document.getElementById('nf-yes').addEventListener('click', () => goStep(2));
+    document.getElementById('nf-no').addEventListener('click', () => showScanner());
+
+    document.getElementById('nf-wine').addEventListener('click', () => {
+        ReportBeverage(barcode, 'wine').catch(() => {});
+        goStep(3);
+        setTimeout(showScanner, 8000);
+    });
+    document.getElementById('nf-spirit').addEventListener('click', () => {
+        ReportBeverage(barcode, 'spirit').catch(() => {});
+        goStep(3);
+        setTimeout(showScanner, 8000);
+    });
+
+    document.getElementById('nf-home').addEventListener('click', () => showScanner());
 }
 
 function renderBeverage(data) {

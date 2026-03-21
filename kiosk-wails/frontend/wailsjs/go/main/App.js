@@ -17,3 +17,7 @@ export function LookupBarcode(arg1) {
 export function RandomBeverage() {
   return window['go']['main']['App']['RandomBeverage']();
 }
+
+export function ReportBeverage(arg1, arg2) {
+  return window['go']['main']['App']['ReportBeverage'](arg1, arg2);
+}

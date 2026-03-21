@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -46,6 +47,31 @@ func (a *App) LookupBarcode(barcode string) BeverageResult {
 func (a *App) RandomBeverage() BeverageResult {
 	url := fmt.Sprintf("%s/api/v1/bebida/aleatorio", apiBaseURL)
 	return a.fetchBeverage(url)
+}
+
+// ReportBeverage reports a barcode as a beverage (wine or spirit)
+func (a *App) ReportBeverage(barcode string, beverageType string) bool {
+	url := fmt.Sprintf("%s/api/v1/bebida/reportar", apiBaseURL)
+	payload, _ := json.Marshal(map[string]string{
+		"barcode": barcode,
+		"type":    beverageType,
+	})
+
+	req, err := http.NewRequest("POST", url, bytes.NewReader(payload))
+	if err != nil {
+		return false
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiToken)
+
+	resp, err := a.client.Do(req)
+	if err != nil {
+		return false
+	}
+	defer resp.Body.Close()
+
+	return resp.StatusCode == 200
 }
 
 // SettingsResult holds the kiosk appearance settings

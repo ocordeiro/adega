@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ad;
+use App\Models\BeverageReport;
 use App\Models\DrinkRecipe;
 use App\Models\Setting;
 use App\Models\Spirit;
 use App\Models\Theme;
 use App\Models\Wine;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class KioskController extends Controller
@@ -121,7 +124,20 @@ class KioskController extends Controller
             return redirect()->route('kiosk.spirit', ['barcode' => $barcode]);
         }
 
-        return redirect('/')->with('error', 'Bebida não encontrada. Tente escanear novamente.');
+        $settings = $this->kioskSettings();
+        return view('kiosk.not-found', compact('barcode', 'settings'));
+    }
+
+    public function report(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'barcode' => 'required|string|max:100',
+            'type'    => 'required|in:wine,spirit',
+        ]);
+
+        BeverageReport::create($data);
+
+        return response()->json(['ok' => true]);
     }
 
     public function showSpirit(string $barcode): View|RedirectResponse

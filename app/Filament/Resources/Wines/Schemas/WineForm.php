@@ -47,7 +47,8 @@ class WineForm
                         TextInput::make('barcode')
                             ->label('Código de Barras')
                             ->nullable()
-                            ->maxLength(100),
+                            ->maxLength(100)
+                            ->default(fn () => request()->query('barcode')),
                     ]),
                 ]),
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\BeverageReport;
 use App\Models\Country;
 use App\Models\DrinkRecipe;
 use App\Models\DrinkRecipeIngredient;
@@ -396,5 +397,98 @@ class BeverageApiTest extends TestCase
 
         $response->assertOk()
             ->assertJson(['data' => ['type' => 'wine', 'name' => 'Vinho']]);
+    }
+
+    // ── Reportar bebida ─────────────────────────────────────
+
+    public function test_report_creates_beverage_report_for_wine(): void
+    {
+        $response = $this->postJson('/api/v1/bebida/reportar', [
+            'barcode' => '7891234567890',
+            'type' => 'wine',
+        ], $this->apiHeaders());
+
+        $response->assertOk()
+            ->assertJson(['message' => 'Reportado com sucesso.']);
+
+        $this->assertDatabaseHas('beverage_reports', [
+            'barcode' => '7891234567890',
+            'type' => 'wine',
+            'is_resolved' => false,
+        ]);
+    }
+
+    public function test_report_creates_beverage_report_for_spirit(): void
+    {
+        $response = $this->postJson('/api/v1/bebida/reportar', [
+            'barcode' => '7891234567891',
+            'type' => 'spirit',
+        ], $this->apiHeaders());
+
+        $response->assertOk()
+            ->assertJson(['message' => 'Reportado com sucesso.']);
+
+        $this->assertDatabaseHas('beverage_reports', [
+            'barcode' => '7891234567891',
+            'type' => 'spirit',
+        ]);
+    }
+
+    public function test_report_returns_401_without_token(): void
+    {
+        $response = $this->postJson('/api/v1/bebida/reportar', [
+            'barcode' => '7891234567890',
+            'type' => 'wine',
+        ]);
+
+        $response->assertStatus(401);
+    }
+
+    public function test_report_validates_required_barcode(): void
+    {
+        $response = $this->postJson('/api/v1/bebida/reportar', [
+            'type' => 'wine',
+        ], $this->apiHeaders());
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('barcode');
+    }
+
+    public function test_report_validates_required_type(): void
+    {
+        $response = $this->postJson('/api/v1/bebida/reportar', [
+            'barcode' => '7891234567890',
+        ], $this->apiHeaders());
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('type');
+    }
+
+    public function test_report_validates_type_must_be_wine_or_spirit(): void
+    {
+        $response = $this->postJson('/api/v1/bebida/reportar', [
+            'barcode' => '7891234567890',
+            'type' => 'beer',
+        ], $this->apiHeaders());
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('type');
+    }
+
+    public function test_report_allows_duplicate_barcodes(): void
+    {
+        $this->postJson('/api/v1/bebida/reportar', [
+            'barcode' => '7891234567890',
+            'type' => 'wine',
+        ], $this->apiHeaders());
+
+        $response = $this->postJson('/api/v1/bebida/reportar', [
+            'barcode' => '7891234567890',
+            'type' => 'spirit',
+        ], $this->apiHeaders());
+
+        $response->assertOk();
+
+        $this->assertCount(2, BeverageReport::where('barcode', '7891234567890')->get());
     }
 }

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\SpiritResource;
 use App\Http\Resources\V1\WineResource;
+use App\Models\BeverageReport;
 use App\Models\DrinkRecipe;
 use App\Models\Spirit;
 use App\Models\Wine;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class BeverageController extends Controller
 {
@@ -80,5 +82,17 @@ class BeverageController extends Controller
         $chosen = $candidates->random();
 
         return $this->show($chosen->barcode);
+    }
+
+    public function report(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'barcode' => 'required|string|max:100',
+            'type'    => 'required|in:wine,spirit',
+        ]);
+
+        BeverageReport::create($data);
+
+        return response()->json(['message' => 'Reportado com sucesso.']);
     }
 }
