@@ -7,7 +7,10 @@
         function hex2rgb(h){var m=/^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:null;}
         function lum(c){return 0.299*c[0]+0.587*c[1]+0.114*c[2];}
         function adj(c,a){return '#'+c.map(function(v){return('0'+Math.max(0,Math.min(255,v+a)).toString(16)).slice(-2);}).join('');}
-        if (s.element_scale && s.element_scale !== 1) r.style.zoom = s.element_scale;
+        var isWin = navigator.platform.indexOf('Win') > -1 || navigator.userAgent.indexOf('Windows') > -1;
+        var dpiZoom = (isWin && window.devicePixelRatio && window.devicePixelRatio !== 1) ? window.devicePixelRatio : 1;
+        if (dpiZoom !== 1) r.style.zoom = dpiZoom;
+        if (s.element_scale && s.element_scale !== 1) r.style.zoom = (s.element_scale || 1) * dpiZoom;
         if (s.font_scale) r.style.fontSize = (s.font_scale * 100) + '%';
         if (s.color_primary) {
             r.style.setProperty('--primary', s.color_primary);

@@ -1,4 +1,5 @@
 import './style.css';
+import 'flag-icons/css/flag-icons.min.css';
 import { LookupBarcode, RandomBeverage, FetchAds, FetchSettings } from '../wailsjs/go/main/App';
 
 // ── State ──
@@ -24,11 +25,39 @@ function getPhoto(data) {
     return null;
 }
 
+function countryFlag(code) {
+    if (!code || code.length !== 2) return '';
+    const c = code.toLowerCase();
+    return `<span class="fi fi-${c} fis country-flag"></span>`;
+}
+
 function getOrigin(data) {
     if (!data.country) return '';
-    let origin = data.country.name;
-    if (data.region) origin += ', ' + data.region.name;
-    return origin;
+    const code = data.country.code || '';
+    const flag = code.length === 2 ? countryFlag(code) : '';
+    let origin = esc(data.country.name);
+    if (data.region) origin += ', ' + esc(data.region.name);
+    return flag ? flag + ' ' + origin : origin;
+}
+
+// Flat SVG icons per occasion ID (Lucide-style, 24x24 stroke)
+const OCCASION_ICONS = {
+    1: `<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>`,           // Churrasco → Flame
+    2: `<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>`,                                       // Jantar Romântico → Heart
+    3: `<path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H7c-1.5 4-2 6-2 8a5 5 0 0 0 5 5z"/>`,                                                   // Celebração → Wine
+    4: `<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>`,                                                                              // Almoço de Negócios → Briefcase
+    5: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,                             // Almoço em Família → Users
+    6: `<path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/>`, // Confraternização → Party
+    7: `<path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 22 4-10 4 10"/><path d="M18 18a4 4 0 0 0-8 0"/>`,  // Aperitivo → Sunset
+    8: `<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>`,                                                                                       // Fim de Semana em Casa → Home
+    9: `<polyline points="20 12 20 22 4 22 4 12"/><rect width="20" height="5" x="2" y="7"/><line x1="12" x2="12" y1="22" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>`, // Presente → Gift
+   10: `<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>`, // Praia e Campo → Waves
+};
+
+function occasionIcon(occ) {
+    const paths = OCCASION_ICONS[occ.id];
+    if (!paths) return '';
+    return `<svg class="occ-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
 }
 
 function starsHTML(rating) {
@@ -259,7 +288,7 @@ function renderWine(w) {
     let metaItems = '';
     if (w.producer) metaItems += `<div class="meta-item"><span class="meta-label">Produtor</span><span class="meta-value">${esc(w.producer.name)}</span></div>`;
     const origin = getOrigin(w);
-    if (origin) metaItems += `<div class="meta-item"><span class="meta-label">Origem</span><span class="meta-value">${esc(origin)}</span></div>`;
+    if (origin) metaItems += `<div class="meta-item"><span class="meta-label">Origem</span><span class="meta-value">${origin}</span></div>`;
     if (w.alcohol_content) metaItems += `<div class="meta-item"><span class="meta-label">Álcool</span><span class="meta-value">${Number(w.alcohol_content).toFixed(1)}%</span></div>`;
     if (w.serving_temp_min || w.serving_temp_max) {
         let temp = '';
@@ -291,7 +320,7 @@ function renderWine(w) {
                         ? `<img src="${esc(f.image)}" alt="${esc(f.name)}" draggable="false">`
                         : `<div class="pairing-img-ph">🍽️</div>`;
                     return `<div class="pairing-col">
-                        ${occ ? `<p class="pairing-occ-label">${esc(occ.icon)} ${esc(occ.name)}</p>` : ''}
+                        ${occ ? `<p class="pairing-occ-label">${occasionIcon(occ)} ${esc(occ.name)}</p>` : ''}
                         <div class="pairing-img-wrap">${img}</div>
                         <p class="pairing-food-name">${esc(f.name)}</p>
                         ${f.category ? `<p class="pairing-food-cat">${esc(f.category)}</p>` : ''}
@@ -405,7 +434,10 @@ function renderSpirit(s) {
     // Meta items
     let metaItems = '';
     if (s.producer) metaItems += `<div class="meta-item"><span class="meta-label">Produtor</span><span class="meta-value">${esc(s.producer.name)}</span></div>`;
-    if (s.country) metaItems += `<div class="meta-item"><span class="meta-label">Origem</span><span class="meta-value">${esc(s.country.name)}</span></div>`;
+    if (s.country) {
+        const sFlag = countryFlag(s.country.code || '');
+        metaItems += `<div class="meta-item"><span class="meta-label">Origem</span><span class="meta-value">${sFlag ? sFlag + ' ' : ''}${esc(s.country.name)}</span></div>`;
+    }
     if (s.alcohol_content) metaItems += `<div class="meta-item"><span class="meta-label">Álcool</span><span class="meta-value">${Number(s.alcohol_content).toFixed(1)}%</span></div>`;
     const hasMeta = metaItems !== '';
 
@@ -422,7 +454,7 @@ function renderSpirit(s) {
                         ? `<img src="${esc(d.photo)}" alt="${esc(d.name)}" draggable="false">`
                         : `<div class="pairing-img-ph">🍸</div>`;
                     return `<div class="pairing-col">
-                        ${occ ? `<p class="pairing-occ-label">${esc(occ.icon)} ${esc(occ.name)}</p>` : ''}
+                        ${occ ? `<p class="pairing-occ-label">${occasionIcon(occ)} ${esc(occ.name)}</p>` : ''}
                         <div class="pairing-img-wrap">${img}</div>
                         <p class="pairing-food-name">${esc(d.name)}</p>
                         ${d.difficulty ? `<p class="pairing-food-cat">${esc(d.difficulty.charAt(0).toUpperCase() + d.difficulty.slice(1))}</p>` : ''}
@@ -663,10 +695,12 @@ function applySettings(settings) {
         }
     }
     if (settings.element_scale) {
-        root.style.zoom = settings.element_scale;
+        const isWin = navigator.platform.indexOf('Win') > -1 || navigator.userAgent.indexOf('Windows') > -1;
+        const dpiZoom = (isWin && window.devicePixelRatio && window.devicePixelRatio !== 1) ? window.devicePixelRatio : 1;
+        root.style.zoom = (settings.element_scale || 1) * dpiZoom;
     }
     if (settings.font_scale) {
-        root.style.fontSize = (settings.font_scale * 100) + '%';
+        root.style.setProperty('--font-scale', settings.font_scale);
     }
 
     try { localStorage.setItem('kiosk_settings', JSON.stringify(settings)); } catch(e) {}

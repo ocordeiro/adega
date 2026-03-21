@@ -9,9 +9,25 @@
     <script>
     (function(){
         try{
+            // Compensar DPI scaling no Windows — o WebView2 com permonitorv2
+            // renderiza em pixels físicos, então precisamos ajustar o zoom base
+            var isWin = navigator.platform.indexOf('Win') > -1 || navigator.userAgent.indexOf('Windows') > -1;
+            var dpiZoom = 1;
+            if (isWin && window.devicePixelRatio && window.devicePixelRatio !== 1) {
+                // No Windows com DPI scaling (125%, 150%, etc), o devicePixelRatio
+                // reflete o fator de escala do sistema. Precisamos compensar.
+                dpiZoom = window.devicePixelRatio;
+            }
+
             var s=JSON.parse(localStorage.getItem('kiosk_settings')||'null');
-            if(!s)return;
             var r=document.documentElement;
+
+            // Aplicar zoom DPI mesmo sem settings
+            if (isWin && dpiZoom !== 1) {
+                r.style.zoom = dpiZoom;
+            }
+
+            if(!s)return;
             function h2r(h){var m=/^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:null;}
             function lum(rgb){return .299*rgb[0]+.587*rgb[1]+.114*rgb[2];}
             function adj(rgb,a){return rgb.map(function(c){return Math.max(0,Math.min(255,c+a));});}
@@ -28,8 +44,8 @@
                 }
             }
             if(s.color_text){r.style.setProperty('--cream',s.color_text);var t=h2r(s.color_text);if(t){r.style.setProperty('--cream-rgb',t.join(','));r.style.setProperty('--muted','rgba('+t.join(',')+', .45)');}}
-            if(s.element_scale)r.style.zoom=s.element_scale;
-            if(s.font_scale)r.style.fontSize=(s.font_scale*100)+'%';
+            if(s.element_scale)r.style.zoom=(s.element_scale||1)*dpiZoom;
+            if(s.font_scale)r.style.setProperty('--font-scale',s.font_scale);
         }catch(e){}
     })();
     </script>

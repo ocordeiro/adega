@@ -71,7 +71,7 @@ class ManageSettings extends Page implements HasForms
                             ->numeric()
                             ->step(0.01)
                             ->minValue(0.8)
-                            ->maxValue(1.5)
+                            ->maxValue(2.0)
                             ->required()
                             ->helperText('1.07 = 7% maior que o padrão. Afeta apenas o tamanho das fontes.'),
                     ]),

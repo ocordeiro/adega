@@ -24,11 +24,11 @@ export namespace main {
 	    color_text: string;
 	    element_scale: number;
 	    font_scale: number;
-
+	
 	    static createFrom(source: any = {}) {
 	        return new SettingsResult(source);
 	    }
-
+	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.logo_url = source["logo_url"];

@@ -18,8 +18,11 @@
         return '#' + rgb.map(function(c) { return ('0' + c.toString(16)).slice(-2); }).join('');
     }
 
+    var isWin = navigator.platform.indexOf('Win') > -1 || navigator.userAgent.indexOf('Windows') > -1;
+    var dpiZoom = (isWin && window.devicePixelRatio && window.devicePixelRatio !== 1) ? window.devicePixelRatio : 1;
+    if (dpiZoom !== 1) r.style.zoom = dpiZoom;
     if (s.element_scale && s.element_scale !== 1) {
-        r.style.zoom = s.element_scale;
+        r.style.zoom = (s.element_scale || 1) * dpiZoom;
     }
 
     if (s.font_scale) {

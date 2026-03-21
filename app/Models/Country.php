@@ -12,6 +12,20 @@ class Country extends Model
 
     protected $fillable = ['name', 'code'];
 
+    protected $appends = ['flag_emoji'];
+
+    public function getFlagEmojiAttribute(): string
+    {
+        if (! $this->code || strlen($this->code) !== 2) {
+            return '';
+        }
+
+        $code = strtoupper($this->code);
+
+        return mb_chr(0x1F1E6 + ord($code[0]) - ord('A'))
+             . mb_chr(0x1F1E6 + ord($code[1]) - ord('A'));
+    }
+
     public function regions(): HasMany
     {
         return $this->hasMany(Region::class);

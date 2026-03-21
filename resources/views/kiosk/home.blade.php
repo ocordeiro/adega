@@ -57,7 +57,7 @@
         /* logo */
         .logo {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(38px, 5.4vw, 61px);
+            font-size: clamp(2.375rem, 5.4vw, 3.8125rem);
             font-weight: 300;
             letter-spacing: .35em;
             color: var(--primary);
@@ -152,7 +152,7 @@
             margin-bottom: 1.8rem;
         }
         .instruction-main {
-            font-size: clamp(25px, 3.36vw, 36px);
+            font-size: clamp(1.5625rem, 3.36vw, 2.25rem);
             font-weight: 700;
             color: var(--text);
             letter-spacing: .01em;

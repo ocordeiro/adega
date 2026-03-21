@@ -6,6 +6,7 @@
     <title>{{ $wine->name }} — Adega Sommelier</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('vendor/flag-icons/flag-icons.min.css') }}">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -131,11 +132,11 @@
         }
 
         .wine-name {
-            font-size: clamp(35px, 4.2vw, 54px);
+            font-size: clamp(2.1875rem, 4.2vw, 3.375rem);
             line-height: 1.15; color: var(--primary); font-weight: 800;
             text-align: center;
         }
-        @media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(27px, 6vw, 36px); } }
+        @media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(1.6875rem, 6vw, 2.25rem); } }
 
         .wine-vintage {
             font-style: italic; color: var(--muted); font-size: 1.14rem; font-weight: 400;
@@ -158,6 +159,7 @@
         .meta-item { display: flex; flex-direction: column; align-items: center; gap: .12rem; }
         .meta-label { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
         .meta-value { font-size: .96rem; font-weight: 700; color: var(--text); }
+        .country-flag { font-size: 1em; vertical-align: middle; margin-top: -.1em; border-radius: 2px; }
 
         .grape-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem; }
         .grape-tag {
@@ -174,7 +176,7 @@
         }
 
         .harmony-title {
-            font-size: clamp(19px, 2.4vw, 25px);
+            font-size: clamp(1.1875rem, 2.4vw, 1.5625rem);
             font-weight: 800; color: var(--primary); letter-spacing: .01em;
             text-align: center;
         }
@@ -310,7 +312,7 @@
             color: var(--primary); opacity: .8; margin-bottom: .5rem;
         }
         .section-title {
-            font-size: clamp(27px, 3.6vw, 42px); font-weight: 800; color: var(--primary);
+            font-size: clamp(1.6875rem, 3.6vw, 2.625rem); font-weight: 800; color: var(--primary);
         }
         .section-sub { margin-top: .4rem; font-size: 1rem; font-weight: 300; color: var(--muted); }
 
@@ -322,7 +324,7 @@
             flex: 1; min-height: 0; overflow: hidden;
             padding: 0 clamp(1.2rem, 3.6vw, 3rem) 1.5rem;
             display: flex; flex-direction: column; gap: .9rem;
-            max-width: 1400px; width: 100%; margin-inline: auto;
+            width: 100%;
         }
         .pairings-body > div {
             display: flex; flex-direction: column; flex: 1; min-height: 0;
@@ -480,7 +482,7 @@
             @if($wine->country)
             <div class="meta-item">
                 <span class="meta-label">Origem</span>
-                <span class="meta-value">{{ $wine->country->name }}{{ $wine->region ? ', '.$wine->region->name : '' }}</span>
+                <span class="meta-value"><span class="fi fi-{{ strtolower($wine->country->code) }} fis country-flag"></span> {{ $wine->country->name }}{{ $wine->region ? ', '.$wine->region->name : '' }}</span>
             </div>
             @endif
             @if($wine->alcohol_content)
