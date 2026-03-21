@@ -6,6 +6,33 @@
     <title>Adega — Sommelier Digital</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <script>
+    (function(){
+        try{
+            var s=JSON.parse(localStorage.getItem('kiosk_settings')||'null');
+            if(!s)return;
+            var r=document.documentElement;
+            function h2r(h){var m=/^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:null;}
+            function lum(rgb){return .299*rgb[0]+.587*rgb[1]+.114*rgb[2];}
+            function adj(rgb,a){return rgb.map(function(c){return Math.max(0,Math.min(255,c+a));});}
+            function hex(rgb){return'#'+rgb.map(function(c){return('0'+c.toString(16)).slice(-2);}).join('');}
+            if(s.color_primary){r.style.setProperty('--gold',s.color_primary);var p=h2r(s.color_primary);if(p)r.style.setProperty('--gold-rgb',p.join(','));}
+            if(s.color_secondary)r.style.setProperty('--gold-lt',s.color_secondary);
+            if(s.color_background){
+                r.style.setProperty('--base',s.color_background);r.style.background=s.color_background;
+                var b=h2r(s.color_background);
+                if(b){
+                    var dk=lum(b)<128;
+                    if(dk){r.style.setProperty('--surface','rgba(255,255,255,.04)');r.style.setProperty('--surface-alt','rgba(255,255,255,.06)');r.style.setProperty('--border','rgba(255,255,255,.08)');r.style.setProperty('--shadow','rgba(0,0,0,.3)');}
+                    else{r.style.setProperty('--surface',s.color_background);r.style.setProperty('--surface-alt',hex(adj(b,-12)));r.style.setProperty('--border','rgba(0,0,0,.1)');r.style.setProperty('--shadow','rgba(0,0,0,.12)');}
+                }
+            }
+            if(s.color_text){r.style.setProperty('--cream',s.color_text);var t=h2r(s.color_text);if(t){r.style.setProperty('--cream-rgb',t.join(','));r.style.setProperty('--muted','rgba('+t.join(',')+', .45)');}}
+            if(s.element_scale)r.style.zoom=s.element_scale;
+            if(s.font_scale)r.style.fontSize=(s.font_scale*100)+'%';
+        }catch(e){}
+    })();
+    </script>
 </head>
 <body>
 <div id="app"></div>

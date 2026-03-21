@@ -55,6 +55,7 @@ class ManageSettings extends Page implements HasForms
 
                 Section::make('Tamanho dos Elementos')
                     ->description('Fator de escala aplicado a todos os elementos da interface (fontes, espaçamentos, etc).')
+                    ->columns(2)
                     ->schema([
                         TextInput::make('element_scale')
                             ->label('Escala')
@@ -64,6 +65,15 @@ class ManageSettings extends Page implements HasForms
                             ->maxValue(3.0)
                             ->required()
                             ->helperText('1.0 = tamanho original. Valores maiores aumentam todos os elementos proporcionalmente.'),
+
+                        TextInput::make('font_scale')
+                            ->label('Tamanho da Fonte')
+                            ->numeric()
+                            ->step(0.01)
+                            ->minValue(0.8)
+                            ->maxValue(1.5)
+                            ->required()
+                            ->helperText('1.07 = 7% maior que o padrão. Afeta apenas o tamanho das fontes.'),
                     ]),
             ])
             ->statePath('data');

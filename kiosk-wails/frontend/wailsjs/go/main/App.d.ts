@@ -4,6 +4,8 @@ import {main} from '../models';
 
 export function FetchAds():Promise<Array<string>>;
 
+export function FetchSettings():Promise<main.SettingsResult>;
+
 export function LookupBarcode(arg1:string):Promise<main.BeverageResult>;
 
 export function RandomBeverage():Promise<main.BeverageResult>;

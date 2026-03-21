@@ -18,17 +18,18 @@
 }
 
 html {
-    zoom: 1.2;
-    font-size: 107%;
+    zoom: 1.0;
+    font-size: 107%; /* default; overridden dynamically by font_scale setting */
 }
 
 html, body {
     width: 100%; height: 100%; overflow: hidden;
     background: var(--base);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Nunito', 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
     cursor: default;
+    color: var(--cream);
 }
 
 /* ── SCANNER HOME SCREEN ─────────────────────── */
@@ -64,7 +65,7 @@ html, body {
 }
 .logo {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-size: clamp(29px, 4vw, 48px);
     font-weight: 300;
     letter-spacing: .35em;
     color: var(--gold);
@@ -166,7 +167,7 @@ html, body {
 .instruction { text-align: center; margin-bottom: 1.25rem; }
 .instruction-main {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-size: clamp(22px, 3vw, 32px);
     font-weight: 300;
     color: var(--cream);
     letter-spacing: .04em;
@@ -191,15 +192,13 @@ html, body {
     transition: background .2s, border-color .2s;
     backdrop-filter: blur(8px);
     cursor: pointer;
-}
-.demo-btn:active { background: rgba(255,255,255,.07); border-color: rgba(var(--gold-rgb),.3); }
-.demo-btn-icon { font-size: .85rem; }
-.demo-btn-text {
+    color: var(--muted);
+    font-family: inherit;
     font-size: .78rem;
     font-weight: 400;
-    color: var(--muted);
     letter-spacing: .06em;
 }
+.demo-btn:active { background: rgba(255,255,255,.07); border-color: rgba(var(--gold-rgb),.3); }
 
 .flash {
     position: fixed;
@@ -251,552 +250,544 @@ html, body {
     .page { gap: 0; }
 }
 
+/* ── AD OVERLAY ──────────────────────────────── */
+.ad-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: #000;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .4s;
+}
+.ad-overlay.hidden { opacity: 0; pointer-events: none; }
+.ad-video { width: 100%; height: 100%; object-fit: contain; }
+.ad-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,.5); font-size: .8rem; letter-spacing: .1em;
+}
+
 /* ── DETAIL VIEW ─────────────────────────────── */
 
-/* CLOSE BUTTON */
-.btn-close {
-    position: fixed; top: 1.25rem; right: 1.5rem; z-index: 50;
+/* BACK BUTTON — filled primary color, matching web */
+.btn-back-fixed {
+    position: fixed; top: 1.1rem; left: 1.25rem; z-index: 50;
     display: flex; align-items: center; justify-content: center;
-    width: 2.4rem; height: 2.4rem;
-    background: rgba(13,13,15,.75); border: 1px solid var(--border);
-    border-radius: 100px; color: rgba(245,240,235,.55);
-    text-decoration: none;
-    backdrop-filter: blur(12px); transition: background .2s, color .2s;
+    width: 2.64rem; height: 2.64rem;
+    background: var(--gold); border: none;
+    border-radius: 100px; color: #fff;
+    text-decoration: none; cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.18), 0 4px 14px rgba(var(--gold-rgb),.4);
+    transition: background .15s, box-shadow .15s;
     touch-action: manipulation;
-    cursor: pointer;
 }
-.btn-close:active { background: rgba(255,255,255,.06); color: var(--cream); }
+.btn-back-fixed svg { width: 16px; height: 16px; }
+.btn-back-fixed:active { background: var(--gold-lt); box-shadow: inset 0 2px 4px rgba(0,0,0,.25); }
 
-/* DOTS */
-.dots {
-    position: fixed; z-index: 40;
-    display: flex; align-items: center; gap: .55rem;
-    bottom: 1.75rem; left: 50%; transform: translateX(-50%);
+/* "VER MAIS" BUTTON — filled primary color, matching web */
+.btn-ver-mais {
+    display: inline-flex; align-items: center; gap: .55rem;
+    background: var(--gold); color: #fff;
+    border: none; border-radius: 100px;
+    padding: .86rem 2.4rem;
+    font-family: 'Nunito', 'Inter', sans-serif;
+    font-size: 1.08rem; font-weight: 700; letter-spacing: .02em;
+    cursor: pointer; touch-action: manipulation;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -2px 0 rgba(0,0,0,.18),
+        0 4px 14px rgba(var(--gold-rgb),.4);
+    transition: box-shadow .15s, background .15s;
+    width: fit-content; align-self: center;
+    margin-top: auto;
 }
-.dot {
-    width: 6px; height: 6px; border-radius: 100px;
-    background: rgba(255,255,255,.2);
-    transition: all .3s var(--ease-out);
-    cursor: pointer; touch-action: manipulation; flex-shrink: 0;
+.btn-ver-mais:active {
+    background: var(--gold-lt);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(var(--gold-rgb),.3);
 }
-.dot.active { width: 22px; background: var(--gold); }
+@media (orientation: portrait) and (max-width: 599px) {
+    .btn-ver-mais { font-size: .94rem; padding: .72rem 1.68rem; }
+}
 
 /* TRACK */
-.track-wrap { width: 100%; height: 100vh; overflow: hidden; cursor: grab; touch-action: none; }
-.track-wrap:active { cursor: grabbing; }
-.track { display: flex; flex-direction: row; height: 100%; will-change: transform; }
+.track-wrap { width: 100vw; height: 100vh; overflow: hidden; }
+.track { display: flex; flex-direction: row; width: 200vw; height: 100%; will-change: transform; }
 .slide {
-    width: 100%; height: 100vh; flex-shrink: 0;
+    width: 100vw; height: 100vh; flex-shrink: 0;
     overflow: hidden;
 }
 
 /* Shared */
 .sub-label {
-    font-size: .64rem; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: .6rem;
+    font-size: .76rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .66rem;
 }
 @media (orientation: portrait) { .sub-label { margin-bottom: .35rem; font-size: .6rem; } }
-.section-header { padding: 2.5rem clamp(1.5rem, 4vw, 2.5rem) 1rem; text-align: center; max-width: 900px; margin-inline: auto; width: 100%; flex-shrink: 0; }
-@media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 2rem 1rem 1rem; } }
+
+.section-header {
+    flex-shrink: 0;
+    padding: 2.4rem clamp(1.8rem, 4.8vw, 3rem) .9rem;
+    text-align: center; max-width: 900px; margin-inline: auto; width: 100%;
+}
+@media (orientation: portrait) and (max-width: 599px) { .section-header { padding: 1.8rem 1.2rem .6rem; } }
+
 .section-label {
-    font-size: .67rem; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--gold); opacity: .7; margin-bottom: .5rem;
+    font-size: .78rem; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--gold); opacity: .8; margin-bottom: .5rem;
 }
 .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.5rem, 3vw, 2.4rem); font-weight: 300; color: var(--cream);
+    font-size: clamp(27px, 3.6vw, 42px); font-weight: 800; color: var(--gold);
 }
-.section-sub { margin-top: .4rem; font-size: .84rem; font-weight: 300; color: var(--muted); }
+.section-sub { margin-top: .4rem; font-size: 1rem; font-weight: 300; color: var(--muted); }
 
 .divider { height: 1px; background: var(--border); }
 
-/* Occasion chip */
-.occ-chip {
-    display: inline-flex; align-items: center; gap: .32rem;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 100px; padding: .34rem .8rem;
-    font-size: .78rem; color: var(--cream); white-space: nowrap;
-}
-.occ-chip .oi { font-size: .88rem; line-height: 1; }
-@media (orientation: portrait) {
-    .occ-chip { padding: .28rem .6rem; font-size: .7rem; }
-    .occ-chip .oi { font-size: .78rem; }
-}
-.occ-chips-row { display: flex; flex-wrap: wrap; gap: .42rem; }
+.empty-state { text-align: center; padding: 3rem 2rem; color: var(--muted); font-size: 1.14rem; }
 
 /* ════════════════════════════════════════════════
    WINE SLIDE 1
 ════════════════════════════════════════════════ */
 .slide-wine {
-    background:
-        radial-gradient(ellipse 55% 40% at 65% 35%, rgba(var(--gold-rgb),.06) 0%, transparent 60%),
-        var(--base);
+    background: var(--surface);
 }
 
-.wine-slide-inner { height: 100vh; display: flex; flex-direction: column; }
-.wine-slide-inner > .wine-layout { max-width: 1600px; width: 100%; align-self: center; }
+.wine-slide-inner { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 .wine-layout {
     flex: 1;
     display: grid;
-    grid-template-areas:
-        "photo title"
-        "photo meta"
-        "photo extras"
-        "photo harmony";
-    grid-template-columns: clamp(220px, 28vw, 340px) 1fr;
-    grid-template-rows: auto auto auto 1fr;
-    column-gap: 2.5rem;
-    row-gap: clamp(.4rem, 1vh, 1rem);
-    padding: 3rem clamp(1.5rem, 3vw, 3rem) 1rem;
-    align-content: start;
-    max-height: 100vh;
-}
-.wine-photo-col  { grid-area: photo;   align-self: start; display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; min-height: 0; overflow: hidden; }
-.wine-title      { grid-area: title;   display: flex; flex-direction: column; gap: .55rem; min-width: 0; }
-.wine-meta-box   { grid-area: meta;    min-width: 0; }
-.wine-extras     { grid-area: extras;  display: flex; flex-direction: column; gap: .8rem; min-width: 0; min-height: 0; overflow: hidden; }
-.wine-harmony    { grid-area: harmony; display: flex; flex-direction: column; gap: .75rem; padding-bottom: .5rem; min-width: 0; min-height: 0; overflow: hidden; }
-
-@media (orientation: landscape) and (min-width: 1024px) {
-    .wine-layout {
-        grid-template-areas:
-            "photo title   title"
-            "photo meta    meta"
-            "photo extras  harmony";
-        grid-template-columns: clamp(220px, 28vw, 340px) 1fr 1fr;
-        grid-template-rows: auto auto 1fr;
-    }
-    .wine-harmony { overflow-x: clip; }
-}
-@media (orientation: portrait) and (max-width: 599px) { .wine-harmony { gap: .55rem; } }
-
-@media (orientation: portrait) and (max-width: 599px) {
-    .wine-layout {
-        grid-template-areas:
-            "photo title"
-            "photo meta"
-            "extras  extras"
-            "harmony harmony";
-        grid-template-columns: 30% 1fr;
-        grid-template-rows: auto auto auto auto;
-        column-gap: .85rem;
-        row-gap: .7rem;
-        padding: 3rem 1rem 1rem;
-        align-content: start;
-    }
-    .wine-photo-col { align-self: stretch; grid-row: 1 / 3; overflow: hidden; }
-    .wine-meta-box  { align-self: start; }
-    .wine-meta      { justify-content: flex-start; }
-    .wine-harmony   { overflow-x: visible; }
+    grid-template-columns: clamp(240px, 38vw, 440px) 1fr;
+    grid-template-areas: "photo info";
+    height: 100%;
+    overflow: hidden;
+    min-height: 100vh;
 }
 
-@media (orientation: portrait) and (min-width: 600px) {
-    .wine-layout {
-        grid-template-columns: clamp(200px, 32vw, 300px) 1fr;
-        grid-template-rows: auto auto auto auto;
-        column-gap: 2rem;
-        padding: 4rem clamp(1.5rem, 3vw, 2.5rem) 2rem;
-        flex: 0;
-    }
-    .wine-photo-col { align-self: start; }
+/* ── Photo column ──────────────────────────── */
+.wine-photo-col {
+    grid-area: photo;
+    background: var(--surface-alt);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem 1.5rem;
+    position: relative;
 }
 
-@media (orientation: portrait) and (max-width: 374px) {
-    .wine-layout {
-        grid-template-columns: 28% 1fr;
-        column-gap: .7rem;
-        padding: 2.75rem .75rem .75rem;
-    }
-}
-
-@media (orientation: portrait) and (max-width: 599px) and (max-height: 680px) {
-    .wine-layout { padding-top: 2.5rem; row-gap: .45rem; }
-    .wine-desc { font-size: .68rem; line-height: 1.5; }
-    .grape-tags { gap: .2rem; }
-    .grape-tag { padding: .18rem .5rem; font-size: .62rem; }
-    .wine-harmony { gap: .4rem; }
-    .divider { margin-bottom: 0; }
-}
-
-/* Photo */
-.wine-photo-frame { position: relative; width: 100%; }
-@media (orientation: portrait) and (max-width: 599px) {
-    .wine-photo-col { display: flex; flex-direction: column; }
-    .wine-photo-frame { flex: 1; min-height: 0; }
-    .wine-photo { height: 100% !important; width: 100% !important; object-fit: cover !important; object-position: top !important; aspect-ratio: unset !important; }
-    .wine-photo-placeholder { height: 100%; aspect-ratio: unset; }
-}
-
-.wine-photo-shadow {
-    position: absolute; inset: 0; border-radius: 12px;
-    box-shadow: 0 0 50px rgba(var(--gold-rgb),.12), 0 20px 44px rgba(0,0,0,.7);
-}
-.wine-photo { position: relative; z-index: 1; width: 100%; max-height: 75vh; border-radius: 12px; object-fit: cover; object-position: top; display: block; }
-.wine-photo-placeholder {
-    position: relative; z-index: 1; width: 100%; aspect-ratio: 1/2.2;
-    background: linear-gradient(160deg, #1e1e22, #141418);
-    border-radius: 12px; border: 1px solid var(--border);
+.wine-photo-frame {
+    position: relative; width: 100%;
     display: flex; align-items: center; justify-content: center;
 }
-.stars { display: flex; gap: .2rem; justify-content: center; }
-.star       { color: var(--gold); font-size: .95rem; }
-.star.empty { color: rgba(var(--gold-rgb),.2); }
-@media (orientation: portrait) and (max-width: 599px) { .stars-photo-col { display: none; } }
-@media not all and (orientation: portrait) { .stars-extras { display: none; } }
-@media (orientation: portrait) and (min-width: 600px) { .stars-extras { display: none; } }
+.wine-photo {
+    max-width: 100%; max-height: 70vh;
+    width: auto; height: auto;
+    object-fit: contain; display: block;
+    filter: drop-shadow(0 24px 40px rgba(0,0,0,.28)) drop-shadow(0 6px 12px rgba(0,0,0,.16));
+}
+.wine-photo-placeholder {
+    width: 100%; aspect-ratio: 2/3;
+    display: flex; align-items: center; justify-content: center;
+}
 
-/* Title */
+.stars { display: flex; gap: .24rem; justify-content: center; margin-top: .9rem; }
+.star       { color: var(--gold); font-size: 1.08rem; }
+.star.empty { color: rgba(var(--gold-rgb),.25); }
+
+/* ── Info column ──────────────────────────── */
+.wine-info-col {
+    grid-area: info;
+    background: var(--surface);
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 3rem clamp(1.5rem, 4vw, 3rem) 2rem;
+    gap: 1.2rem;
+    overflow-y: auto;
+}
+
+/* Badge */
 .wine-badge, .spirit-badge {
     display: inline-flex; align-items: center; gap: .35rem;
-    background: rgba(var(--gold-rgb),.1); border: 1px solid rgba(var(--gold-rgb),.22);
-    border-radius: 100px; padding: .25rem .8rem;
-    font-size: .67rem; font-weight: 500; letter-spacing: .13em; text-transform: uppercase;
+    background: rgba(var(--gold-rgb),.1); border: 1px solid rgba(var(--gold-rgb),.2);
+    border-radius: 100px; padding: .24rem .9rem;
+    font-size: .78rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
     color: var(--gold); width: fit-content;
 }
+
+/* Title */
 .wine-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.6rem, 3.3vw, 3rem);
-    line-height: 1.1; color: var(--cream); font-weight: 400;
+    font-size: clamp(35px, 4.2vw, 54px);
+    line-height: 1.15; color: var(--gold); font-weight: 800;
+    text-align: center;
 }
-@media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(1.15rem, 4.5vw, 1.7rem); } }
+@media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(27px, 6vw, 36px); } }
+
 .wine-vintage {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic; color: var(--gold); font-size: 1.1rem; font-weight: 300;
+    font-style: italic; color: var(--muted); font-size: 1.14rem; font-weight: 400;
+    margin-top: -.4rem; text-align: center;
 }
-@media (orientation: portrait) and (max-width: 599px) { .wine-vintage { font-size: .92rem; } }
 
-/* Meta */
-.wine-meta, .spirit-meta {
-    display: flex; flex-direction: column; gap: .38rem;
-    padding: .8rem 1rem;
-    background: var(--surface); border-radius: 12px; border: 1px solid var(--border);
-}
-@media (orientation: portrait) and (max-width: 599px) { .wine-meta, .spirit-meta { padding: .45rem .6rem; gap: .2rem; } }
-.meta-row { display: flex; justify-content: space-between; align-items: center; font-size: .83rem; }
-@media (orientation: portrait) and (max-width: 599px) { .meta-row { font-size: .68rem; } }
-.meta-label { color: var(--muted); font-weight: 300; letter-spacing: .03em; white-space: nowrap; }
-.meta-value { color: var(--cream); font-weight: 500; text-align: right; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* Extras */
 .wine-desc {
-    font-size: .88rem; font-weight: 300; line-height: 1.7;
-    color: rgba(245,240,235,.62); font-style: italic;
+    font-size: 1.03rem; font-weight: 400; line-height: 1.65;
+    color: var(--muted); max-width: 520px;
 }
-@media (orientation: portrait) and (max-width: 599px) { .wine-desc { font-size: .75rem; } }
-.grape-tags { display: flex; flex-wrap: wrap; gap: .28rem; }
+@media (orientation: portrait) and (max-width: 599px) { .wine-desc { font-size: .9rem; } }
+
+/* Meta: produtor, origem etc. — compact row */
+.wine-meta-row, .spirit-meta-row {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.08rem;
+    padding: .72rem 1rem;
+    background: var(--surface-alt); border-radius: 12px;
+    border: 1px solid var(--border);
+}
+.meta-item { display: flex; flex-direction: column; align-items: center; gap: .12rem; }
+.meta-label { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.meta-value { font-size: .96rem; font-weight: 700; color: var(--cream); }
+
+.grape-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem; }
 .grape-tag {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 100px; padding: .22rem .65rem;
-    font-size: .7rem; color: rgba(245,240,235,.5);
+    background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: 100px; padding: .24rem .72rem;
+    font-size: .82rem; color: var(--muted);
 }
 
-/* Harmony preview */
-.food-mini-grid {
+/* ── "Combina com" / Harmony section ───────── */
+.harmony-section {
+    display: flex; flex-direction: column; align-items: center; gap: .78rem;
+    flex: 1; margin-top: .6rem;
+}
+
+.harmony-divider {
+    height: 1px; background: var(--border); margin-bottom: .25rem; align-self: stretch;
+}
+
+.harmony-title {
+    font-size: clamp(19px, 2.4vw, 25px);
+    font-weight: 800; color: var(--gold); letter-spacing: .01em;
+    text-align: center;
+}
+
+/* Grid de 3 colunas: ocasião + alimento/drink */
+.pairing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100px, 28%), 1fr));
-    gap: .5rem;
+    grid-template-columns: repeat(3, clamp(86px, 11vw, 240px));
+    gap: clamp(.6rem, 1.4vw, 2.4rem);
+    margin-top: auto; margin-bottom: auto;
 }
 @media (orientation: portrait) and (max-width: 599px) {
-    .food-mini-grid { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: .45rem; }
-}
-@media (orientation: portrait) and (max-width: 599px) and (max-height: 680px) {
-    .food-mini-grid { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: .35rem; }
+    .pairing-grid { gap: .6rem; }
 }
 
-.food-mini {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 11px; overflow: hidden;
+.pairing-col {
+    display: flex; flex-direction: column;
+    align-items: center; gap: .42rem;
+    text-align: center;
 }
-.food-mini-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
-.food-mini-ph  { width: 100%; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 1.6rem; }
-@media (orientation: portrait) and (max-width: 599px) and (max-height: 680px) {
-    .food-mini-ph  { aspect-ratio: 1/1; font-size: 1.2rem; }
-    .food-mini-img { aspect-ratio: 1/1; }
-}
-.food-mini-body { padding: .4rem .5rem; }
-.food-mini-name { font-size: .72rem; font-weight: 600; color: var(--cream); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.food-mini-cat  { font-size: .58rem; color: var(--gold); letter-spacing: .05em; text-transform: uppercase; margin-top: .1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* Legal notice */
-.legal-notice {
-    padding: .6rem 1.5rem; text-align: center;
-    font-size: .6rem; color: rgba(245,240,235,.2); letter-spacing: .04em;
-    border-top: 1px solid rgba(255,255,255,.04);
+.pairing-occ-label {
+    font-size: .8rem; color: var(--muted); font-weight: 400;
+    letter-spacing: .02em; line-height: 1.3;
+    min-height: 2em;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
 }
+
+.pairing-img-wrap {
+    width: clamp(67px, 9.6vw, 192px);
+    height: clamp(67px, 9.6vw, 192px);
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 4px 14px var(--shadow);
+    flex-shrink: 0;
+}
+.pairing-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pairing-img-ph {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.4rem; background: var(--surface-alt);
+}
+
+.pairing-food-name {
+    font-size: .94rem; font-weight: 600; color: var(--cream);
+    line-height: 1.3; overflow: hidden; text-overflow: ellipsis;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    max-width: 100%;
+}
+.pairing-food-cat {
+    font-size: .76rem; color: var(--gold); letter-spacing: .04em;
+    text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 100%;
+}
+@media (orientation: portrait) and (max-width: 599px) {
+    .pairing-img-wrap { width: 67px; height: 67px; }
+    .pairing-food-name { font-size: .82rem; }
+    .pairing-food-cat  { font-size: .68rem; }
+    .pairing-occ-label { font-size: .7rem; }
+}
+
+/* PORTRAIT phones — stacked layout */
+@media (orientation: portrait) and (max-width: 599px) {
+    .wine-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "photo"
+            "info";
+        min-height: unset;
+    }
+    .wine-photo-col {
+        padding: 1.5rem 2rem 1rem;
+        min-height: 200px;
+    }
+    .wine-info-col {
+        padding: 1.25rem 1rem 1rem;
+        gap: .9rem;
+    }
+    .wine-meta-row, .spirit-meta-row { display: none; }
+}
+
+/* Portrait tablets */
+@media (orientation: portrait) and (min-width: 600px) {
+    .wine-layout {
+        grid-template-columns: clamp(180px, 30vw, 260px) 1fr;
+    }
+}
+
 
 /* ════════════════════════════════════════════════
-   SLIDE 2 — PAIRINGS
+   SLIDE 2 — PAIRINGS (recipes for wines)
 ════════════════════════════════════════════════ */
 .slide-pairings {
     display: flex; flex-direction: column;
-    background:
-        radial-gradient(ellipse 65% 35% at 50% 0%, rgba(var(--gold-rgb),.05) 0%, transparent 55%),
-        var(--base);
+    background: var(--base);
+    overflow: hidden;
 }
 
-.pairings-body { padding: 0 clamp(1rem, 3vw, 2.5rem) 2rem; display: flex; flex-direction: column; gap: 1.2rem; max-width: 1400px; width: 100%; margin-inline: auto; flex: 1; min-height: 0; overflow: hidden; }
-@media (orientation: portrait) and (max-width: 599px) { .pairings-body { padding: 0 1rem 2rem; } }
+.pairings-body {
+    flex: 1; min-height: 0; overflow: hidden;
+    padding: 0 clamp(1.2rem, 3.6vw, 3rem) 1.5rem;
+    display: flex; flex-direction: column; gap: .9rem;
+    max-width: 1400px; width: 100%; margin-inline: auto;
+}
+.pairings-body > div { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+@media (orientation: portrait) and (max-width: 599px) { .pairings-body { padding: 0 1.2rem 1.2rem; } }
 
-/* Occasion cards */
-.occ-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(150px, 42vw), 1fr));
-    gap: .85rem;
-}
-@media (orientation: portrait) and (max-width: 599px) {
-    .occ-grid { grid-template-columns: repeat(auto-fit, minmax(min(140px, 44vw), 1fr)); gap: .7rem; }
-}
-.occ-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 1rem 1rem .9rem;
-    display: flex; flex-direction: column; gap: .45rem;
-}
-.occ-card-icon { font-size: 1.75rem; line-height: 1; }
-.occ-card-name { font-size: .88rem; font-weight: 600; color: var(--cream); }
-.occ-card-desc { font-size: .75rem; font-weight: 300; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-/* Food cards */
-.food-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(160px, 40vw), 1fr));
-    gap: .9rem;
-}
-@media (orientation: portrait) and (max-width: 599px) {
-    .food-grid { grid-template-columns: repeat(auto-fit, minmax(min(140px, 44vw), 1fr)); gap: .7rem; }
-}
-.food-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 13px; overflow: hidden;
-}
-.food-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
-.food-ph  { width: 100%; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 2rem; }
-.food-body  { padding: .7rem .85rem; }
-.food-name  { font-size: .88rem; font-weight: 600; color: var(--cream); margin-bottom: .12rem; }
-.food-cat   { font-size: .66rem; color: var(--gold); letter-spacing: .06em; text-transform: uppercase; }
-.food-notes { margin-top: .38rem; font-size: .73rem; color: var(--muted); line-height: 1.5; font-style: italic; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-.empty-state { text-align: center; padding: 3rem 2rem; color: var(--muted); font-size: .95rem; }
 
 /* ════════════════════════════════════════════════
-   RECIPES
+   RECIPES (wine pairings slide 2)
 ════════════════════════════════════════════════ */
-.slide-recipes {
-    display: flex; flex-direction: column;
-    background:
-        radial-gradient(ellipse 60% 35% at 50% 0%, rgba(120,80,200,.05) 0%, transparent 55%),
-        var(--base);
-}
-
 .recipes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(260px, 42vw), 1fr));
-    gap: 1.2rem;
-    flex: 1; min-height: 0; overflow: hidden;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: clamp(.6rem, 1.2vw, 1.02rem);
+    flex: 1; min-height: 0;
 }
 @media (orientation: portrait) { .recipes-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 85vw), 1fr)); } }
 
-.recipe-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
-.recipe-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
-.recipe-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 2.4rem; }
-.recipe-body { padding: .75rem 1rem; flex: 1; min-height: 0; overflow: hidden; }
-.recipe-tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .6rem; }
-.recipe-tag  { font-size: .67rem; letter-spacing: .08em; text-transform: uppercase; padding: .2rem .65rem; border-radius: 100px; background: var(--surface); border: 1px solid var(--border); }
-.recipe-tag.difficulty { color: rgba(245,240,235,.5); }
-.recipe-tag.time       { color: var(--gold); }
-.recipe-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.15rem,2.4vw,1.55rem); font-weight: 400; color: var(--cream); line-height: 1.2; margin-bottom: .4rem; }
-.recipe-desc { font-size: .84rem; font-weight: 300; color: var(--muted); line-height: 1.6; margin-bottom: .5rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.recipe-note {
-    margin-bottom: .5rem; padding: .38rem .68rem;
-    background: rgba(var(--gold-rgb),.05); border-left: 2px solid rgba(var(--gold-rgb),.3);
-    border-radius: 0 8px 8px 0; font-size: .72rem; color: var(--muted); font-style: italic;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+.recipe-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 19px; overflow: hidden; display: flex; flex-direction: column; min-height: 0;
+    box-shadow: 0 2px 8px var(--shadow);
 }
-.recipe-steps { padding-top: .6rem; font-size: .78rem; font-weight: 300; line-height: 1.6; color: rgba(245,240,235,.52); white-space: pre-line; border-top: 1px solid var(--border); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.recipe-img  { width: 100%; aspect-ratio: 5/1; object-fit: cover; display: block; flex-shrink: 0; }
+.recipe-ph   { width: 100%; aspect-ratio: 5/1; display: flex; align-items: center; justify-content: center; background: var(--surface-alt); font-size: 3em; flex-shrink: 0; }
+.recipe-body { padding: .54em .9em; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.recipe-tags { display: flex; gap: .3rem; flex-wrap: wrap; margin-bottom: .34em; flex-shrink: 0; }
+.recipe-tag  { font-size: .9em; letter-spacing: .06em; text-transform: uppercase; padding: .18em .6em; border-radius: 100px; background: var(--surface-alt); border: 1px solid var(--border); }
+.recipe-tag.difficulty { color: var(--muted); }
+.recipe-tag.time       { color: var(--gold); }
+.recipe-name {
+    font-size: 2.04em; font-weight: 700; color: var(--cream);
+    line-height: 1.2; margin-bottom: .34em; flex-shrink: 0;
+}
+.recipe-desc {
+    font-size: 1.32em; font-weight: 300; color: var(--muted); line-height: 1.45;
+    margin-bottom: .36em; flex-shrink: 0;
+}
+.recipe-note {
+    margin-bottom: .36em; padding: .28em .56em;
+    background: rgba(var(--gold-rgb),.05); border-left: 2px solid rgba(var(--gold-rgb),.3);
+    border-radius: 0 8px 8px 0; font-size: 1.08em; color: var(--muted); font-style: italic;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    flex-shrink: 0;
+}
+
+.recipe-ingredients {
+    margin-bottom: .54em; padding: .46em .66em;
+    background: rgba(var(--gold-rgb),.04); border: 1px solid rgba(var(--gold-rgb),.12);
+    border-radius: 10px; flex-shrink: 0;
+}
+.recipe-ingredients-title {
+    font-size: .94em; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); opacity: .8; margin-bottom: .26em;
+}
+.recipe-ingredient {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 1.2em; color: var(--cream); padding: .14em 0;
+    border-bottom: 1px solid var(--border);
+}
+.recipe-ingredient:last-child { border-bottom: none; }
+.recipe-ingredient-name { font-weight: 400; }
+.recipe-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: .9em; white-space: nowrap; }
+
+.recipe-steps {
+    padding-top: .48em; font-size: 1.2em; font-weight: 300; line-height: 1.5;
+    color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border);
+}
+
 
 /* ════════════════════════════════════════════════
    SPIRIT SLIDE 1
 ════════════════════════════════════════════════ */
 .slide-spirit {
-    background:
-        radial-gradient(ellipse 55% 40% at 65% 35%, rgba(var(--gold-rgb),.06) 0%, transparent 60%),
-        var(--base);
+    background: var(--surface);
 }
 
-.spirit-slide-inner { height: 100vh; display: flex; flex-direction: column; }
-.spirit-slide-inner > .spirit-layout { max-width: 1600px; width: 100%; align-self: center; }
+.spirit-slide-inner { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 .spirit-layout {
     flex: 1;
     display: grid;
-    grid-template-areas:
-        "photo title"
-        "photo meta"
-        "photo extras"
-        "photo drinks";
-    grid-template-columns: clamp(220px, 28vw, 340px) 1fr;
-    grid-template-rows: auto auto auto 1fr;
-    column-gap: 2.5rem;
-    row-gap: clamp(.4rem, 1vh, 1rem);
-    padding: 3rem clamp(1.5rem, 3vw, 3rem) 1rem;
-    align-content: start;
-    max-height: 100vh;
-}
-.spirit-photo-col { grid-area: photo;  align-self: start; display: flex; flex-direction: column; align-items: center; gap: .75rem; min-width: 0; min-height: 0; overflow: hidden; }
-.spirit-title      { grid-area: title;  display: flex; flex-direction: column; gap: .55rem; min-width: 0; }
-.spirit-meta-box   { grid-area: meta;   min-width: 0; }
-.spirit-extras     { grid-area: extras; display: flex; flex-direction: column; gap: .8rem; min-width: 0; }
-.spirit-drinks     { grid-area: drinks; display: flex; flex-direction: column; gap: .75rem; padding-bottom: .5rem; min-width: 0; min-height: 0; overflow: hidden; }
-
-@media (orientation: landscape) and (min-width: 1024px) {
-    .spirit-layout {
-        grid-template-areas:
-            "photo title  title"
-            "photo meta   meta"
-            "photo extras drinks";
-        grid-template-columns: clamp(220px, 28vw, 340px) 1fr 1fr;
-        grid-template-rows: auto auto 1fr;
-    }
+    grid-template-columns: clamp(240px, 38vw, 440px) 1fr;
+    grid-template-areas: "photo info";
+    height: 100%;
+    overflow: hidden;
+    min-height: 100vh;
 }
 
-@media (orientation: portrait) and (max-width: 599px) {
-    .spirit-layout {
-        grid-template-areas:
-            "photo title"
-            "photo meta"
-            "extras extras"
-            "drinks drinks";
-        grid-template-columns: 30% 1fr;
-        grid-template-rows: auto auto auto auto;
-        column-gap: .85rem;
-        row-gap: .7rem;
-        padding: 3rem 1rem 1rem;
-        align-content: start;
-    }
-    .spirit-photo-col { align-self: stretch; grid-row: 1 / 3; overflow: hidden; }
-    .spirit-meta-box  { align-self: start; }
-    .spirit-drinks    { gap: .55rem; }
+/* Spirit Photo column */
+.spirit-photo-col {
+    grid-area: photo;
+    background: var(--surface-alt);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem 1.5rem;
+    position: relative;
 }
 
-@media (orientation: portrait) and (min-width: 600px) {
-    .spirit-layout {
-        grid-template-columns: clamp(200px, 32vw, 300px) 1fr;
-        column-gap: 2rem;
-        padding: 4rem clamp(1.5rem, 3vw, 2.5rem) 2rem;
-        flex: 0;
-    }
-}
-
-@media (orientation: portrait) and (max-width: 374px) {
-    .spirit-layout {
-        grid-template-columns: 28% 1fr;
-        column-gap: .7rem;
-        padding: 2.75rem .75rem .75rem;
-    }
-}
-
-/* Spirit Photo */
-.spirit-photo-frame { position: relative; width: 100%; }
-@media (orientation: portrait) and (max-width: 599px) {
-    .spirit-photo-col { display: flex; flex-direction: column; }
-    .spirit-photo-frame { flex: 1; min-height: 0; }
-    .spirit-photo { height: 100% !important; width: 100% !important; object-fit: cover !important; object-position: top !important; aspect-ratio: unset !important; }
-    .spirit-photo-placeholder { height: 100%; aspect-ratio: unset; }
-}
-
-.spirit-photo-shadow {
-    position: absolute; inset: 0; border-radius: 12px;
-    box-shadow: 0 0 50px rgba(var(--gold-rgb),.12), 0 20px 44px rgba(0,0,0,.7);
-}
-.spirit-photo { position: relative; z-index: 1; width: 100%; max-height: 75vh; border-radius: 12px; object-fit: cover; object-position: top; display: block; }
-.spirit-photo-placeholder {
-    position: relative; z-index: 1; width: 100%; aspect-ratio: 1/2;
-    background: linear-gradient(160deg, #1e1e22, #141418);
-    border-radius: 12px; border: 1px solid var(--border);
+.spirit-photo-frame {
+    position: relative; width: 100%;
     display: flex; align-items: center; justify-content: center;
+}
+.spirit-photo {
+    max-width: 100%; max-height: 70vh;
+    width: auto; height: auto;
+    object-fit: contain; display: block;
+    filter: drop-shadow(0 24px 40px rgba(0,0,0,.28)) drop-shadow(0 6px 12px rgba(0,0,0,.16));
+}
+.spirit-photo-placeholder {
+    width: 100%; aspect-ratio: 2/3;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* Spirit Info column */
+.spirit-info-col {
+    grid-area: info;
+    background: var(--surface);
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 3rem clamp(1.5rem, 4vw, 3rem) 2rem;
+    gap: 1.2rem;
+    overflow-y: auto;
 }
 
 /* Spirit Title */
 .spirit-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.6rem, 3.3vw, 3rem);
-    line-height: 1.1; color: var(--cream); font-weight: 400;
+    font-size: clamp(35px, 4.2vw, 54px);
+    line-height: 1.15; color: var(--gold); font-weight: 800;
+    text-align: center;
 }
-@media (orientation: portrait) and (max-width: 599px) { .spirit-name { font-size: clamp(1.15rem, 4.5vw, 1.7rem); } }
+@media (orientation: portrait) and (max-width: 599px) { .spirit-name { font-size: clamp(27px, 6vw, 36px); } }
 
-/* Spirit Extras */
 .spirit-desc {
-    font-size: .88rem; font-weight: 300; line-height: 1.7;
-    color: rgba(245,240,235,.62); font-style: italic;
+    font-size: 1.03rem; font-weight: 400; line-height: 1.65;
+    color: var(--muted); max-width: 520px; text-align: center;
 }
-@media (orientation: portrait) and (max-width: 599px) { .spirit-desc { font-size: .75rem; } }
+@media (orientation: portrait) and (max-width: 599px) { .spirit-desc { font-size: .9rem; } }
 
-/* Drink mini preview */
-.drink-mini-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100px, 28%), 1fr));
-    gap: .5rem;
-}
+/* PORTRAIT phones — spirit stacked */
 @media (orientation: portrait) and (max-width: 599px) {
-    .drink-mini-grid { grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); gap: .45rem; }
+    .spirit-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas: "photo" "info";
+        min-height: unset;
+    }
+    .spirit-photo-col { padding: 1rem; min-height: 200px; }
+    .spirit-info-col { padding: 1.25rem 1rem 1rem; gap: .9rem; }
 }
-.drink-mini { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
-.drink-mini-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
-.drink-mini-ph  { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 1.4rem; }
-.drink-mini-body { padding: .4rem .5rem; }
-.drink-mini-name { font-size: .72rem; font-weight: 600; color: var(--cream); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.drink-mini-diff { font-size: .58rem; color: var(--gold); letter-spacing: .05em; text-transform: uppercase; margin-top: .1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (orientation: portrait) and (min-width: 600px) {
+    .spirit-layout { grid-template-columns: clamp(180px, 30vw, 260px) 1fr; }
+}
+
 
 /* ════════════════════════════════════════════════
-   SLIDE 2 — DRINKS
+   SLIDE 2 — DRINKS (spirit drink recipes)
 ════════════════════════════════════════════════ */
 .slide-drinks {
     display: flex; flex-direction: column;
-    background:
-        radial-gradient(ellipse 60% 35% at 50% 0%, rgba(120,80,200,.05) 0%, transparent 55%),
-        var(--base);
+    background: var(--base);
+    overflow: hidden;
 }
+
+.drinks-body {
+    flex: 1; min-height: 0; overflow: hidden;
+    padding: 0 clamp(1.2rem, 3.6vw, 3rem) 1.5rem;
+    display: flex; flex-direction: column; gap: .9rem;
+    max-width: 1400px; width: 100%; margin-inline: auto;
+}
+.drinks-body > div { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+@media (orientation: portrait) and (max-width: 599px) { .drinks-body { padding: 0 1.2rem 1.2rem; } }
 
 .drinks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(260px, 42vw), 1fr));
-    gap: 1.2rem; padding: 0 clamp(1rem, 3vw, 2.5rem) 2rem;
-    max-width: 1400px; width: 100%; margin-inline: auto;
-    flex: 1; min-height: 0; overflow: hidden;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: clamp(.6rem, 1.2vw, 1.02rem);
+    flex: 1; min-height: 0;
 }
-@media (orientation: portrait) { .drinks-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 85vw), 1fr)); padding: 0 clamp(1rem, 3vw, 1.5rem) 2rem; } }
+@media (orientation: portrait) { .drinks-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 85vw), 1fr)); } }
 
-.drink-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
-.drink-img  { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
-.drink-ph   { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.03); font-size: 2.4rem; }
-.drink-body { padding: .75rem 1rem; flex: 1; min-height: 0; overflow: hidden; }
-.drink-tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .6rem; }
-.drink-tag  { font-size: .67rem; letter-spacing: .08em; text-transform: uppercase; padding: .2rem .65rem; border-radius: 100px; background: var(--surface); border: 1px solid var(--border); }
-.drink-tag.difficulty { color: rgba(245,240,235,.5); }
+.drink-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 19px; overflow: hidden; display: flex; flex-direction: column; min-height: 0;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+.drink-img  { width: 100%; aspect-ratio: 5/1; object-fit: cover; display: block; flex-shrink: 0; }
+.drink-ph   { width: 100%; aspect-ratio: 5/1; display: flex; align-items: center; justify-content: center; background: var(--surface-alt); font-size: 3em; flex-shrink: 0; }
+.drink-body { padding: .54em .9em; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.drink-tags { display: flex; gap: .3rem; flex-wrap: wrap; margin-bottom: .34em; flex-shrink: 0; }
+.drink-tag  { font-size: .9em; letter-spacing: .06em; text-transform: uppercase; padding: .18em .6em; border-radius: 100px; background: var(--surface-alt); border: 1px solid var(--border); }
+.drink-tag.difficulty { color: var(--muted); }
 .drink-tag.time       { color: var(--gold); }
-.drink-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.15rem,2.4vw,1.55rem); font-weight: 400; color: var(--cream); line-height: 1.2; margin-bottom: .4rem; }
-.drink-desc { font-size: .84rem; font-weight: 300; color: var(--muted); line-height: 1.6; margin-bottom: .5rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.drink-name {
+    font-size: 2.04em; font-weight: 700; color: var(--cream);
+    line-height: 1.2; margin-bottom: .34em; flex-shrink: 0;
+}
+.drink-desc {
+    font-size: 1.32em; font-weight: 300; color: var(--muted); line-height: 1.45;
+    margin-bottom: .36em; flex-shrink: 0;
+}
 
 /* Ingredients list */
 .drink-ingredients {
-    margin-bottom: .8rem; padding: .65rem .85rem;
+    margin-bottom: .54em; padding: .46em .66em;
     background: rgba(var(--gold-rgb),.04); border: 1px solid rgba(var(--gold-rgb),.12);
-    border-radius: 10px;
+    border-radius: 10px; flex-shrink: 0;
 }
 .drink-ingredients-title {
-    font-size: .67rem; letter-spacing: .15em; text-transform: uppercase;
-    color: var(--gold); opacity: .7; margin-bottom: .4rem;
+    font-size: .94em; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); opacity: .8; margin-bottom: .26em;
 }
 .drink-ingredient {
     display: flex; justify-content: space-between; align-items: baseline;
-    font-size: .8rem; color: var(--cream); padding: .18rem 0;
-    border-bottom: 1px solid rgba(255,255,255,.04);
+    font-size: 1.2em; color: var(--cream); padding: .14em 0;
+    border-bottom: 1px solid var(--border);
 }
 .drink-ingredient:last-child { border-bottom: none; }
 .drink-ingredient-name { font-weight: 400; }
-.drink-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: .75rem; white-space: nowrap; }
+.drink-ingredient-qty  { font-weight: 300; color: var(--muted); font-size: .9em; white-space: nowrap; }
 
-.drink-steps { padding-top: .6rem; font-size: .78rem; font-weight: 300; line-height: 1.6; color: rgba(245,240,235,.52); white-space: pre-line; border-top: 1px solid var(--border); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.drink-steps {
+    padding-top: .48em; font-size: 1.2em; font-weight: 300; line-height: 1.5;
+    color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border);
+}
 
 /* ════════════════════════════════════════════════
    GHOST HAND OVERLAY

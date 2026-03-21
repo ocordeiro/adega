@@ -8,6 +8,7 @@
         function lum(c){return 0.299*c[0]+0.587*c[1]+0.114*c[2];}
         function adj(c,a){return '#'+c.map(function(v){return('0'+Math.max(0,Math.min(255,v+a)).toString(16)).slice(-2);}).join('');}
         if (s.element_scale && s.element_scale !== 1) r.style.zoom = s.element_scale;
+        if (s.font_scale) r.style.fontSize = (s.font_scale * 100) + '%';
         if (s.color_primary) {
             r.style.setProperty('--primary', s.color_primary);
             r.style.setProperty('--primary-dk', s.color_primary);

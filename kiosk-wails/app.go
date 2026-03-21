@@ -56,6 +56,7 @@ type SettingsResult struct {
 	ColorBackground string  `json:"color_background"`
 	ColorText       string  `json:"color_text"`
 	ElementScale    float64 `json:"element_scale"`
+	FontScale       float64 `json:"font_scale"`
 }
 
 // FetchAds returns a list of active ad video URLs

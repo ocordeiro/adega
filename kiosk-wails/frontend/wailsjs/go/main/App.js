@@ -6,6 +6,10 @@ export function FetchAds() {
   return window['go']['main']['App']['FetchAds']();
 }
 
+export function FetchSettings() {
+  return window['go']['main']['App']['FetchSettings']();
+}
+
 export function LookupBarcode(arg1) {
   return window['go']['main']['App']['LookupBarcode'](arg1);
 }

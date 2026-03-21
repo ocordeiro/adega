@@ -22,6 +22,10 @@
         r.style.zoom = s.element_scale;
     }
 
+    if (s.font_scale) {
+        r.style.fontSize = (s.font_scale * 100) + '%';
+    }
+
     if (s.color_primary) {
         r.style.setProperty('--primary', s.color_primary);
         r.style.setProperty('--primary-dk', s.color_primary);

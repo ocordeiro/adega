@@ -36,6 +36,7 @@ class KioskController extends Controller
             'color_background' => $theme?->color_background ?? '#0d0d0f',
             'color_text'       => $theme?->color_text       ?? '#f5f0eb',
             'element_scale'    => $setting->element_scale,
+            'font_scale'       => $setting->font_scale,
         ];
     }
 

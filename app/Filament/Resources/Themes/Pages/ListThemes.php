@@ -36,8 +36,8 @@ class ListThemes extends ListRecords implements HasForms
             ->model(Setting::instance())
             ->components([
                 Section::make('Logo & Escala')
-                    ->description('Logotipo e tamanho dos elementos do kiosk.')
-                    ->columns(2)
+                    ->description('Logotipo, tamanho dos elementos e fonte do kiosk.')
+                    ->columns(3)
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('logo')
                             ->label('Logo')
@@ -57,6 +57,16 @@ class ListThemes extends ListRecords implements HasForms
                             ->maxValue(3.0)
                             ->required()
                             ->helperText('1.0 = tamanho original.')
+                            ->columnSpan(1),
+
+                        TextInput::make('font_scale')
+                            ->label('Tamanho da Fonte')
+                            ->numeric()
+                            ->step(0.01)
+                            ->minValue(0.8)
+                            ->maxValue(1.5)
+                            ->required()
+                            ->helperText('1.07 = 7% maior que o padrão.')
                             ->columnSpan(1),
                     ]),
             ])

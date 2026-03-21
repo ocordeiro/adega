@@ -12,14 +12,17 @@ class Setting extends Model implements HasMedia
 
     public const DEFAULTS = [
         'element_scale' => 1.0,
+        'font_scale'    => 1.07,
     ];
 
     protected $fillable = [
         'element_scale',
+        'font_scale',
     ];
 
     protected $casts = [
         'element_scale' => 'float',
+        'font_scale'    => 'float',
     ];
 
     public static function instance(): static

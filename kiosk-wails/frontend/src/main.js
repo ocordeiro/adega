@@ -97,19 +97,19 @@ function showScanner() {
             <div class="scan-line"></div>
             <div class="scanner-inner">
                 <svg class="barcode-icon" width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0"  y="0"  width="4"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="8"  y="0"  width="2"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="13" y="0"  width="6"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="23" y="0"  width="2"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="28" y="0"  width="4"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="36" y="0"  width="2"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="42" y="0"  width="6"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="52" y="0"  width="2"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="57" y="0"  width="4"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="65" y="0"  width="2"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="70" y="0"  width="6"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="80" y="0"  width="2"  height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="84" y="0"  width="4"  height="64" rx="1" fill="#1a1a2e"/>
+                    <rect x="0"  y="0"  width="4"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="8"  y="0"  width="2"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="13" y="0"  width="6"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="23" y="0"  width="2"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="28" y="0"  width="4"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="36" y="0"  width="2"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="42" y="0"  width="6"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="52" y="0"  width="2"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="57" y="0"  width="4"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="65" y="0"  width="2"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="70" y="0"  width="6"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="80" y="0"  width="2"  height="64" rx="1" fill="var(--cream)"/>
+                    <rect x="84" y="0"  width="4"  height="64" rx="1" fill="var(--cream)"/>
                 </svg>
             </div>
         </div>
@@ -248,9 +248,9 @@ function renderWine(w) {
         photoHTML = `<img class="wine-photo" src="${esc(photo)}" alt="${esc(w.name)}" draggable="false">`;
     } else {
         photoHTML = `<div class="wine-photo-placeholder">
-            <svg width="36" height="64" viewBox="0 0 90 160" fill="none" opacity=".35">
-                <rect x="36" y="4" width="18" height="22" rx="4" fill="#d93f35"/>
-                <path d="M28 36 Q20 50 18 70 L18 138 Q18 148 28 150 L62 150 Q72 148 72 138 L72 70 Q70 50 62 36 Z" fill="#d93f35"/>
+            <svg width="36" height="64" viewBox="0 0 90 160" fill="none" opacity=".35" style="color:var(--gold)">
+                <rect x="36" y="4" width="18" height="22" rx="4" fill="currentColor"/>
+                <path d="M28 36 Q20 50 18 70 L18 138 Q18 148 28 150 L62 150 Q72 148 72 138 L72 70 Q70 50 62 36 Z" fill="currentColor"/>
             </svg>
         </div>`;
     }
@@ -395,9 +395,9 @@ function renderSpirit(s) {
         photoHTML = `<img class="spirit-photo" src="${esc(sPhoto)}" alt="${esc(s.name)}" draggable="false">`;
     } else {
         photoHTML = `<div class="spirit-photo-placeholder">
-            <svg width="48" height="64" viewBox="0 0 48 64" fill="none" opacity=".35">
-                <rect x="18" y="2" width="12" height="10" rx="2" fill="#d93f35"/>
-                <path d="M14 16 Q10 24 10 34 L10 54 Q10 60 16 62 L32 62 Q38 60 38 54 L38 34 Q38 24 34 16 Z" fill="#d93f35"/>
+            <svg width="48" height="64" viewBox="0 0 48 64" fill="none" opacity=".35" style="color:var(--gold)">
+                <rect x="18" y="2" width="12" height="10" rx="2" fill="currentColor"/>
+                <path d="M14 16 Q10 24 10 34 L10 54 Q10 60 16 62 L32 62 Q38 60 38 54 L38 34 Q38 24 34 16 Z" fill="currentColor"/>
             </svg>
         </div>`;
     }
@@ -615,28 +615,61 @@ document.addEventListener('keydown', e => {
 });
 
 // ── Settings ──
+function hexToRgb(hex) {
+    const m = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : null;
+}
+function luminance(rgb) { return 0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]; }
+function adjColor(rgb, amount) { return rgb.map(c => Math.max(0, Math.min(255, c + amount))); }
+function rgbToHex(rgb) { return '#' + rgb.map(c => ('0' + c.toString(16)).slice(-2)).join(''); }
+
 function applySettings(settings) {
     if (!settings) return;
     const root = document.documentElement;
+
     if (settings.color_primary) {
         root.style.setProperty('--gold', settings.color_primary);
+        const p = hexToRgb(settings.color_primary);
+        if (p) root.style.setProperty('--gold-rgb', p.join(','));
     }
     if (settings.color_secondary) {
         root.style.setProperty('--gold-lt', settings.color_secondary);
     }
     if (settings.color_background) {
+        const b = hexToRgb(settings.color_background);
+        const isDark = b && luminance(b) < 128;
         root.style.setProperty('--base', settings.color_background);
         document.body.style.background = settings.color_background;
+        if (b) {
+            if (isDark) {
+                root.style.setProperty('--surface', 'rgba(255,255,255,.04)');
+                root.style.setProperty('--surface-alt', 'rgba(255,255,255,.06)');
+                root.style.setProperty('--border', 'rgba(255,255,255,.08)');
+                root.style.setProperty('--shadow', 'rgba(0,0,0,.3)');
+            } else {
+                root.style.setProperty('--surface', settings.color_background);
+                root.style.setProperty('--surface-alt', rgbToHex(adjColor(b, -12)));
+                root.style.setProperty('--border', 'rgba(0,0,0,.1)');
+                root.style.setProperty('--shadow', 'rgba(0,0,0,.12)');
+            }
+        }
     }
     if (settings.color_text) {
         root.style.setProperty('--cream', settings.color_text);
-        root.style.setProperty('--muted', settings.color_text.replace(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i, (_, r, g, b) =>
-            `rgba(${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},.45)`
-        ));
+        const t = hexToRgb(settings.color_text);
+        if (t) {
+            root.style.setProperty('--cream-rgb', t.join(','));
+            root.style.setProperty('--muted', `rgba(${t.join(',')},.45)`);
+        }
     }
     if (settings.element_scale) {
         root.style.zoom = settings.element_scale;
     }
+    if (settings.font_scale) {
+        root.style.fontSize = (settings.font_scale * 100) + '%';
+    }
+
+    try { localStorage.setItem('kiosk_settings', JSON.stringify(settings)); } catch(e) {}
 }
 
 function getLogoHTML() {
@@ -649,7 +682,13 @@ function getLogoHTML() {
 
 // ── Init ──
 async function init() {
-    // Load settings and ads in parallel
+    // Apply cached settings immediately while API loads
+    try {
+        const cached = JSON.parse(localStorage.getItem('kiosk_settings') || 'null');
+        if (cached) { appSettings = cached; applySettings(cached); }
+    } catch(e) {}
+
+    // Load fresh settings and ads in parallel
     try {
         const [urls, settings] = await Promise.all([
             FetchAds().catch(() => null),
@@ -663,7 +702,7 @@ async function init() {
             applySettings(settings);
         }
     } catch (e) {
-        // Continue with defaults
+        // Continue with defaults/cache
     }
     showScanner();
 }
