@@ -10,23 +10,26 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --primary:   #d93f35;
-            --primary-dk:#b83028;
-            --bg:        #dce9f0;
-            --bg-alt:    #eaf2f7;
-            --white:     #ffffff;
-            --text:      #1a1a2e;
-            --muted:     #6b7280;
-            --border:    rgba(0,0,0,.1);
-            --shadow:    rgba(0,0,0,.12);
+            --primary:     #d93f35;
+            --primary-dk:  #b83028;
+            --primary-rgb: 217, 63, 53;
+            --bg:          #dce9f0;
+            --bg-alt:      #eaf2f7;
+            --surface:     #ffffff;
+            --surface-alt: #f5f5f7;
+            --text:        #1a1a2e;
+            --muted:       #6b7280;
+            --border:      rgba(0,0,0,.1);
+            --shadow:      rgba(0,0,0,.12);
             --slide-dur: 380ms;
             --ease-out:  cubic-bezier(.25,.46,.45,.94);
             --ease-in:   cubic-bezier(.55,.06,.68,.19);
         }
 
+        html { font-size: 107%; }
         html, body {
             width: 100%; height: 100%; overflow: hidden;
-            background: var(--white);
+            background: var(--surface);
             font-family: 'Nunito', sans-serif;
             -webkit-font-smoothing: antialiased;
             user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
@@ -39,9 +42,9 @@
             display: flex; align-items: center; justify-content: center;
             width: 2.64rem; height: 2.64rem;
             background: var(--primary); border: none;
-            border-radius: 100px; color: var(--white);
+            border-radius: 100px; color: #fff;
             text-decoration: none; cursor: pointer;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.18), 0 4px 14px rgba(217,63,53,.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.18), 0 4px 14px rgba(var(--primary-rgb),.4);
             transition: background .15s, box-shadow .15s;
             touch-action: manipulation;
         }
@@ -63,7 +66,7 @@
         /* ════════════════════════════════════════════════
            SLIDE 1 — DESTILADO + preview
         ════════════════════════════════════════════════ */
-        .slide-spirit { background: var(--white); }
+        .slide-spirit { background: var(--surface); }
 
         .spirit-slide-inner { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -80,7 +83,7 @@
         /* ── Coluna da foto ──────────────────────────── */
         .spirit-photo-col {
             grid-area: photo;
-            background: linear-gradient(160deg, #f0f2f5 0%, #e4e7ed 100%);
+            background: linear-gradient(160deg, var(--surface-alt) 0%, var(--surface-alt) 100%);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             padding: 2rem 1.5rem;
@@ -105,7 +108,7 @@
         /* ── Coluna de info ──────────────────────────── */
         .spirit-info-col {
             grid-area: info;
-            background: var(--white);
+            background: var(--surface);
             display: flex; flex-direction: column;
             align-items: center; text-align: center;
             padding: 3rem clamp(1.5rem, 4vw, 3rem) 2rem;
@@ -115,18 +118,18 @@
 
         .spirit-badge {
             display: inline-flex; align-items: center; gap: .35rem;
-            background: rgba(217,63,53,.1); border: 1px solid rgba(217,63,53,.2);
+            background: rgba(var(--primary-rgb),.1); border: 1px solid rgba(var(--primary-rgb),.2);
             border-radius: 100px; padding: .24rem .9rem;
             font-size: .78rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
             color: var(--primary); width: fit-content;
         }
 
         .spirit-name {
-            font-size: clamp(2.16rem, 4.2vw, 3.36rem);
+            font-size: clamp(35px, 4.2vw, 54px);
             line-height: 1.15; color: var(--primary); font-weight: 800;
             text-align: center;
         }
-        @media (orientation: portrait) and (max-width: 599px) { .spirit-name { font-size: clamp(1.68rem, 6vw, 2.28rem); } }
+        @media (orientation: portrait) and (max-width: 599px) { .spirit-name { font-size: clamp(27px, 6vw, 36px); } }
 
         .spirit-desc {
             font-size: 1.03rem; font-weight: 400; line-height: 1.65;
@@ -137,7 +140,7 @@
         .spirit-meta-row {
             display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.08rem;
             padding: .72rem 1rem;
-            background: #f5f5f7; border-radius: 12px;
+            background: var(--surface-alt); border-radius: 12px;
             border: 1px solid var(--border);
         }
         .meta-item { display: flex; flex-direction: column; align-items: center; gap: .12rem; }
@@ -148,7 +151,7 @@
         .harmony-section { display: flex; flex-direction: column; align-items: center; gap: .78rem; flex: 1; margin-top: .6rem; }
         .harmony-divider { height: 1px; background: var(--border); margin-bottom: .25rem; align-self: stretch; }
         .harmony-title {
-            font-size: clamp(1.2rem, 2.4vw, 1.56rem);
+            font-size: clamp(19px, 2.4vw, 25px);
             font-weight: 800; color: var(--primary); letter-spacing: .01em;
             text-align: center;
         }
@@ -181,7 +184,7 @@
             height: clamp(67px, 9.6vw, 192px);
             border-radius: 50%;
             overflow: hidden;
-            background: var(--white);
+            background: var(--surface);
             box-shadow: 0 4px 14px var(--shadow);
             flex-shrink: 0;
         }
@@ -213,7 +216,7 @@
         /* ── Botão "Ver mais" ───────────────────────── */
         .btn-ver-mais {
             display: inline-flex; align-items: center; gap: .55rem;
-            background: var(--primary); color: var(--white);
+            background: var(--primary); color: #fff;
             border: none; border-radius: 100px;
             padding: .86rem 2.4rem;
             font-family: 'Nunito', sans-serif;
@@ -222,14 +225,14 @@
             box-shadow:
                 inset 0 1px 0 rgba(255,255,255,.22),
                 inset 0 -2px 0 rgba(0,0,0,.18),
-                0 4px 14px rgba(217,63,53,.4);
+                0 4px 14px rgba(var(--primary-rgb),.4);
             transition: box-shadow .15s, background .15s;
             width: fit-content; align-self: center;
             margin-top: auto;
         }
         .btn-ver-mais:active {
             background: var(--primary-dk);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(217,63,53,.3);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(var(--primary-rgb),.3);
         }
         @media (orientation: portrait) and (max-width: 599px) {
             .btn-ver-mais { font-size: .94rem; padding: .72rem 1.68rem; }
@@ -269,7 +272,7 @@
             color: var(--primary); opacity: .8; margin-bottom: .5rem;
         }
         .section-title {
-            font-size: clamp(1.68rem, 3.6vw, 2.64rem); font-weight: 800; color: var(--text);
+            font-size: clamp(27px, 3.6vw, 42px); font-weight: 800; color: var(--primary);
         }
         .section-sub { margin-top: .4rem; font-size: 1rem; font-weight: 300; color: var(--muted); }
 
@@ -285,7 +288,7 @@
             gap: .96rem;
         }
         .occ-card {
-            background: var(--white); border: 1px solid var(--border);
+            background: var(--surface); border: 1px solid var(--border);
             border-radius: 17px; padding: 1.08rem 1.2rem;
             display: flex; flex-direction: column; gap: .48rem;
             box-shadow: 0 2px 8px var(--shadow);
@@ -303,7 +306,7 @@
             flex: 1; min-height: 0;
         }
 
-        .drink-card { background: var(--white); border: 1px solid var(--border); border-radius: 19px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
+        .drink-card { background: var(--surface); border: 1px solid var(--border); border-radius: 19px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
         .drink-img  { width: 100%; aspect-ratio: 5/1; object-fit: cover; display: block; flex-shrink: 0; }
         .drink-ph   { width: 100%; aspect-ratio: 5/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 3em; flex-shrink: 0; }
         .drink-body { padding: .54em .9em; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
@@ -316,7 +319,7 @@
 
         .drink-ingredients {
             margin-bottom: .54em; padding: .46em .66em;
-            background: rgba(217,63,53,.04); border: 1px solid rgba(217,63,53,.12);
+            background: rgba(var(--primary-rgb),.04); border: 1px solid rgba(var(--primary-rgb),.12);
             border-radius: 10px; flex-shrink: 0;
         }
         .drink-ingredients-title {
@@ -345,6 +348,7 @@
 
         .empty-state { text-align: center; padding: 3rem 2rem; color: var(--muted); font-size: 1.14rem; }
     </style>
+@include('kiosk.partials.settings-cache')
 </head>
 <body>
 
@@ -369,8 +373,8 @@
             @else
                 <div class="spirit-photo-placeholder">
                     <svg width="48" height="64" viewBox="0 0 48 64" fill="none" opacity=".35">
-                        <rect x="18" y="2" width="12" height="10" rx="2" fill="#d93f35"/>
-                        <path d="M14 16 Q10 24 10 34 L10 54 Q10 60 16 62 L32 62 Q38 60 38 54 L38 34 Q38 24 34 16 Z" fill="#d93f35"/>
+                        <rect x="18" y="2" width="12" height="10" rx="2" fill="var(--primary)"/>
+                        <path d="M14 16 Q10 24 10 34 L10 54 Q10 60 16 62 L32 62 Q38 60 38 54 L38 34 Q38 24 34 16 Z" fill="var(--primary)"/>
                     </svg>
                 </div>
             @endif
@@ -602,5 +606,7 @@
     let _drt; window.addEventListener('resize', () => { clearTimeout(_drt); _drt = setTimeout(fitDrinkCards, 120); });
 })();
 </script>
+
+@include('kiosk.partials.settings-script')
 </body>
 </html>

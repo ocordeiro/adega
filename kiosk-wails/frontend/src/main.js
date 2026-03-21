@@ -1,5 +1,5 @@
 import './style.css';
-import { LookupBarcode, RandomBeverage, FetchAds } from '../wailsjs/go/main/App';
+import { LookupBarcode, RandomBeverage, FetchAds, FetchSettings } from '../wailsjs/go/main/App';
 
 // ── State ──
 let currentView = 'scanner'; // 'scanner' | 'detail'
@@ -7,6 +7,7 @@ let barcodeBuffer = '';
 let barcodeTimer = null;
 let adUrls = [];
 let adTimer = null;
+let appSettings = null; // settings from API
 
 const AD_DELAY = 30000; // 30s inactivity before showing ads
 
@@ -86,8 +87,7 @@ function showScanner() {
     document.getElementById('app').innerHTML = `
 <div class="bg"></div>
 <div class="page">
-    <div class="logo">Adega</div>
-    <div class="logo-sub">Sommelier Digital</div>
+    ${getLogoHTML()}
     <div class="rule"></div>
     <div class="scanner-wrap">
         <div class="scanner-glow"></div>
@@ -614,16 +614,56 @@ document.addEventListener('keydown', e => {
     }
 });
 
+// ── Settings ──
+function applySettings(settings) {
+    if (!settings) return;
+    const root = document.documentElement;
+    if (settings.color_primary) {
+        root.style.setProperty('--gold', settings.color_primary);
+    }
+    if (settings.color_secondary) {
+        root.style.setProperty('--gold-lt', settings.color_secondary);
+    }
+    if (settings.color_background) {
+        root.style.setProperty('--base', settings.color_background);
+        document.body.style.background = settings.color_background;
+    }
+    if (settings.color_text) {
+        root.style.setProperty('--cream', settings.color_text);
+        root.style.setProperty('--muted', settings.color_text.replace(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i, (_, r, g, b) =>
+            `rgba(${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},.45)`
+        ));
+    }
+    if (settings.element_scale) {
+        root.style.zoom = settings.element_scale;
+    }
+}
+
+function getLogoHTML() {
+    if (appSettings && appSettings.logo_url) {
+        return `<img class="logo-img" src="${esc(appSettings.logo_url)}" alt="Logo" draggable="false">`;
+    }
+    return `<div class="logo">Adega</div>
+    <div class="logo-sub">Sommelier Digital</div>`;
+}
+
 // ── Init ──
 async function init() {
-    // Load ads in background
+    // Load settings and ads in parallel
     try {
-        const urls = await FetchAds();
+        const [urls, settings] = await Promise.all([
+            FetchAds().catch(() => null),
+            FetchSettings().catch(() => null),
+        ]);
         if (urls && urls.length) {
             adUrls = urls;
         }
+        if (settings) {
+            appSettings = settings;
+            applySettings(settings);
+        }
     } catch (e) {
-        // Ads are optional, continue without them
+        // Continue with defaults
     }
     showScanner();
 }

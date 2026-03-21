@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Ad;
 use App\Models\DrinkRecipe;
+use App\Models\Setting;
 use App\Models\Spirit;
+use App\Models\Theme;
 use App\Models\Wine;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -22,10 +24,26 @@ class KioskController extends Controller
             ->all();
     }
 
+    private function kioskSettings(): array
+    {
+        $setting = Setting::instance();
+        $theme   = Theme::where('is_active', true)->first();
+
+        return [
+            'logo_url'         => $setting->getFirstMediaUrl('logo') ?: null,
+            'color_primary'    => $theme?->color_primary    ?? '#c8a96e',
+            'color_secondary'  => $theme?->color_secondary  ?? '#e2c98a',
+            'color_background' => $theme?->color_background ?? '#0d0d0f',
+            'color_text'       => $theme?->color_text       ?? '#f5f0eb',
+            'element_scale'    => $setting->element_scale,
+        ];
+    }
+
     public function home(): View
     {
         $adUrls = $this->activeAdUrls();
-        return view('kiosk.home', compact('adUrls'));
+        $settings = $this->kioskSettings();
+        return view('kiosk.home', compact('adUrls', 'settings'));
     }
 
     public function random(): RedirectResponse
@@ -89,7 +107,8 @@ class KioskController extends Controller
                 }
             }
 
-            return view('kiosk.wine', compact('wine', 'previewFoods'));
+            $settings = $this->kioskSettings();
+            return view('kiosk.wine', compact('wine', 'previewFoods', 'settings'));
         }
 
         // Fallback: buscar em destilados
@@ -137,6 +156,7 @@ class KioskController extends Controller
             }
         }
 
-        return view('kiosk.spirit', compact('spirit', 'drinkRecipes', 'previewDrinks'));
+        $settings = $this->kioskSettings();
+        return view('kiosk.spirit', compact('spirit', 'drinkRecipes', 'previewDrinks', 'settings'));
     }
 }

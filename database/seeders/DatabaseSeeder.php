@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
             SpiritTypeSeeder::class,
             SpiritSeeder::class,
             DrinkRecipeSeeder::class,
+            SettingSeeder::class,
+            ThemeSeeder::class,
             AdSeeder::class,
         ]);
     }

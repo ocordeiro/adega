@@ -48,6 +48,16 @@ func (a *App) RandomBeverage() BeverageResult {
 	return a.fetchBeverage(url)
 }
 
+// SettingsResult holds the kiosk appearance settings
+type SettingsResult struct {
+	LogoURL         *string `json:"logo_url"`
+	ColorPrimary    string  `json:"color_primary"`
+	ColorSecondary  string  `json:"color_secondary"`
+	ColorBackground string  `json:"color_background"`
+	ColorText       string  `json:"color_text"`
+	ElementScale    float64 `json:"element_scale"`
+}
+
 // FetchAds returns a list of active ad video URLs
 func (a *App) FetchAds() []string {
 	url := fmt.Sprintf("%s/api/v1/anuncios", apiBaseURL)
@@ -89,6 +99,41 @@ func (a *App) FetchAds() []string {
 		}
 	}
 	return urls
+}
+
+// FetchSettings returns the kiosk appearance settings from the API
+func (a *App) FetchSettings() *SettingsResult {
+	url := fmt.Sprintf("%s/api/v1/configuracoes", apiBaseURL)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiToken)
+
+	resp, err := a.client.Do(req)
+	if err != nil {
+		return nil
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil
+	}
+
+	var result struct {
+		Data SettingsResult `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil
+	}
+
+	return &result.Data
 }
 
 func (a *App) fetchBeverage(url string) BeverageResult {

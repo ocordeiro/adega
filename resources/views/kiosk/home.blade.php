@@ -10,21 +10,24 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --primary:   #d93f35;
-            --primary-dk:#b83028;
-            --bg:        #dce9f0;
-            --bg-alt:    #eaf2f7;
-            --white:     #ffffff;
-            --text:      #1a1a2e;
-            --muted:     #6b7280;
-            --border:    rgba(0,0,0,.1);
-            --shadow:    rgba(0,0,0,.12);
+            --primary:     #d93f35;
+            --primary-dk:  #b83028;
+            --primary-rgb: 217, 63, 53;
+            --bg:          #dce9f0;
+            --bg-alt:      #eaf2f7;
+            --surface:     #ffffff;
+            --surface-alt: #f5f5f7;
+            --text:        #1a1a2e;
+            --muted:       #6b7280;
+            --border:      rgba(0,0,0,.1);
+            --shadow:      rgba(0,0,0,.12);
         }
 
+        html { font-size: 107%; }
         html, body {
             width: 100%; height: 100%;
             overflow: hidden;
-            background: var(--white);
+            background: var(--surface);
             font-family: 'Nunito', sans-serif;
             -webkit-font-smoothing: antialiased;
             user-select: none; -webkit-user-select: none;
@@ -35,9 +38,9 @@
         .bg {
             position: fixed; inset: 0;
             background:
-                radial-gradient(ellipse 70% 50% at 50% 100%, rgba(217,63,53,.05) 0%, transparent 65%),
+                radial-gradient(ellipse 70% 50% at 50% 100%, rgba(var(--primary-rgb),.05) 0%, transparent 65%),
                 radial-gradient(ellipse 50% 40% at 15% 20%,  rgba(220,233,240,.8) 0%, transparent 60%),
-                var(--white);
+                var(--surface);
             pointer-events: none;
         }
 
@@ -54,7 +57,7 @@
         /* logo */
         .logo {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.4rem, 5.4vw, 3.84rem);
+            font-size: clamp(38px, 5.4vw, 61px);
             font-weight: 300;
             letter-spacing: .35em;
             color: var(--primary);
@@ -89,7 +92,7 @@
         .scanner-glow {
             position: absolute; inset: -43px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(217,63,53,.08) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(var(--primary-rgb),.08) 0%, transparent 70%);
             animation: glowPulse 3s ease-in-out infinite;
             pointer-events: none;
         }
@@ -111,7 +114,7 @@
             content: '';
             position: absolute;
             width: 34px; height: 34px;
-            border-color: rgba(217,63,53,.55);
+            border-color: rgba(var(--primary-rgb),.55);
             border-style: solid;
         }
         .scanner-frame::before { top: 0; left: 0;  border-width: 2px 0 0 2px; border-radius: 3px 0 0 0; }
@@ -141,7 +144,7 @@
             position: absolute; inset: 29px;
             display: flex; align-items: center; justify-content: center;
         }
-        .barcode-icon { opacity: .1; width: 106px; height: 77px; }
+        .barcode-icon { opacity: .15; width: 106px; height: 77px; color: var(--text); }
 
         /* instruction */
         .instruction {
@@ -149,7 +152,7 @@
             margin-bottom: 1.8rem;
         }
         .instruction-main {
-            font-size: clamp(1.56rem, 3.36vw, 2.28rem);
+            font-size: clamp(25px, 3.36vw, 36px);
             font-weight: 700;
             color: var(--text);
             letter-spacing: .01em;
@@ -167,7 +170,7 @@
         /* demo button — igual btn-ver-mais dos outros slides */
         .demo-btn {
             display: inline-flex; align-items: center; gap: .55rem;
-            background: var(--primary); color: var(--white);
+            background: var(--primary); color: #fff;
             border: none; border-radius: 100px;
             padding: .86rem 2.4rem;
             font-family: 'Nunito', sans-serif;
@@ -176,13 +179,13 @@
             box-shadow:
                 inset 0 1px 0 rgba(255,255,255,.22),
                 inset 0 -2px 0 rgba(0,0,0,.18),
-                0 4px 14px rgba(217,63,53,.35);
+                0 4px 14px rgba(var(--primary-rgb),.35);
             transition: box-shadow .15s, background .15s;
             touch-action: manipulation;
         }
         .demo-btn:active {
             background: var(--primary-dk);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(217,63,53,.3);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(var(--primary-rgb),.3);
         }
 
         /* flash de erro */
@@ -198,7 +201,7 @@
             pointer-events: none;
             white-space: nowrap;
             z-index: 10;
-            box-shadow: 0 4px 16px rgba(217,63,53,.35);
+            box-shadow: 0 4px 16px rgba(var(--primary-rgb),.35);
         }
         .flash.show { opacity: 1; }
 
@@ -250,6 +253,7 @@
             50%      { opacity: .7; }
         }
     </style>
+@include('kiosk.partials.settings-cache')
 </head>
 <body>
 <div class="bg"></div>
@@ -268,19 +272,19 @@
             <div class="scan-line"></div>
             <div class="scanner-inner">
                 <svg class="barcode-icon" width="88" height="64" viewBox="0 0 88 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0"  y="0" width="4" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="8"  y="0" width="2" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="13" y="0" width="6" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="23" y="0" width="2" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="28" y="0" width="4" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="36" y="0" width="2" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="42" y="0" width="6" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="52" y="0" width="2" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="57" y="0" width="4" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="65" y="0" width="2" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="70" y="0" width="6" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="80" y="0" width="2" height="64" rx="1" fill="#1a1a2e"/>
-                    <rect x="84" y="0" width="4" height="64" rx="1" fill="#1a1a2e"/>
+                    <rect x="0"  y="0" width="4" height="64" rx="1" fill="currentColor"/>
+                    <rect x="8"  y="0" width="2" height="64" rx="1" fill="currentColor"/>
+                    <rect x="13" y="0" width="6" height="64" rx="1" fill="currentColor"/>
+                    <rect x="23" y="0" width="2" height="64" rx="1" fill="currentColor"/>
+                    <rect x="28" y="0" width="4" height="64" rx="1" fill="currentColor"/>
+                    <rect x="36" y="0" width="2" height="64" rx="1" fill="currentColor"/>
+                    <rect x="42" y="0" width="6" height="64" rx="1" fill="currentColor"/>
+                    <rect x="52" y="0" width="2" height="64" rx="1" fill="currentColor"/>
+                    <rect x="57" y="0" width="4" height="64" rx="1" fill="currentColor"/>
+                    <rect x="65" y="0" width="2" height="64" rx="1" fill="currentColor"/>
+                    <rect x="70" y="0" width="6" height="64" rx="1" fill="currentColor"/>
+                    <rect x="80" y="0" width="2" height="64" rx="1" fill="currentColor"/>
+                    <rect x="84" y="0" width="4" height="64" rx="1" fill="currentColor"/>
                 </svg>
             </div>
         </div>
@@ -364,5 +368,7 @@
 })();
 </script>
 @endif
+
+@include('kiosk.partials.settings-script')
 </body>
 </html>

@@ -10,20 +10,23 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --primary:   #d93f35;
-            --primary-dk:#b83028;
-            --bg:        #dce9f0;
-            --bg-alt:    #eaf2f7;
-            --white:     #ffffff;
-            --text:      #1a1a2e;
-            --muted:     #6b7280;
-            --border:    rgba(0,0,0,.1);
-            --shadow:    rgba(0,0,0,.12);
+            --primary:     #d93f35;
+            --primary-dk:  #b83028;
+            --primary-rgb: 217, 63, 53;
+            --bg:          #dce9f0;
+            --bg-alt:      #eaf2f7;
+            --surface:     #ffffff;
+            --surface-alt: #f5f5f7;
+            --text:        #1a1a2e;
+            --muted:       #6b7280;
+            --border:      rgba(0,0,0,.1);
+            --shadow:      rgba(0,0,0,.12);
             --slide-dur: 380ms;
             --ease-out:  cubic-bezier(.25,.46,.45,.94);
             --ease-in:   cubic-bezier(.55,.06,.68,.19);
         }
 
+        html { font-size: 107%; }
         html, body {
             width: 100%; height: 100%; overflow: hidden;
             background: var(--bg);
@@ -39,9 +42,9 @@
             display: flex; align-items: center; justify-content: center;
             width: 2.64rem; height: 2.64rem;
             background: var(--primary); border: none;
-            border-radius: 100px; color: var(--white);
+            border-radius: 100px; color: #fff;
             text-decoration: none; cursor: pointer;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.18), 0 4px 14px rgba(217,63,53,.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -2px 0 rgba(0,0,0,.18), 0 4px 14px rgba(var(--primary-rgb),.4);
             transition: background .15s, box-shadow .15s;
             touch-action: manipulation;
         }
@@ -63,7 +66,7 @@
         /* ════════════════════════════════════════════════
            SLIDE 1 — VINHO + preview harmonizações
         ════════════════════════════════════════════════ */
-        .slide-wine { background: var(--white); }
+        .slide-wine { background: var(--surface); }
 
         .wine-slide-inner {
             height: 100vh; display: flex; flex-direction: column; overflow: hidden;
@@ -82,7 +85,7 @@
         /* ── Coluna da foto ──────────────────────────── */
         .wine-photo-col {
             grid-area: photo;
-            background: linear-gradient(160deg, #f0f2f5 0%, #e4e7ed 100%);
+            background: linear-gradient(160deg, var(--surface-alt) 0%, var(--surface-alt) 100%);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             padding: 2rem 1.5rem;
@@ -106,12 +109,12 @@
 
         .stars { display: flex; gap: .24rem; justify-content: center; margin-top: .9rem; }
         .star       { color: var(--primary); font-size: 1.08rem; }
-        .star.empty { color: rgba(217,63,53,.25); }
+        .star.empty { color: rgba(var(--primary-rgb),.25); }
 
         /* ── Coluna de info ──────────────────────────── */
         .wine-info-col {
             grid-area: info;
-            background: var(--white);
+            background: var(--surface);
             display: flex; flex-direction: column;
             align-items: center; text-align: center;
             padding: 3rem clamp(1.5rem, 4vw, 3rem) 2rem;
@@ -121,18 +124,18 @@
 
         .wine-badge {
             display: inline-flex; align-items: center; gap: .35rem;
-            background: rgba(217,63,53,.1); border: 1px solid rgba(217,63,53,.2);
+            background: rgba(var(--primary-rgb),.1); border: 1px solid rgba(var(--primary-rgb),.2);
             border-radius: 100px; padding: .24rem .9rem;
             font-size: .78rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
             color: var(--primary); width: fit-content;
         }
 
         .wine-name {
-            font-size: clamp(2.16rem, 4.2vw, 3.36rem);
+            font-size: clamp(35px, 4.2vw, 54px);
             line-height: 1.15; color: var(--primary); font-weight: 800;
             text-align: center;
         }
-        @media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(1.68rem, 6vw, 2.28rem); } }
+        @media (orientation: portrait) and (max-width: 599px) { .wine-name { font-size: clamp(27px, 6vw, 36px); } }
 
         .wine-vintage {
             font-style: italic; color: var(--muted); font-size: 1.14rem; font-weight: 400;
@@ -149,7 +152,7 @@
         .wine-meta-row {
             display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.08rem;
             padding: .72rem 1rem;
-            background: #f5f5f7; border-radius: 12px;
+            background: var(--surface-alt); border-radius: 12px;
             border: 1px solid var(--border);
         }
         .meta-item { display: flex; flex-direction: column; align-items: center; gap: .12rem; }
@@ -158,7 +161,7 @@
 
         .grape-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem; }
         .grape-tag {
-            background: #f5f5f7; border: 1px solid var(--border);
+            background: var(--surface-alt); border: 1px solid var(--border);
             border-radius: 100px; padding: .24rem .72rem;
             font-size: .82rem; color: var(--muted);
         }
@@ -171,7 +174,7 @@
         }
 
         .harmony-title {
-            font-size: clamp(1.2rem, 2.4vw, 1.56rem);
+            font-size: clamp(19px, 2.4vw, 25px);
             font-weight: 800; color: var(--primary); letter-spacing: .01em;
             text-align: center;
         }
@@ -206,7 +209,7 @@
             height: clamp(67px, 9.6vw, 192px);
             border-radius: 50%;
             overflow: hidden;
-            background: var(--white);
+            background: var(--surface);
             box-shadow: 0 4px 14px var(--shadow);
             flex-shrink: 0;
         }
@@ -240,7 +243,7 @@
         /* ── Botão "Ver mais" ───────────────────────── */
         .btn-ver-mais {
             display: inline-flex; align-items: center; gap: .55rem;
-            background: var(--primary); color: var(--white);
+            background: var(--primary); color: #fff;
             border: none; border-radius: 100px;
             padding: .86rem 2.4rem;
             font-family: 'Nunito', sans-serif;
@@ -249,14 +252,14 @@
             box-shadow:
                 inset 0 1px 0 rgba(255,255,255,.22),
                 inset 0 -2px 0 rgba(0,0,0,.18),
-                0 4px 14px rgba(217,63,53,.4);
+                0 4px 14px rgba(var(--primary-rgb),.4);
             transition: box-shadow .15s, background .15s;
             width: fit-content; align-self: center;
             margin-top: auto;
         }
         .btn-ver-mais:active {
             background: var(--primary-dk);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(217,63,53,.3);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 4px rgba(var(--primary-rgb),.3);
         }
         @media (orientation: portrait) and (max-width: 599px) {
             .btn-ver-mais { font-size: .94rem; padding: .72rem 1.68rem; }
@@ -307,7 +310,7 @@
             color: var(--primary); opacity: .8; margin-bottom: .5rem;
         }
         .section-title {
-            font-size: clamp(1.68rem, 3.6vw, 2.64rem); font-weight: 800; color: var(--text);
+            font-size: clamp(27px, 3.6vw, 42px); font-weight: 800; color: var(--primary);
         }
         .section-sub { margin-top: .4rem; font-size: 1rem; font-weight: 300; color: var(--muted); }
 
@@ -333,7 +336,7 @@
             gap: .96rem;
         }
         .occ-card {
-            background: var(--white); border: 1px solid var(--border);
+            background: var(--surface); border: 1px solid var(--border);
             border-radius: 17px; padding: 1.08rem 1.2rem;
             display: flex; flex-direction: column; gap: .48rem;
             box-shadow: 0 2px 8px var(--shadow);
@@ -351,7 +354,7 @@
             flex: 1; min-height: 0;
         }
         .food-card {
-            background: var(--white); border: 1px solid var(--border);
+            background: var(--surface); border: 1px solid var(--border);
             border-radius: 16px; overflow: hidden;
             box-shadow: 0 2px 8px var(--shadow);
             display: flex; flex-direction: column; min-height: 0;
@@ -374,7 +377,7 @@
             flex: 1; min-height: 0;
         }
 
-        .recipe-card { background: var(--white); border: 1px solid var(--border); border-radius: 19px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
+        .recipe-card { background: var(--surface); border: 1px solid var(--border); border-radius: 19px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow); display: flex; flex-direction: column; min-height: 0; }
         .recipe-img  { width: 100%; aspect-ratio: 4/1; object-fit: cover; display: block; flex-shrink: 0; }
         .recipe-ph   { width: 100%; aspect-ratio: 4/1; display: flex; align-items: center; justify-content: center; background: var(--bg); font-size: 3em; flex-shrink: 0; }
         .recipe-body { padding: .54em .9em; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
@@ -384,11 +387,11 @@
         .recipe-tag.time       { color: var(--primary); }
         .recipe-name { font-size: 2.04em; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: .34em; flex-shrink: 0; }
         .recipe-desc { font-size: 1.32em; font-weight: 300; color: var(--muted); line-height: 1.5; margin-bottom: .36em; flex-shrink: 0; }
-        .recipe-note { margin-bottom: .36em; padding: .38em .66em; background: rgba(217,63,53,.05); border-left: 2px solid rgba(217,63,53,.3); border-radius: 0 8px 8px 0; font-size: 1.2em; color: var(--muted); font-style: italic; flex-shrink: 0; }
+        .recipe-note { margin-bottom: .36em; padding: .38em .66em; background: rgba(var(--primary-rgb),.05); border-left: 2px solid rgba(var(--primary-rgb),.3); border-radius: 0 8px 8px 0; font-size: 1.2em; color: var(--muted); font-style: italic; flex-shrink: 0; }
 
         .recipe-ingredients {
             margin-bottom: .54em; padding: .46em .66em;
-            background: rgba(217,63,53,.04); border: 1px solid rgba(217,63,53,.12);
+            background: rgba(var(--primary-rgb),.04); border: 1px solid rgba(var(--primary-rgb),.12);
             border-radius: 10px; flex-shrink: 0;
         }
         .recipe-ingredients-title {
@@ -406,6 +409,7 @@
 
         .recipe-steps { padding-top: .48em; font-size: 1.2em; font-weight: 300; line-height: 1.55; color: var(--muted); white-space: pre-line; border-top: 1px solid var(--border); }
     </style>
+@include('kiosk.partials.settings-cache')
 </head>
 <body>
 
@@ -431,8 +435,8 @@
             @else
                 <div class="wine-photo-placeholder">
                     <svg width="36" height="64" viewBox="0 0 90 160" fill="none" opacity=".35">
-                        <rect x="36" y="4" width="18" height="22" rx="4" fill="#d93f35"/>
-                        <path d="M28 36 Q20 50 18 70 L18 138 Q18 148 28 150 L62 150 Q72 148 72 138 L72 70 Q70 50 62 36 Z" fill="#d93f35"/>
+                        <rect x="36" y="4" width="18" height="22" rx="4" fill="var(--primary)"/>
+                        <path d="M28 36 Q20 50 18 70 L18 138 Q18 148 28 150 L62 150 Q72 148 72 138 L72 70 Q70 50 62 36 Z" fill="var(--primary)"/>
                     </svg>
                 </div>
             @endif
@@ -695,5 +699,7 @@
     let _rrt; window.addEventListener('resize', () => { clearTimeout(_rrt); _rrt = setTimeout(fitRecipeCards, 120); });
 })();
 </script>
+
+@include('kiosk.partials.settings-script')
 </body>
 </html>
