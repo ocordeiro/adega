@@ -10,4 +10,4 @@ export function LookupBarcode(arg1:string):Promise<main.BeverageResult>;
 
 export function RandomBeverage():Promise<main.BeverageResult>;
 
-export function ReportBeverage(arg1:string, arg2:string):Promise<boolean>;
+export function ReportBeverage(arg1:string,arg2:string):Promise<boolean>;

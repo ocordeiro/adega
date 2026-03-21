@@ -219,6 +219,10 @@ function initAdSystem() {
 
 // ── Fetch beverage ──
 async function fetchRandom() {
+    if (Math.random() < 0.2) {
+        showNotFound('0000000000000');
+        return;
+    }
     showLoading();
     try {
         const result = await RandomBeverage();
