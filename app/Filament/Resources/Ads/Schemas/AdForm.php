@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Ads\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -19,11 +20,15 @@ class AdForm
                     ->required()
                     ->maxLength(200),
 
-                TextInput::make('sort_order')
-                    ->label('Ordem')
-                    ->numeric()
-                    ->default(0)
-                    ->helperText('Menor número aparece primeiro'),
+                Select::make('media_type')
+                    ->label('Tipo de Mídia')
+                    ->options([
+                        'video' => 'Vídeo',
+                        'image' => 'Imagem',
+                    ])
+                    ->default('video')
+                    ->required()
+                    ->live(),
             ]),
 
             SpatieMediaLibraryFileUpload::make('video')
@@ -31,6 +36,25 @@ class AdForm
                 ->collection('video')
                 ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
                 ->maxSize(512000)
+                ->columnSpanFull()
+                ->visible(fn ($get) => $get('media_type') === 'video'),
+
+            SpatieMediaLibraryFileUpload::make('image')
+                ->label('Imagem do Anúncio')
+                ->collection('image')
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                ->maxSize(10240)
+                ->columnSpanFull()
+                ->visible(fn ($get) => $get('media_type') === 'image'),
+
+            TextInput::make('display_duration')
+                ->label('Duração de exibição (segundos)')
+                ->numeric()
+                ->minValue(1)
+                ->maxValue(300)
+                ->default(10)
+                ->helperText('Tempo em segundos que a imagem ficará visível')
+                ->visible(fn ($get) => $get('media_type') === 'image')
                 ->columnSpanFull(),
 
             Toggle::make('is_active')

@@ -6,11 +6,12 @@ import { LookupBarcode, RandomBeverage, ReportBeverage, FetchAds, FetchSettings 
 let currentView = 'scanner'; // 'scanner' | 'detail'
 let barcodeBuffer = '';
 let barcodeTimer = null;
-let adUrls = [];
+let ads = [];      // [{media_type, media_url, display_duration}]
 let adTimer = null;
 let appSettings = null; // settings from API
 
 const AD_DELAY = 30000; // 30s inactivity before showing ads
+const DEFAULT_IMAGE_DURATION = 10000; // 10s default for images
 
 // ── Helpers ──
 function esc(str) {
@@ -154,9 +155,10 @@ function showScanner() {
 </div>
 <div class="flash" id="flash"></div>
 <div class="footer">Aproxime o código de barras</div>
-${adUrls.length ? `
+${ads.length ? `
 <div id="ad-overlay" class="ad-overlay hidden">
     <video id="ad-video" class="ad-video" muted playsinline></video>
+    <img id="ad-image" class="ad-image hidden" alt="" />
     <div class="ad-hint">Toque para continuar</div>
 </div>` : ''}
 `;
@@ -168,35 +170,56 @@ ${adUrls.length ? `
 // AD SYSTEM
 // ═══════════════════════════════════════════════
 function initAdSystem() {
-    if (!adUrls.length) return;
+    if (!ads.length) return;
     const overlay = document.getElementById('ad-overlay');
     const video = document.getElementById('ad-video');
-    if (!overlay || !video) return;
+    const image = document.getElementById('ad-image');
+    if (!overlay || !video || !image) return;
 
     let adIndex = 0;
+    let imageTimer = null;
 
-    function playAd(idx) {
-        video.src = adUrls[idx];
-        video.load();
-        video.play().catch(() => {});
+    function showMedia(idx) {
+        const ad = ads[idx];
+        clearTimeout(imageTimer);
+        if (ad.media_type === 'image') {
+            video.classList.add('hidden');
+            video.pause();
+            video.src = '';
+            image.src = ad.media_url;
+            image.classList.remove('hidden');
+            const duration = (ad.display_duration || 10) * 1000;
+            imageTimer = setTimeout(nextAd, duration);
+        } else {
+            image.classList.add('hidden');
+            image.src = '';
+            video.classList.remove('hidden');
+            video.src = ad.media_url;
+            video.load();
+            video.play().catch(() => {});
+        }
     }
 
-    video.addEventListener('ended', () => {
-        adIndex = (adIndex + 1) % adUrls.length;
-        playAd(adIndex);
-    });
+    function nextAd() {
+        adIndex = (adIndex + 1) % ads.length;
+        showMedia(adIndex);
+    }
+
+    video.addEventListener('ended', nextAd);
 
     function showAds() {
         if (currentView !== 'scanner') return;
         adIndex = 0;
-        playAd(0);
+        showMedia(0);
         overlay.classList.remove('hidden');
     }
 
     function dismissAds() {
         overlay.classList.add('hidden');
+        clearTimeout(imageTimer);
         video.pause();
         video.src = '';
+        image.src = '';
         scheduleAds();
     }
 
@@ -811,7 +834,7 @@ async function init() {
             FetchSettings().catch(() => null),
         ]);
         if (urls && urls.length) {
-            adUrls = urls;
+            ads = urls;
         }
         if (settings) {
             appSettings = settings;

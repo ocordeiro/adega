@@ -85,8 +85,15 @@ type SettingsResult struct {
 	FontScale       float64 `json:"font_scale"`
 }
 
-// FetchAds returns a list of active ad video URLs
-func (a *App) FetchAds() []string {
+// AdItem represents a single ad returned to the frontend
+type AdItem struct {
+	MediaType       string `json:"media_type"`
+	MediaURL        string `json:"media_url"`
+	DisplayDuration *int   `json:"display_duration"`
+}
+
+// FetchAds returns a list of active ads with type and URL
+func (a *App) FetchAds() []AdItem {
 	url := fmt.Sprintf("%s/api/v1/anuncios", apiBaseURL)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -112,20 +119,26 @@ func (a *App) FetchAds() []string {
 
 	var result struct {
 		Data []struct {
-			VideoURL string `json:"video_url"`
+			MediaType       string `json:"media_type"`
+			MediaURL        string `json:"media_url"`
+			DisplayDuration *int   `json:"display_duration"`
 		} `json:"data"`
 	}
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil
 	}
 
-	var urls []string
+	var ads []AdItem
 	for _, ad := range result.Data {
-		if ad.VideoURL != "" {
-			urls = append(urls, ad.VideoURL)
+		if ad.MediaURL != "" {
+			ads = append(ads, AdItem{
+				MediaType:       ad.MediaType,
+				MediaURL:        ad.MediaURL,
+				DisplayDuration: ad.DisplayDuration,
+			})
 		}
 	}
-	return urls
+	return ads
 }
 
 // FetchSettings returns the kiosk appearance settings from the API
