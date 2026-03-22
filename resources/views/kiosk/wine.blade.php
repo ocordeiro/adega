@@ -454,12 +454,19 @@
     <div class="wine-info-col">
 
         {{-- Badge + nome + safra --}}
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center">
         @if($wine->wineType)
         <div class="wine-badge">
             <svg width="6" height="6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
             {{ $wine->wineType->name }}
         </div>
         @endif
+        @if($wine->classification)
+        <div class="wine-badge">
+            {{ \App\Models\Wine::CLASSIFICATIONS[$wine->classification] ?? $wine->classification }}
+        </div>
+        @endif
+        </div>
         <h1 class="wine-name">{{ $wine->name }}</h1>
         @if($wine->vintage)<p class="wine-vintage">{{ $wine->vintage }}</p>@endif
 

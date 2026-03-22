@@ -124,4 +124,26 @@ class WineTest extends TestCase
 
         $this->assertTrue($wine->is_active);
     }
+
+    public function test_classification_can_be_set(): void
+    {
+        $wine = Wine::create(['name' => 'Seco Test', 'classification' => 'seco']);
+
+        $this->assertEquals('seco', $wine->classification);
+    }
+
+    public function test_classification_is_nullable(): void
+    {
+        $wine = Wine::create(['name' => 'Sem Classificação']);
+
+        $this->assertNull($wine->classification);
+    }
+
+    public function test_classification_constants_are_defined(): void
+    {
+        $this->assertArrayHasKey('seco', Wine::CLASSIFICATIONS);
+        $this->assertArrayHasKey('demi_sec', Wine::CLASSIFICATIONS);
+        $this->assertArrayHasKey('suave', Wine::CLASSIFICATIONS);
+        $this->assertArrayHasKey('doce', Wine::CLASSIFICATIONS);
+    }
 }

@@ -21,6 +21,8 @@ class WineResource extends JsonResource
             'serving_temp_min' => $this->serving_temp_min,
             'serving_temp_max' => $this->serving_temp_max,
             'rating' => $this->rating,
+            'classification' => $this->classification,
+            'classification_label' => $this->classification ? \App\Models\Wine::CLASSIFICATIONS[$this->classification] ?? $this->classification : null,
             'wine_type' => $this->whenLoaded('wineType', fn () => [
                 'id' => $this->wineType->id,
                 'name' => $this->wineType->name,

@@ -10,6 +10,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use App\Models\Wine;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -36,6 +37,13 @@ class WinesTable
                     ->label('Tipo')
                     ->badge()
                     ->sortable(),
+                TextColumn::make('classification')
+                    ->label('Classificação')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => Wine::CLASSIFICATIONS[$state] ?? $state)
+                    ->color('info')
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('vintage')
                     ->label('Safra')
                     ->sortable(),
@@ -73,6 +81,9 @@ class WinesTable
                     ->relationship('producer', 'name')
                     ->searchable()
                     ->preload(),
+                SelectFilter::make('classification')
+                    ->label('Classificação')
+                    ->options(Wine::CLASSIFICATIONS),
                 TernaryFilter::make('is_active')->label('Ativo'),
                 TrashedFilter::make(),
             ])

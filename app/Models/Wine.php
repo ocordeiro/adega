@@ -17,6 +17,13 @@ class Wine extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes, InteractsWithMedia;
 
+    const CLASSIFICATIONS = [
+        'seco'    => 'Seco',
+        'demi_sec' => 'Demi-sec',
+        'suave'   => 'Suave',
+        'doce'    => 'Doce',
+    ];
+
     protected $fillable = [
         'name',
         'slug',
@@ -24,6 +31,7 @@ class Wine extends Model implements HasMedia
         'country_id',
         'region_id',
         'wine_type_id',
+        'classification',
         'vintage',
         'description',
         'alcohol_content',

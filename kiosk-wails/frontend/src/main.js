@@ -469,7 +469,10 @@ function renderWine(w) {
         ${starsHTML(w.rating)}
     </div>
     <div class="wine-info-col">
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center">
         ${w.wine_type ? `<div class="wine-badge"><svg width="6" height="6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg> ${esc(w.wine_type.name)}</div>` : ''}
+        ${w.classification_label ? `<div class="wine-badge">${esc(w.classification_label)}</div>` : ''}
+        </div>
         <h1 class="wine-name">${esc(w.name)}</h1>
         ${w.vintage ? `<p class="wine-vintage">${esc(w.vintage)}</p>` : ''}
         ${w.description ? `<p class="wine-desc">${esc(w.description)}</p>` : ''}

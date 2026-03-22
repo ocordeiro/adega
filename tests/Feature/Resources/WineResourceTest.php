@@ -42,6 +42,7 @@ class WineResourceTest extends TestCase
         $response->assertSee('Nome do Vinho');
         $response->assertSee('Safra (Ano)');
         $response->assertSee('Harmonização');
+        $response->assertSee('Classificação');
     }
 
     public function test_can_access_edit_wine_page(): void
@@ -92,6 +93,7 @@ class WineResourceTest extends TestCase
             'vintage'        => 2020,
             'alcohol_content'=> 13.5,
             'rating'         => 92,
+            'classification' => 'seco',
             'is_active'      => true,
         ]);
 

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Wines\Schemas;
 
 use App\Models\Region;
+use App\Models\Wine;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -29,12 +30,17 @@ class WineForm
                         ->maxLength(255)
                         ->columnSpanFull(),
 
-                    Grid::make(3)->schema([
+                    Grid::make(4)->schema([
                         Select::make('wine_type_id')
                             ->label('Tipo de Vinho')
                             ->relationship('wineType', 'name')
                             ->searchable()
                             ->preload()
+                            ->nullable(),
+
+                        Select::make('classification')
+                            ->label('Classificação')
+                            ->options(Wine::CLASSIFICATIONS)
                             ->nullable(),
 
                         TextInput::make('vintage')
