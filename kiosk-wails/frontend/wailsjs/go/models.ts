@@ -1,5 +1,21 @@
 export namespace main {
 	
+	export class AdItem {
+	    media_type: string;
+	    media_url: string;
+	    display_duration?: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new AdItem(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.media_type = source["media_type"];
+	        this.media_url = source["media_url"];
+	        this.display_duration = source["display_duration"];
+	    }
+	}
 	export class BeverageResult {
 	    success: boolean;
 	    data: any;

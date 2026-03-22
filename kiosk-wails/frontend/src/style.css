@@ -840,7 +840,7 @@ html, body {
     display: inline-block;
     vertical-align: middle;
     margin-top: -.1em;
-    opacity: .75;
+    font-size: 1em;
 }
 
 /* ── NOT FOUND SCREEN ──────────────────────────────── */
