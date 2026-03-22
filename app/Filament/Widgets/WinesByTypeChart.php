@@ -25,13 +25,36 @@ class WinesByTypeChart extends ChartWidget
                 [
                     'label'           => 'Vinhos',
                     'data'            => $data->pluck('wines_count')->toArray(),
-                    'backgroundColor' => ['#9e2d4c','#c44d72','#e07898','#8b3a6a','#b85c50','#d4856a','#7b3558','#c86080'],
-                    'borderWidth'     => 2,
-                    'borderColor'     => '#ffffff',
-                    'hoverOffset'     => 6,
+                    'backgroundColor' => ['#c4506a','#e07898','#9e2d4c','#d4456e','#f09ab8','#7b1f3a','#e85c82','#b03060'],
+                    'borderWidth'     => 0,
+                    'hoverOffset'     => 10,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'cutout'     => '68%',
+            'plugins'    => [
+                'legend' => [
+                    'position' => 'bottom',
+                    'labels'   => [
+                        'padding'         => 18,
+                        'usePointStyle'   => true,
+                        'pointStyleWidth' => 10,
+                        'color'           => '#94a3b8',
+                        'font'            => ['size' => 12],
+                    ],
+                ],
+                'tooltip' => [
+                    'padding'      => 12,
+                    'cornerRadius' => 8,
+                ],
+            ],
+            'animation' => ['animateScale' => true],
         ];
     }
 

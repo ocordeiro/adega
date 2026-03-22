@@ -220,6 +220,105 @@ class AdminPanelProvider extends PanelProvider
                 border-radius: 0.5rem !important;
                 overflow: hidden;
             }
+
+            /* ── Tema escuro ────────────────────────────────────────────────── */
+
+            /* Fundo da página */
+            .dark body,
+            .dark .fi-body {
+                background-color: #0e0c16 !important;
+            }
+
+            /* Sidebar e topbar */
+            .dark .fi-sidebar {
+                background-color: #13111e !important;
+                border-right: 1px solid rgba(255,255,255,0.06) !important;
+                box-shadow: none !important;
+            }
+
+            .dark .fi-topbar {
+                background-color: #13111e !important;
+                border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+                box-shadow: none !important;
+            }
+
+            /* Cards no dark: sem borda de acento superior, fundo profundo */
+            .dark .fi-wi {
+                background-color: #1c1928 !important;
+                border: 1px solid rgba(255,255,255,0.07) !important;
+                border-top: 1px solid rgba(255,255,255,0.07) !important;
+                box-shadow: 0 4px 32px rgba(0,0,0,0.55) !important;
+                border-radius: 0.75rem !important;
+                overflow: hidden;
+            }
+
+            .dark .fi-card,
+            .dark .fi-section,
+            .dark .fi-ta-ctn {
+                background-color: #1c1928 !important;
+                border-color: rgba(255,255,255,0.07) !important;
+                box-shadow: none !important;
+            }
+
+            /* Stats overview: sem background duplo */
+            .dark .fi-wi-stats-overview,
+            .dark .fi-wi-stats-overview section.fi-section,
+            .dark .fi-wi-stats-overview .fi-section-content-ctn {
+                background-color: transparent !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+            }
+
+            /* Cada stat card no dark */
+            .dark .fi-wi-stats-overview-stat {
+                background-color: #1c1928 !important;
+                border: 1px solid rgba(255,255,255,0.07) !important;
+                border-radius: 0.75rem !important;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.5) !important;
+            }
+
+            /* Acento esquerdo colorido nos stats cards */
+            .dark .fi-wi-stats-overview-stat {
+                border-left: 3px solid rgba(196, 80, 106, 0.55) !important;
+            }
+
+            /* Tabela no dark */
+            .dark .fi-ta-header-cell {
+                background-color: #13111e !important;
+            }
+
+            .dark .fi-ta-row:hover td {
+                background-color: rgba(255,255,255,0.025) !important;
+            }
+
+            /* Headings dos widgets no dark */
+            .dark .fi-section-header-heading {
+                color: #e2e8f0 !important;
+            }
+
+            /* Números dos stats no dark: branco */
+            .dark .fi-wi-stats-overview-stat-value {
+                color: #f1f5f9 !important;
+            }
+
+            /* Labels e descrições dos stats */
+            .dark .fi-wi-stats-overview-stat-label {
+                color: #94a3b8 !important;
+            }
+
+            .dark .fi-wi-stats-overview-stat-description {
+                color: #64748b !important;
+            }
+
+            /* Nav items no dark */
+            .dark .fi-sidebar-item-label {
+                color: #cbd5e1 !important;
+            }
+
+            /* Ícone do nav ativo no dark */
+            .dark .fi-sidebar-item-active .fi-sidebar-item-label {
+                color: #f8b4c4 !important;
+            }
         </style>
         CSS;
     }

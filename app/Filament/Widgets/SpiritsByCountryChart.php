@@ -26,13 +26,41 @@ class SpiritsByCountryChart extends ChartWidget
                 [
                     'label'           => 'Destilados',
                     'data'            => $data->pluck('spirits_count')->toArray(),
-                    'backgroundColor' => 'rgba(184, 124, 58, 0.6)',
-                    'borderColor'     => 'rgba(184, 124, 58, 0.9)',
+                    'backgroundColor' => 'rgba(212, 154, 80, 0.8)',
+                    'borderColor'     => 'rgba(212, 154, 80, 1)',
                     'borderWidth'     => 0,
-                    'borderRadius'    => 4,
+                    'borderRadius'    => 6,
+                    'borderSkipped'   => false,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'plugins' => [
+                'legend' => ['display' => false],
+                'tooltip' => ['padding' => 12, 'cornerRadius' => 8],
+            ],
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
+                    'ticks'       => [
+                        'color'     => '#64748b',
+                        'precision' => 0,
+                        'stepSize'  => 1,
+                    ],
+                    'grid'   => ['color' => 'rgba(148,163,184,0.08)'],
+                    'border' => ['display' => false],
+                ],
+                'x' => [
+                    'ticks'  => ['color' => '#64748b'],
+                    'grid'   => ['display' => false],
+                    'border' => ['display' => false],
+                ],
+            ],
         ];
     }
 

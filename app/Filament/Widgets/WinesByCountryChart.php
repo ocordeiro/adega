@@ -26,13 +26,41 @@ class WinesByCountryChart extends ChartWidget
                 [
                     'label'           => 'Vinhos',
                     'data'            => $data->pluck('wines_count')->toArray(),
-                    'backgroundColor' => 'rgba(158, 45, 76, 0.6)',
-                    'borderColor'     => 'rgba(158, 45, 76, 0.9)',
+                    'backgroundColor' => 'rgba(196, 80, 106, 0.75)',
+                    'borderColor'     => 'rgba(196, 80, 106, 1)',
                     'borderWidth'     => 0,
-                    'borderRadius'    => 4,
+                    'borderRadius'    => 6,
+                    'borderSkipped'   => false,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'plugins' => [
+                'legend' => ['display' => false],
+                'tooltip' => ['padding' => 12, 'cornerRadius' => 8],
+            ],
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
+                    'ticks'       => [
+                        'color'     => '#64748b',
+                        'precision' => 0,
+                        'stepSize'  => 1,
+                    ],
+                    'grid'   => ['color' => 'rgba(148,163,184,0.08)'],
+                    'border' => ['display' => false],
+                ],
+                'x' => [
+                    'ticks'  => ['color' => '#64748b'],
+                    'grid'   => ['display' => false],
+                    'border' => ['display' => false],
+                ],
+            ],
         ];
     }
 

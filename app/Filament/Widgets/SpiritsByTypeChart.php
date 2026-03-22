@@ -24,13 +24,36 @@ class SpiritsByTypeChart extends ChartWidget
                 [
                     'label'           => 'Destilados',
                     'data'            => $data->pluck('spirits_count')->toArray(),
-                    'backgroundColor' => ['#8b5e2a','#b87c3a','#d49a50','#9a6e3c','#c48848','#6b4420','#e0a858','#f0c070'],
-                    'borderWidth'     => 2,
-                    'borderColor'     => '#ffffff',
-                    'hoverOffset'     => 6,
+                    'backgroundColor' => ['#d4986a','#f0b870','#b87840','#e8a850','#9a6030','#f5cc88','#c88848','#a06838'],
+                    'borderWidth'     => 0,
+                    'hoverOffset'     => 10,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),
+        ];
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'cutout'  => '68%',
+            'plugins' => [
+                'legend' => [
+                    'position' => 'bottom',
+                    'labels'   => [
+                        'padding'         => 18,
+                        'usePointStyle'   => true,
+                        'pointStyleWidth' => 10,
+                        'color'           => '#94a3b8',
+                        'font'            => ['size' => 12],
+                    ],
+                ],
+                'tooltip' => [
+                    'padding'      => 12,
+                    'cornerRadius' => 8,
+                ],
+            ],
+            'animation' => ['animateScale' => true],
         ];
     }
 
