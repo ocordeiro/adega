@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 class GrapeVarietyResource extends Resource
 {
     protected static ?string $model = GrapeVariety::class;
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSparkles;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCircleStack;
     protected static UnitEnum|string|null $navigationGroup = 'Catálogo';
     protected static ?string $navigationLabel = 'Uvas / Variedades';
     protected static ?string $modelLabel = 'Uva / Variedade';

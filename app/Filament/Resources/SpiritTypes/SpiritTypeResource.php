@@ -19,7 +19,7 @@ class SpiritTypeResource extends Resource
 {
     protected static ?string $model = SpiritType::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedListBullet;
 
     protected static UnitEnum|string|null $navigationGroup = 'Catálogo';
 

@@ -24,6 +24,7 @@ class CountryResource extends Resource
     protected static ?string $modelLabel = 'País';
     protected static ?string $pluralModelLabel = 'Países';
     protected static ?int $navigationSort = 1;
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Schema $schema): Schema { return CountryForm::configure($schema); }
     public static function table(Table $table): Table { return CountriesTable::configure($table); }

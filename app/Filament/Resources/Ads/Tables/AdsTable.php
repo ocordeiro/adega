@@ -33,11 +33,6 @@ class AdsTable
                     ->label('Duração')
                     ->suffix('s')
                     ->placeholder('—'),
-                TextColumn::make('media_count')
-                    ->label('Mídia')
-                    ->getStateUsing(fn ($record) => ($record->getFirstMedia('video') || $record->getFirstMedia('image')) ? '✓' : '—')
-                    ->badge()
-                    ->color(fn ($state) => $state === '✓' ? 'success' : 'gray'),
                 IconColumn::make('is_active')
                     ->label('Ativo')
                     ->boolean(),
