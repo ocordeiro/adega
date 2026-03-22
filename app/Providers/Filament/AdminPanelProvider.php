@@ -4,7 +4,10 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\Login;
+use App\Filament\Widgets\RecentSpirits;
 use App\Filament\Widgets\RecentWines;
+use App\Filament\Widgets\SpiritsByCountryChart;
+use App\Filament\Widgets\SpiritsByTypeChart;
 use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\WinesByCountryChart;
 use App\Filament\Widgets\WinesByTypeChart;
@@ -74,8 +77,11 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 StatsOverview::class,
                 WinesByTypeChart::class,
+                SpiritsByTypeChart::class,
                 WinesByCountryChart::class,
+                SpiritsByCountryChart::class,
                 RecentWines::class,
+                RecentSpirits::class,
             ])
             ->navigationGroups([
                 NavigationGroup::make('Catálogo'),
@@ -112,6 +118,107 @@ class AdminPanelProvider extends PanelProvider
                 letter-spacing: 0.08em !important;
                 text-transform: uppercase !important;
                 line-height: 1 !important;
+            }
+
+            /* ── Tema claro: flat minimalista ───────────────────────────────── */
+
+            /* Fundo da página: cinza-quente neutro */
+            :root:not(.dark) body,
+            :root:not(.dark) .fi-body {
+                background-color: #ede9ea !important;
+            }
+
+            /* Sidebar e topbar: branco limpo */
+            :root:not(.dark) .fi-sidebar {
+                background-color: #ffffff !important;
+                border-right: 1px solid #e2dcdd !important;
+                box-shadow: none !important;
+            }
+
+            :root:not(.dark) .fi-topbar {
+                background-color: #ffffff !important;
+                border-bottom: 1px solid #e2dcdd !important;
+                box-shadow: none !important;
+            }
+
+            /* Cards genéricos: branco puro, sem sombra, borda finíssima */
+            :root:not(.dark) .fi-section,
+            :root:not(.dark) .fi-ta-ctn,
+            :root:not(.dark) .fi-wi,
+            :root:not(.dark) .fi-card {
+                background-color: #ffffff !important;
+                border-color: #e2dcdd !important;
+                box-shadow: none !important;
+            }
+
+            /* Acento no topo de cada widget card */
+            :root:not(.dark) .fi-wi {
+                border-top: 3px solid #9e2d4c !important;
+            }
+
+            /* StatsOverview: widget e a section interna sem fundo */
+            :root:not(.dark) .fi-wi-stats-overview,
+            :root:not(.dark) .fi-wi-stats-overview section.fi-section,
+            :root:not(.dark) .fi-wi-stats-overview .fi-section-content-ctn {
+                background-color: transparent !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+            }
+
+            /* Tipografia: sai do preto puro para um dark warm */
+            :root:not(.dark) body,
+            :root:not(.dark) .fi-body {
+                color: #1e1014 !important;
+            }
+
+            :root:not(.dark) h1,
+            :root:not(.dark) h2,
+            :root:not(.dark) h3,
+            :root:not(.dark) .fi-section-header-heading,
+            :root:not(.dark) .fi-wi-stats-overview-stat-label,
+            :root:not(.dark) .fi-page-header-heading {
+                color: #1e1014 !important;
+            }
+
+            /* Texto secundário / descrições: warm gray */
+            :root:not(.dark) .fi-page-header-subheading,
+            :root:not(.dark) .fi-wi-stats-overview-stat-description {
+                color: #5c4048 !important;
+            }
+
+            /* Labels de tabela e nav items */
+            :root:not(.dark) .fi-ta-header-cell,
+            :root:not(.dark) .fi-sidebar-item-label {
+                color: #3a2028 !important;
+            }
+
+            /* Header de tabela: cinza-quente bem suave */
+            :root:not(.dark) .fi-ta-header-cell {
+                background-color: #f7f4f5 !important;
+            }
+
+            /* Hover nas linhas: mínimo */
+            :root:not(.dark) .fi-ta-row:hover td {
+                background-color: #faf7f8 !important;
+            }
+
+            /* ── Espaçamento do grid de widgets ────────────────────────────── */
+
+            /* Conteúdo principal: mais espaço interno */
+            .fi-main {
+                padding: 1.75rem !important;
+            }
+
+            /* Grid de widgets: gap maior para os cards respirarem */
+            .fi-widgets-grid,
+            .fi-dashboard-widgets-ctn {
+                gap: 1.25rem !important;
+            }
+
+            /* Garante que widgets individuais tenham bordas arredondadas visíveis */
+            :root:not(.dark) .fi-wi {
+                border-radius: 0.5rem !important;
+                overflow: hidden;
             }
         </style>
         CSS;

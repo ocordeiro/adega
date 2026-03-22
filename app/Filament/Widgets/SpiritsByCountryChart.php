@@ -26,9 +26,10 @@ class SpiritsByCountryChart extends ChartWidget
                 [
                     'label'           => 'Destilados',
                     'data'            => $data->pluck('spirits_count')->toArray(),
-                    'backgroundColor' => 'rgba(180, 83, 9, 0.85)',
-                    'borderColor'     => 'rgb(146, 64, 14)',
-                    'borderWidth'     => 1,
+                    'backgroundColor' => 'rgba(184, 124, 58, 0.6)',
+                    'borderColor'     => 'rgba(184, 124, 58, 0.9)',
+                    'borderWidth'     => 0,
+                    'borderRadius'    => 4,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),

@@ -12,6 +12,8 @@ class WinesByTypeChart extends ChartWidget
 
     protected int|string|array $columnSpan = 1;
 
+    protected static ?int $sort = 2;
+
     protected function getData(): array
     {
         $data = WineType::withCount(['wines' => fn ($q) => $q->where('is_active', true)])
@@ -23,7 +25,10 @@ class WinesByTypeChart extends ChartWidget
                 [
                     'label'           => 'Vinhos',
                     'data'            => $data->pluck('wines_count')->toArray(),
-                    'backgroundColor' => ['#7b1f3a','#a83256','#c2185b','#d4a373','#8b5e3c','#6d4c41','#b71c1c','#880e4f'],
+                    'backgroundColor' => ['#9e2d4c','#c44d72','#e07898','#8b3a6a','#b85c50','#d4856a','#7b3558','#c86080'],
+                    'borderWidth'     => 2,
+                    'borderColor'     => '#ffffff',
+                    'hoverOffset'     => 6,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),

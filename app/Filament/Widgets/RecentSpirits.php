@@ -16,7 +16,7 @@ class RecentSpirits extends TableWidget
 
     protected int|string|array $columnSpan = 2;
 
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
 
     public function table(Table $table): Table
     {

@@ -16,7 +16,7 @@ class RecentWines extends TableWidget
 
     protected int|string|array $columnSpan = 2;
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 4;
 
     public function table(Table $table): Table
     {

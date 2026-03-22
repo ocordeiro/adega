@@ -11,6 +11,8 @@ class WinesByCountryChart extends ChartWidget
 
     protected int|string|array $columnSpan = 1;
 
+    protected static ?int $sort = 3;
+
     protected function getData(): array
     {
         $data = Country::withCount(['wines' => fn ($q) => $q->where('is_active', true)])
@@ -24,9 +26,10 @@ class WinesByCountryChart extends ChartWidget
                 [
                     'label'           => 'Vinhos',
                     'data'            => $data->pluck('wines_count')->toArray(),
-                    'backgroundColor' => 'rgba(158, 45, 76, 0.85)',
-                    'borderColor'     => 'rgb(123, 31, 58)',
-                    'borderWidth'     => 1,
+                    'backgroundColor' => 'rgba(158, 45, 76, 0.6)',
+                    'borderColor'     => 'rgba(158, 45, 76, 0.9)',
+                    'borderWidth'     => 0,
+                    'borderRadius'    => 4,
                 ],
             ],
             'labels' => $data->pluck('name')->toArray(),
