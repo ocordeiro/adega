@@ -16,7 +16,8 @@
       "Bash(find /Users/alan/Sites/pessoal/codigo-de-barras -path */Livewire/*.php -type f)",
       "Bash(xargs cat:*)",
       "Bash(grep -n \"boot\\\\|booted\\\\|bootAll\\\\|clearBootedModels\\\\|$booted\" vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(grep -n \"occasions\\(\\)\" /Users/alan/Sites/pessoal/adega/app/Models/*.php)"
     ]
   }
 }

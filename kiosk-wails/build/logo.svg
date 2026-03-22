@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a0a0f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d0f1e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bottleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B1A2E;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#C0392B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6B1220;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.03" />
+    </linearGradient>
+    <linearGradient id="wineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B1A2E;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#4a0d1a;stop-opacity:0.9" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="roundedClip">
+      <rect width="512" height="512" rx="80" ry="80"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="80" ry="80" fill="url(#bgGrad)"/>
+
+  <!-- Subtle texture lines -->
+  <line x1="0" y1="512" x2="512" y2="0" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.03"/>
+  <line x1="-100" y1="512" x2="412" y2="0" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.03"/>
+  <line x1="100" y1="512" x2="612" y2="0" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.03"/>
+
+  <!-- Wine bottle -->
+  <!-- Bottle neck cap (foil) -->
+  <rect x="216" y="68" width="80" height="22" rx="4" fill="#8B1A2E" filter="url(#shadow)"/>
+  <rect x="214" y="82" width="84" height="10" rx="2" fill="#6B1220"/>
+
+  <!-- Bottle neck -->
+  <path d="M 228 92 L 228 148 Q 228 158 218 165 L 205 178 L 307 178 L 294 165 Q 284 158 284 148 L 284 92 Z"
+        fill="url(#bottleGrad)" filter="url(#shadow)"/>
+
+  <!-- Bottle shoulder -->
+  <path d="M 205 178 Q 185 195 180 220 L 180 390 Q 180 415 205 415 L 307 415 Q 332 415 332 390 L 332 220 Q 327 195 307 178 Z"
+        fill="url(#bottleGrad)"/>
+
+  <!-- Label area -->
+  <rect x="192" y="248" width="128" height="112" rx="6" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-width="1" stroke-opacity="0.15"/>
+
+  <!-- Wine level inside bottle -->
+  <path d="M 183 310 L 183 390 Q 183 412 205 412 L 307 412 Q 329 412 329 390 L 329 310 Z"
+        fill="url(#wineGrad)" fill-opacity="0.6"/>
+
+  <!-- Bottle shine -->
+  <path d="M 215 185 Q 208 210 208 280 L 208 380"
+        stroke="#ffffff" stroke-width="5" stroke-opacity="0.12" stroke-linecap="round" fill="none"/>
+
+  <!-- Bottle bottom -->
+  <ellipse cx="256" cy="415" rx="76" ry="10" fill="#4a0d1a" fill-opacity="0.6"/>
+
+  <!-- Wine glass (overlapping) -->
+  <!-- Glass body -->
+  <path d="M 308 195 Q 365 230 355 295 Q 348 330 320 340 L 320 368 L 348 368 L 348 380 L 280 380 L 280 368 L 308 368 L 308 340 Q 280 330 273 295 Q 263 230 320 195 Z"
+        fill="url(#glassGrad)" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.25" filter="url(#shadow)"/>
+
+  <!-- Wine in glass -->
+  <path d="M 278 295 Q 276 320 308 332 L 308 340 Q 280 330 273 295 Q 268 265 280 242 Z"
+        fill="#8B1A2E" fill-opacity="0.5"/>
+  <path d="M 280 242 Q 300 260 340 255 Q 352 270 355 295 Q 348 330 320 340 L 308 340 L 308 332 Q 338 320 338 295 Q 336 268 308 255 Q 290 250 280 242 Z"
+        fill="#8B1A2E" fill-opacity="0.4"/>
+
+  <!-- Glass shine -->
+  <path d="M 326 200 Q 356 235 350 280"
+        stroke="#ffffff" stroke-width="4" stroke-opacity="0.2" stroke-linecap="round" fill="none"/>
+
+  <!-- Decorative grape cluster (small, bottom left) -->
+  <g transform="translate(68, 340)" fill-opacity="0.7">
+    <circle cx="20" cy="30" r="9" fill="#8B1A2E"/>
+    <circle cx="36" cy="30" r="9" fill="#8B1A2E"/>
+    <circle cx="28" cy="18" r="9" fill="#8B1A2E"/>
+    <circle cx="44" cy="18" r="9" fill="#8B1A2E"/>
+    <circle cx="12" cy="18" r="9" fill="#8B1A2E"/>
+    <circle cx="28" cy="6" r="9" fill="#8B1A2E"/>
+    <circle cx="44" cy="6" r="9" fill="#8B1A2E"/>
+    <circle cx="12" cy="6" r="9" fill="#8B1A2E"/>
+    <!-- Stem -->
+    <path d="M 28 -2 Q 28 -12 38 -18" stroke="#5a3a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Leaf -->
+    <path d="M 38 -18 Q 50 -26 48 -10 Q 38 -8 38 -18" fill="#3d6b2a" fill-opacity="0.8"/>
+  </g>
+
+  <!-- Decorative grape cluster (small, bottom right) -->
+  <g transform="translate(390, 345) scale(-1,1)" fill-opacity="0.7">
+    <circle cx="20" cy="25" r="8" fill="#8B1A2E"/>
+    <circle cx="34" cy="25" r="8" fill="#8B1A2E"/>
+    <circle cx="27" cy="14" r="8" fill="#8B1A2E"/>
+    <circle cx="41" cy="14" r="8" fill="#8B1A2E"/>
+    <circle cx="13" cy="14" r="8" fill="#8B1A2E"/>
+    <circle cx="27" cy="4" r="8" fill="#8B1A2E"/>
+    <!-- Stem -->
+    <path d="M 27 -4 Q 27 -12 36 -16" stroke="#5a3a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Leaf -->
+    <path d="M 36 -16 Q 46 -24 44 -10 Q 36 -8 36 -16" fill="#3d6b2a" fill-opacity="0.8"/>
+  </g>
+
+  <!-- Top decorative element -->
+  <path d="M 200 52 Q 256 42 312 52" stroke="#8B1A2E" stroke-width="1.5" fill="none" stroke-opacity="0.5"/>
+</svg>
