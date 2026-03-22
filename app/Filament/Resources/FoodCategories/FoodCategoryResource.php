@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 class FoodCategoryResource extends Resource
 {
     protected static ?string $model = FoodCategory::class;
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
     protected static UnitEnum|string|null $navigationGroup = 'Harmonização';
     protected static ?string $navigationLabel = 'Categorias';
     protected static ?string $modelLabel = 'Categoria';

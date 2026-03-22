@@ -19,7 +19,7 @@ class WineTypeResource extends Resource
 {
     protected static ?string $model = WineType::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQueueList;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
     protected static UnitEnum|string|null $navigationGroup = 'Catálogo';
 
